@@ -1,0 +1,3 @@
+[submodule "instagramapp"]
+	path = instagramapp
+	url = https://github.com/charlieAndroidDev/Instagram4Android.git

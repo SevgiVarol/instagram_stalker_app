@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">appinsta</string>
+
+    <string name="login_success">ok</string>
+    <string name="title_activity_inst_log">InstLog</string>
+    <string name="facebook_app_id">432792410915519</string>
+    <string name="fb_login_protocol_scheme">fb432792410915519</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

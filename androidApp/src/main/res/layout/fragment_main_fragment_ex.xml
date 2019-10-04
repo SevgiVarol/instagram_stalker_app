@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainFragmentEx">
+    <RelativeLayout
+
+        android:id="@+id/layoutLastestPhoto"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#000000"
+
+        >
+
+
+        <ImageView
+            android:id="@+id/latestPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            />
+
+
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+
+                        android:id="@+id/linearLayout4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:id="@+id/cardViewLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="188dp"
+                            android:orientation="horizontal"
+
+                            >
+
+
+                            <LinearLayout
+
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Takip"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:id="@+id/takipTv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="10dp"
+                                    android:text="0"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_alignTop="@+id/cardViewLayout"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+
+                                <de.hdodenhof.circleimageview.CircleImageView
+
+                                    android:id="@+id/profilPic"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="4dp"
+                                    android:layout_marginTop="4dp"
+                                    android:layout_marginRight="4dp"
+                                    android:layout_marginLeft="4dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <com.app.adprogressbarlib.AdCircleProgress
+                                    android:id="@+id/progress_bar"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:backgroundTintMode="add"
+                                    app:adpgb_background_color="@android:color/transparent"
+                                    app:adpgb_finished_color="@android:color/white"
+                                    app:adpgb_gradient_color_one="@color/colorAccent"
+                                    app:adpgb_gradient_color_two="@color/com_facebook_blue"
+                                    app:adpgb_progress="90"
+                                    app:adpgb_text_size="12dp"
+                                    app:adpgb_unfinished_color="@android:color/transparent"
+                                 />
+
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Takipçi"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:id="@+id/takipciTv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="10dp"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="20sp"
+                                    android:text="0"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingTop="50dp"
+
+
+                            >
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/mutedStory"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Condition="Hikayelerimi sessize alanlar"
+                                    app:Number="0"
+                                    >
+
+
+                                </com.example.appinsta.CustomView>
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/latestPhotoLikers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Number="0"
+                                    app:Condition="Son fotoğrafımı beğenmeyen takipçiler"
+                                    >
+
+
+                                </com.example.appinsta.CustomView>
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/storyStalkers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Number="0"
+                                    app:Condition="Hikayelerimi izleyip beni takip etmeyenler">
+
+
+                                </com.example.appinsta.CustomView>
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/photoStalkers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Number="0"
+                                    app:Condition="Fotoğraflarımı beğenip beni takip etmeyenler">
+
+
+                                </com.example.appinsta.CustomView>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/userStalking"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Condition="Kişinin takip ettikleri ama onu takip etmeyenler">
+
+
+                                </com.example.appinsta.CustomView>
+
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/userStalkers"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Condition="Kişiyi takip etmeyenler ama onun takip ettikleri">
+
+
+                                </com.example.appinsta.CustomView>
+
+
+                                <com.example.appinsta.CustomView
+                                    android:id="@+id/userAction"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3dp"
+                                    android:paddingTop="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="3dp"
+                                    app:Condition="Kişi hareketleri">
+
+
+                                </com.example.appinsta.CustomView>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <include layout="@layout/content_user" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+</FrameLayout>

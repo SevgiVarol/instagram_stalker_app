@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+             />-->
+<!--    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/my_nav_host"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/navigation"
+        app:defaultNavHost="true"
+
+        />-->
+
+    <include layout="@layout/content_user" />
+
+</LinearLayout>
+
+
+    <!--
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="257dp"
+        android:layout_height="33dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.406"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="149dp"
+        />
+-->
+
+
+    <!--  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:id="@+id/linearLayout4"
+          android:layout_width="0dp"
+          android:layout_height="0dp"
+          android:orientation="vertical"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          tools:context=".MainActivity">
+
+
+          <Button
+              android:id="@+id/btnConnect"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="40dip"
+              android:text=" Connect wıth ınstagram"
+
+
+              />
+
+
+          <LinearLayout
+              android:id="@+id/llAfterLoginView"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:orientation="vertical"
+              android:visibility="gone" />
+
+
+      </LinearLayout>-->
