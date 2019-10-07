@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.appinsta.service.InstagramService;
 
 import dev.niekirk.com.instagram4android.InstagramConstants;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,12 +35,17 @@ public class MainActivity extends AppCompatActivity {
         String ad=edittext_ad.getText().toString();
         String sifre= edittext_sifre.getText().toString();
         try {
-            service.login(ad,sifre);
+            InstagramLoginResult loginResult = service.login(ad, sifre);
+            if(loginResult.getStatus().equals("fail")) {
+                throw new Exception();
+            }
             setContentView(R.layout.activity_main);
             MainFragment mainFragment= new MainFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
         }
-        catch (Exception e){Toast.makeText(this,"Bilgileriniz eksik veya yanlış. Error:"+e.getMessage(),Toast.LENGTH_SHORT).show();}
+        catch (Exception e){
+            Toast.makeText(this,"Bilgileriniz eksik veya yanlış.",Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

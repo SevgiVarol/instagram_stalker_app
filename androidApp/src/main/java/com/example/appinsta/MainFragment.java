@@ -163,8 +163,9 @@ public class MainFragment extends Fragment {
                 myFollowers = service.getMyFollowers();
                 myFollowing = service.getMyFollowing();
 
+                if (service.myMedia(0) != null){
                 mediaLikers = compare(myFollowers, service.getMyMediaLikers(service.myMedia(0).pk));
-                pk=InstagramService.instagram.getUserId();
+                pk=InstagramService.instagram.getUserId();}
 
                 myStalking = compare(myFollowers, myFollowing);
                 myStalkers = compare(myFollowing, myFollowers);
@@ -189,6 +190,7 @@ public class MainFragment extends Fragment {
 
             latestPhoto.setAlpha(0.3f);
 
+            if (service.myMedia(0) != null){
             Glide.with(getActivity()).load(service.myMedia( 0).image_versions2.candidates.get(0).url).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
@@ -197,12 +199,14 @@ public class MainFragment extends Fragment {
                         latestPhoto.setBackground(resource);
                     }
                 }
-            });
+            });}
 
             takipTv.setText(String.valueOf(service.myInfo().following_count));
             takipciTv.setText(String.valueOf(service.myInfo().follower_count));
 
-            latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
+            if (mediaLikers!=null){
+            latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));}
+            else latestPhotoLikers.setNumberText(String.valueOf(0));
 
             usersStalkers.setNumberText(String.valueOf(myStalkers.size()));
             usersStalking.setNumberText(String.valueOf(myStalking.size()));

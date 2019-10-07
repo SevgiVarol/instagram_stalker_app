@@ -89,6 +89,7 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        if(userSummary!=null){
         adapter = new RecyclerSearch(userSummary,getActivity());
 
 
@@ -106,7 +107,7 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
                 manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
 
             }
-        });
+        });}
 
         return v;
     }

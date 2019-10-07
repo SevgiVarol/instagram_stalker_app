@@ -20,6 +20,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetMediaLikersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetStoryViewersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetUserFollowersResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
@@ -61,18 +62,14 @@ public class InstagramService {
     }
 
 
-    public void login(String ad, String sifre) {
+    public InstagramLoginResult login(String ad, String sifre) throws IOException {
 
 
         InstagramConstants.log = false;
         instagram = Instagram4Android.builder().username(ad).password(sifre).build();
 
         instagram.setup();
-        try {
-            instagram.login();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return instagram.login();
     }
 
     public InstagramService(Instagram4Android instagram) {
@@ -356,7 +353,12 @@ public class InstagramService {
 
 
     public InstagramFeedItem myMedia(int mediaIndex) {
-        return getMyMedias(instagram.getUserId()).get(mediaIndex);
+        if (getMyMedias(instagram.getUserId()).isEmpty()==false){
+            return getMyMedias(instagram.getUserId()).get(mediaIndex);
+        }
+        else{
+            return null;
+        }
     }
 
 
