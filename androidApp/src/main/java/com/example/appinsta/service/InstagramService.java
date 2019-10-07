@@ -61,11 +61,11 @@ public class InstagramService {
     }
 
 
-    public void login() {
+    public void login(String ad, String sifre) {
 
 
         InstagramConstants.log = false;
-        instagram = Instagram4Android.builder().username("simge.keser").password("Com15290107.").build();
+        instagram = Instagram4Android.builder().username(ad).password(sifre).build();
 
         instagram.setup();
         try {

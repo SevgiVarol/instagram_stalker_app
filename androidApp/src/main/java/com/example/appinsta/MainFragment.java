@@ -80,7 +80,7 @@ public class MainFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
 
       View view = inflater.inflate(R.layout.main_fragment, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         initComponent(view);
         new loginAsynTask().execute();
@@ -153,10 +153,10 @@ public class MainFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            if(InstagramConstants.log) {
+            /*if(InstagramConstants.log) {
                 service.login();
 
-            }
+            }*/
 
 
 

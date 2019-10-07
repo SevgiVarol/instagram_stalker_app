@@ -1,17 +1,22 @@
 package com.example.appinsta;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.app.FragmentManager;
+import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.appinsta.service.InstagramService;
+
+import dev.niekirk.com.instagram4android.InstagramConstants;
+
 
 public class MainActivity extends AppCompatActivity {
-
-
+    InstagramService service=InstagramService.getInstance();
+    public EditText edittext_ad,edittext_sifre;
 
 
     @Override
@@ -19,20 +24,24 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
-
-
-        setContentView(R.layout.activity_main);
-
-
-            MainFragment mainFragment= new MainFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
-
-
+        setContentView(R.layout.login_page);
+        edittext_ad=findViewById(R.id.edtEmail);
+        edittext_sifre=findViewById(R.id.edtPassword);
 
     }
 
+    public void loginOnClick(View view) {
+        String ad=edittext_ad.getText().toString();
+        String sifre= edittext_sifre.getText().toString();
+        try {
+            service.login(ad,sifre);
+            setContentView(R.layout.activity_main);
+            MainFragment mainFragment= new MainFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
+        }
+        catch (Exception e){Toast.makeText(this,"Bilgileriniz eksik veya yanlış. Error:"+e.getMessage(),Toast.LENGTH_SHORT).show();}
 
-
+    }
 }
 
   /*  private void test(User followers, Following following) {
