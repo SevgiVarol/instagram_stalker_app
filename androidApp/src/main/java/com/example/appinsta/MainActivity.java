@@ -1,12 +1,15 @@
 package com.example.appinsta;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appinsta.service.InstagramService;
@@ -16,8 +19,8 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
 
 public class MainActivity extends AppCompatActivity {
-    InstagramService service=InstagramService.getInstance();
-    public EditText edittext_ad,edittext_sifre;
+
+
 
 
     @Override
@@ -25,29 +28,22 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_page);
-        edittext_ad=findViewById(R.id.edtEmail);
-        edittext_sifre=findViewById(R.id.edtPassword);
-
+        setContentView(R.layout.activity_main);
+        Intent i= new Intent(this,LoginPage.class);
+        startActivityForResult(i,10);
     }
 
-    public void loginOnClick(View view) {
-        String ad=edittext_ad.getText().toString();
-        String sifre= edittext_sifre.getText().toString();
-        try {
-            InstagramLoginResult loginResult = service.login(ad, sifre);
-            if(loginResult.getStatus().equals("fail")) {
-                throw new Exception();
-            }
-            setContentView(R.layout.activity_main);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==10){
             MainFragment mainFragment= new MainFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout,mainFragment).commit();
         }
-        catch (Exception e){
-            Toast.makeText(this,"Bilgileriniz eksik veya yanlış.",Toast.LENGTH_SHORT).show();
-        }
-
+        else finish();
     }
+
+
 }
 
   /*  private void test(User followers, Following following) {

@@ -230,6 +230,7 @@ public class Instagram4Android implements Serializable {
                 .build();
 
         InstagramLoginResult loginResult = this.sendRequest(new InstagramLoginRequest(loginRequest));
+        this.username=loginResult.getLogged_in_user().username;
         emulateUserLoggedIn(loginResult);
 
         if (loginResult.getTwo_factor_info() != null) {
