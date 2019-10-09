@@ -80,7 +80,6 @@ public class MainFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
 
       View view = inflater.inflate(R.layout.main_fragment, container, false);
-        //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
         initComponent(view);
         new loginAsynTask().execute();
