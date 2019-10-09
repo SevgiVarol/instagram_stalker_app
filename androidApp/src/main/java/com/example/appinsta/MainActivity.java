@@ -1,27 +1,11 @@
 package com.example.appinsta;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.view.View;
-import android.view.Window;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.appinsta.service.InstagramService;
-
-import dev.niekirk.com.instagram4android.InstagramConstants;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
-
-
 public class MainActivity extends AppCompatActivity {
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +13,11 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent i= new Intent(this,LoginPage.class);
-        startActivityForResult(i,10);
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==10){
-            MainFragment mainFragment= new MainFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout,mainFragment).commit();
-        }
-        else finish();
-    }
+        MainFragment mainFragment = new MainFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
 
+    }
 
 }
 

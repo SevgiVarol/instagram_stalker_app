@@ -230,6 +230,7 @@ public class Instagram4Android implements Serializable {
                 .build();
 
         InstagramLoginResult loginResult = this.sendRequest(new InstagramLoginRequest(loginRequest));
+        //email change to username
         this.username=loginResult.getLogged_in_user().username;
         emulateUserLoggedIn(loginResult);
 
