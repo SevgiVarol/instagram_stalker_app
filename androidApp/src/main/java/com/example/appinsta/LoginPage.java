@@ -61,6 +61,8 @@ public class LoginPage extends AppCompatActivity {
         if (backPressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
             finishAffinity();
+        } else {
+            Toast.makeText(this, "Çıkmak için tekrar geri tuşuna basın", Toast.LENGTH_SHORT).show();
         }
         backPressedTime = System.currentTimeMillis();
     }
