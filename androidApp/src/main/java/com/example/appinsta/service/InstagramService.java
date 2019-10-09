@@ -20,6 +20,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetMediaLikersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetStoryViewersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetUserFollowersResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
@@ -29,7 +30,6 @@ public class InstagramService {
 
 
     public static Instagram4Android instagram;
-
 
 
     private static InstagramService myService;
@@ -61,18 +61,14 @@ public class InstagramService {
     }
 
 
-    public void login() {
+    public InstagramLoginResult login(String username, String password) throws IOException {
 
 
         InstagramConstants.log = false;
-        instagram = Instagram4Android.builder().username("simge.keser").password("Com15290107.").build();
+        instagram = Instagram4Android.builder().username(username).password(password).build();
 
         instagram.setup();
-        try {
-            instagram.login();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return instagram.login();
     }
 
     public InstagramService(Instagram4Android instagram) {
@@ -356,13 +352,51 @@ public class InstagramService {
 
 
     public InstagramFeedItem myMedia(int mediaIndex) {
-        return getMyMedias(instagram.getUserId()).get(mediaIndex);
+        if (!getMyMedias(instagram.getUserId()).isEmpty()) {
+            return getMyMedias(instagram.getUserId()).get(mediaIndex);
+        } else {
+            return null;
+        }
     }
 
 
     public List<InstagramUserSummary> getMediaLikers(long mediaId) {
 
-            List<InstagramUserSummary> mediaLikers = new ArrayList<>();
+        List<InstagramUserSummary> mediaLikers = new ArrayList<>();
+
+        InstagramGetMediaLikersResult getMediaLikersResult = null;
+
+        String nextMaxId = null;
+        do {
+
+            try {
+
+
+                getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
+                for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
+                    mediaLikers.add(user);
+
+                }
+            }
+            nextMaxId = myUserFeedResult.getNext_max_id();
+        } while (nextMaxId != null);
+
+        return mediaLikers;
+
+
+    }
+
+    public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
+
+        if (!myMediaLikers.isEmpty()) {
+            return myMediaLikers;
+        } else {
 
             InstagramGetMediaLikersResult getMediaLikersResult = null;
 
@@ -380,48 +414,15 @@ public class InstagramService {
                 }
                 if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
                     for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
-                        mediaLikers.add(user);
+                        myMediaLikers.add(user);
 
                     }
                 }
-                nextMaxId =myUserFeedResult.getNext_max_id();
+                nextMaxId = myUserFeedResult.getNext_max_id();
             } while (nextMaxId != null);
 
-            return mediaLikers;
-
-
-    }
-    public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
-
-       if(!myMediaLikers.isEmpty()){
-           return myMediaLikers;
-       }else {
-
-           InstagramGetMediaLikersResult getMediaLikersResult = null;
-
-           String nextMaxId = null;
-           do {
-
-               try {
-
-
-                   getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
-
-
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-               if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
-                   for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
-                       myMediaLikers.add(user);
-
-                   }
-               }
-               nextMaxId = myUserFeedResult.getNext_max_id();
-           } while (nextMaxId != null);
-
-           return myMediaLikers;
-       }
+            return myMediaLikers;
+        }
 
     }
 
@@ -429,28 +430,28 @@ public class InstagramService {
     public List<InstagramFeedItem> urlOfMyPhotos(String username) {
 
 
-            List<InstagramFeedItem> likedMediaList = new ArrayList<>();
-            List<InstagramUserSummary> medialikers = new ArrayList<>();
+        List<InstagramFeedItem> likedMediaList = new ArrayList<>();
+        List<InstagramUserSummary> medialikers = new ArrayList<>();
 
-            int mediaNum = getMyMedias(instagram.getUserId()).size();
+        int mediaNum = getMyMedias(instagram.getUserId()).size();
 
-            for (int i = 0; i < mediaNum; i++) {
+        for (int i = 0; i < mediaNum; i++) {
 
-                long mediaId = myMedia(i).getPk();
-                medialikers= getMediaLikers(mediaId);
+            long mediaId = myMedia(i).getPk();
+            medialikers = getMediaLikers(mediaId);
 
-                for ( int j =0 ; j < medialikers.size(); j++) {
+            for (int j = 0; j < medialikers.size(); j++) {
 
-                    if (username.equals(medialikers.get(j).username)) {
+                if (username.equals(medialikers.get(j).username)) {
 
-                        likedMediaList.add(myMedia(i));
+                    likedMediaList.add(myMedia(i));
 
-                    }
                 }
-
             }
 
-            return likedMediaList;
+        }
+
+        return likedMediaList;
 
 
     }

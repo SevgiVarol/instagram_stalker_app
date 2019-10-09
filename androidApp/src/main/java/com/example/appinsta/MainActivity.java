@@ -1,37 +1,23 @@
 package com.example.appinsta;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.app.FragmentManager;
-import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
 public class MainActivity extends AppCompatActivity {
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_main);
 
-
-            MainFragment mainFragment= new MainFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
-
-
+        MainFragment mainFragment = new MainFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
 
     }
-
-
 
 }
 
