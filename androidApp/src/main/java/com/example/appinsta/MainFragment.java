@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -66,7 +67,7 @@ public class MainFragment extends Fragment {
 
     RelativeLayout theLayout;
     SwipeRefreshLayout swipeRefreshLayout;
-    AdCircleProgress mProgress = null;
+    ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service=InstagramService.getInstance();
     private Handler mHandler = new Handler();
@@ -90,6 +91,7 @@ public class MainFragment extends Fragment {
 
 
     private void initComponent(View view) {
+
         mProgress = view.findViewById(R.id.progress_bar);
         Resources res = getResources();
         drawable = res.getDrawable(R.drawable.circle_shape);
@@ -124,22 +126,7 @@ public class MainFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
 
-
-
-            final Timer t = new Timer();
-            t.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-
-
-
-                            mProgress.setAdProgress(i);
-                            i++;
-                        }
-                    });
-                }
-            }, 0, 120);
+            mProgress.setVisibility(View.VISIBLE);
 
             if(!InstagramConstants.log){
 
@@ -157,9 +144,6 @@ public class MainFragment extends Fragment {
                 service.login();
 
             }
-
-
-
                 myFollowers = service.getMyFollowers();
                 myFollowing = service.getMyFollowing();
 

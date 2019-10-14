@@ -41,8 +41,8 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
     AutoCompleteTextView autoCompleteTextView;
     List<InstagramUserSummary> userSummary;
     EditText searchEdit;
-    Instagram4Android instagram4Android;
-    public SearchFragment() {
+
+   public SearchFragment() {
         // Required empty public constructor
     }
     @SuppressLint("ValidFragment")
@@ -57,7 +57,6 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-
         View v= inflater.inflate(R.layout.search_fragment, container, false);
 
         //Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
@@ -99,15 +98,12 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
             @Override
             public void onClick(int position) {
 
-                UserProfile.urlOfUserPhotos.clear();
-                InstagramConstants.userProfile=true;
                 UserProfile fragment = new UserProfile(userSummary.get(position));
                 FragmentManager manager = getFragmentManager();
                 manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
 
             }
         });
-
         return v;
     }
 

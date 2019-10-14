@@ -64,6 +64,9 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'jp.co.cyberagent.android:gpuimage:2.0.0'
 
+    implementation 'in.srain.cube:grid-view-with-header-footer:1.0.12'
+
+    implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
     implementation 'com.android.support:support-v4:29.0.0'
     implementation 'com.android.support:appcompat-v7:29.0.0'
     implementation 'com.android.support:design:29.0.0'

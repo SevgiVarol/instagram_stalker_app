@@ -115,21 +115,13 @@
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />
 
-                                <com.app.adprogressbarlib.AdCircleProgress
+                                <ProgressBar
                                     android:id="@+id/progress_bar"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
                                     android:backgroundTintMode="add"
-                                    app:adpgb_background_color="@android:color/transparent"
-                                    app:adpgb_finished_color="@android:color/white"
-                                    app:adpgb_gradient_color_one="@color/colorAccent"
-                                    app:adpgb_gradient_color_two="@color/com_facebook_blue"
-                                    app:adpgb_progress="90"
-                                    app:adpgb_text_size="12dp"
-                                    app:adpgb_unfinished_color="@android:color/transparent"
-                                    custom:adpgb_finished_stroke_width="5dp"
-                                    custom:adpgb_show_text="false"
-                                    custom:adpgb_unfinished_stroke_width="5dp" /> />
+
+                                    />
 
                             </RelativeLayout>
 

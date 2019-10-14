@@ -211,21 +211,19 @@
 
             </com.google.android.material.tabs.TabLayout>
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-                <GridView
-                    android:id="@+id/gridView"
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:horizontalSpacing="3dp"
-                    android:numColumns="3"
-                    android:verticalSpacing="3dp" />
-            </androidx.viewpager.widget.ViewPager></LinearLayout>
+                    android:layout_height="match_parent">
+
+                </androidx.viewpager.widget.ViewPager>
+
+
+
+
+
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

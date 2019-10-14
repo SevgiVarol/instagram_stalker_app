@@ -23,14 +23,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.RecyclerViewHolder> implements Filterable {
-    public List<InstagramUserSummary> userList=null;
-    public List<InstagramUserSummary> userListFull=null;
+    public List<InstagramUserSummary> userList;
+    public List<InstagramUserSummary> userListFull;
     Context context;
 
     private OnListener mListener;
@@ -127,10 +128,7 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
                         filteredList.add(item);
                     }
                 }
-
-
             }
-
             FilterResults results = new FilterResults();
             results.values = filteredList;
 
@@ -142,8 +140,6 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
             userList.clear();
             userList.addAll((List) results.values);
             notifyDataSetChanged();
-
-
         }
     };
 

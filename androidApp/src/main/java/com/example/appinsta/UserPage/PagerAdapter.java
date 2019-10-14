@@ -9,14 +9,18 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import com.example.appinsta.UserPage.MyMediasFragment;
 import com.example.appinsta.UserPage.UserMediaFragment;
 
+import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
+
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
     int noOfTab;
+    InstagramUser user;
 
-    public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
+    public PagerAdapter(@NonNull FragmentManager fm, int behavior, InstagramUser user) {
         super(fm);
         this.noOfTab=behavior;
+        this.user=user;
     }
 
     @NonNull
@@ -25,7 +29,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         switch (position)
         {
             case 0:
-                UserMediaFragment userMediaFragment = new UserMediaFragment();
+                UserMediaFragment userMediaFragment = new UserMediaFragment(user);
                 return userMediaFragment;
 
             case 1:

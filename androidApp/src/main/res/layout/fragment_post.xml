@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserPage.UserMediaFragment">
+    tools:context=".UserPage.UserMediaFragment"
+    android:id="@+id/mediaFragment"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+        <GridView
+            android:id="@+id/gridViewUser2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="3"
+            android:verticalSpacing="10dp" />
 
 
-    <GridView
-        android:id="@+id/gridViewUser"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:horizontalSpacing="3dp"
-        android:numColumns="3"
-        android:verticalSpacing="3dp" />
-</FrameLayout>
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/footerLoadingView"/>
+
+
+</LinearLayout>
