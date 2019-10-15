@@ -80,7 +80,7 @@
                 android:textColor="#FFFF"/>
 
             <TextView
-                android:id="@+id/gonderi"
+                android:id="@+id/tvMediaNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
@@ -106,7 +106,7 @@
                 android:textColor="#FFFF"/>
 
             <TextView
-                android:id="@+id/takipTv"
+                android:id="@+id/tvFollowingNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
@@ -132,7 +132,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/takipciTv"
+                android:id="@+id/tvFollowersNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
@@ -157,7 +157,7 @@
                 android:layout_weight="1">
 
                 <com.example.appinsta.CustomView
-                    android:id="@+id/stalkersUser"
+                    android:id="@+id/customUsersStalkers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="3dp"
@@ -178,7 +178,7 @@
                 android:layout_weight="1">
 
                 <com.example.appinsta.CustomView
-                    android:id="@+id/stalkingUser"
+                    android:id="@+id/customUsersStalking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="3dp"
