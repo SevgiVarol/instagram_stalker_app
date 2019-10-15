@@ -1,9 +1,6 @@
 package com.example.appinsta;
 
 
-import android.annotation.SuppressLint;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import android.content.res.Resources;
@@ -22,8 +19,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.adprogressbarlib.AdCircleProgress;
@@ -33,13 +28,11 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.service.InstagramService;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dev.niekirk.com.instagram4android.Instagram4Android;
 import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
@@ -144,6 +137,7 @@ public class MainFragment extends Fragment {
 
                 takipTv.setText(String.valueOf(service.myInfo().following_count));
                 takipciTv.setText(String.valueOf(service.myInfo().follower_count));
+                service.getStories();
 
             }
 

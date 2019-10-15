@@ -12,6 +12,7 @@ import dev.niekirk.com.instagram4android.requests.InstagramGetMediaLikersRequest
 import dev.niekirk.com.instagram4android.requests.InstagramGetStoryViewersRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramGetUserFollowersRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramGetUserFollowingRequest;
+import dev.niekirk.com.instagram4android.requests.InstagramReelsTrayRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramSearchUsernameRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramUserFeedRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramUserStoryFeedRequest;
@@ -21,7 +22,9 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramGetMediaLiker
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetStoryViewersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetUserFollowersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramReelsTrayFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
@@ -453,6 +456,29 @@ public class InstagramService {
 
         return likedMediaList;
 
+
+    }
+    public void getStories(){
+        try {
+            InstagramReelsTrayFeedResult result = instagram.sendRequest(new InstagramReelsTrayRequest());
+            List<InstagramStoryTray> trays = result.getTray();
+            List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
+            for(InstagramStoryTray tray : trays) {
+                if(tray != null) {
+                    userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk())));
+                    System.out.println("user stories in for loop tray:"+userStories);
+                }
+            }
+            for(InstagramUserStoryFeedResult story : userStories) {
+                if(story.getReel() == null) {
+                    System.out.println("Null check for safety, hardly ever null");
+                } else {
+                    System.out.println(story.getReel().getItems().get(0).getImage_versions2().getCandidates().get(0).getUrl());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 }
