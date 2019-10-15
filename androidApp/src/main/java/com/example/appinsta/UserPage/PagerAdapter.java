@@ -37,9 +37,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return myMediasFragment;
             default:
                 return null;
-
         }
-
     }
 
 

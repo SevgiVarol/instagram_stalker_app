@@ -27,9 +27,7 @@ public class InstagramService {
 
 
     public static Instagram4Android instagram;
-
-
-    public static String nextMaxIdMedias;
+    public static String mediasNextMaxId;
     private static InstagramService myService;
     List<InstagramUserSummary> myFollowing = new ArrayList<>();
     List<InstagramUserSummary> myMediaLikers = new ArrayList<>();
@@ -37,7 +35,7 @@ public class InstagramService {
     private List<InstagramUser> storyViewers = null;
     List<InstagramFeedItem> myMedia = new ArrayList<>();
 
-    private List<InstagramFeedItem> story, likedMedia = null;
+    private List<InstagramFeedItem> story=null;
 
     InstagramFeedResult userFeedResult = null;
     InstagramFeedResult myUserFeedResult = null;
@@ -60,7 +58,6 @@ public class InstagramService {
 
     public void login() {
 
-
         InstagramConstants.log = false;
         instagram = Instagram4Android.builder().username("simge.keser").password("Com15290107.").build();
 
@@ -76,6 +73,33 @@ public class InstagramService {
         this.instagram = instagram;
     }
 
+    public InstagramUser myInfo() {
+
+        InstagramSearchUsernameResult result = null;
+        try {
+            result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result.getUser();
+
+    }
+
+    public InstagramUser getUser(String username) {
+
+        InstagramSearchUsernameResult result = null;
+        try {
+            result = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result.getUser();
+
+    }
 
     public List<InstagramUserSummary> getFollowers(long pk) {
 
@@ -192,34 +216,6 @@ public class InstagramService {
     }
 
 
-    public InstagramUser getUser(String username) {
-
-        InstagramSearchUsernameResult result = null;
-        try {
-            result = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return result.getUser();
-
-    }
-
-    public InstagramUser myInfo() {
-
-        InstagramSearchUsernameResult result = null;
-        try {
-            result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return result.getUser();
-
-    }
-
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
 
         if (storyViewers != null) {
@@ -289,41 +285,27 @@ public class InstagramService {
 
     public List<InstagramFeedItem> getMedias(long userId) {
 
+        try {
+            userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, null, 0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediasNextMaxId = userFeedResult.getNext_max_id();
 
-
-            try {
-                userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, null, 0));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-
-            nextMaxIdMedias=userFeedResult.getNext_max_id();
-
-            return userFeedResult.getItems();
-
-
-
-
+        return userFeedResult.getItems();
 
     }
 
     public List<InstagramFeedItem> getMedias(long userId,String nextMaxId) {
 
+        try {
+            userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mediasNextMaxId = userFeedResult.getNext_max_id();
 
-
-            try {
-                userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-            nextMaxIdMedias=userFeedResult.getNext_max_id();
-
-            return userFeedResult.getItems();
-
+        return userFeedResult.getItems();
 
     }
 

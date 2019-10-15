@@ -27,8 +27,6 @@ import com.example.appinsta.UserPage.UserProfile;
 
 import java.util.List;
 
-import dev.niekirk.com.instagram4android.Instagram4Android;
-import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 
@@ -57,9 +55,8 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true);
-        View v= inflater.inflate(R.layout.search_fragment, container, false);
+        View v= inflater.inflate(R.layout.search_page, container, false);
 
-        //Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
         searchEdit= (EditText)v.findViewById(R.id.editTextSearch);
 
         searchEdit.addTextChangedListener(new TextWatcher() {

@@ -2,7 +2,6 @@ package com.example.appinsta.UserPage;
 
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.InstagramConstants;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
@@ -36,16 +34,12 @@ public class UserProfile extends Fragment {
 
 
     ImageView profilPic;
-    TextView takipTv, takipciTv, gönderiTv;
+    TextView tvFollowingNum, tvFollowersNum, tvMediaNum;
     public InstagramUserSummary user;
-    CustomView usersStalkers, usersStalking;
+    CustomView customUsersStalkers, customUsersStalking;
     ViewPager viewPager;
-
-    List<InstagramUserSummary> stalking = new ArrayList<>();
-    List<InstagramUserSummary> stalkers = new ArrayList<>();
-
-
-    public static List<InstagramFeedItem> myMedia = new ArrayList<>();
+    List<InstagramUserSummary> userStalking = new ArrayList<>();
+    List<InstagramUserSummary> userStalkers = new ArrayList<>();
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
 
@@ -59,40 +53,38 @@ public class UserProfile extends Fragment {
     public UserProfile(InstagramUserSummary user) {
         this.user = user;
 
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
+        View view = inflater.inflate(R.layout.user_profile_page, container, false);
 
         initComponents(view);
-        new myAsycnTask().execute();
+        new userProfilePage().execute();
+
         return view;
     }
 
 
     private void initComponents(View view) {
 
-
         profilPic = (CircleImageView) view.findViewById(R.id.profilPic);
-        takipTv = (TextView) view.findViewById(R.id.takipTv);
-        takipciTv = (TextView) view.findViewById(R.id.takipciTv);
-        gönderiTv = (TextView) view.findViewById(R.id.gonderi);
+        tvFollowingNum = (TextView) view.findViewById(R.id.tvFollowingNum);
+        tvFollowersNum = (TextView) view.findViewById(R.id.tvFollowersNum);
+        tvMediaNum = (TextView) view.findViewById(R.id.tvMediaNum);
 
-        usersStalkers = (CustomView) view.findViewById(R.id.stalkersUser);
-        usersStalking = (CustomView) view.findViewById(R.id.stalkingUser);
+        customUsersStalkers = (CustomView) view.findViewById(R.id.customUsersStalkers);
+        customUsersStalking = (CustomView) view.findViewById(R.id.customUsersStalking);
+
         tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-
 
     }
 
 
-    private class myAsycnTask extends AsyncTask<String, String, String> {
+    private class userProfilePage extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -100,43 +92,38 @@ public class UserProfile extends Fragment {
 
             InstagramUser userSum = service.getUser(user.getUsername());
 
-
-            Glide.with(getActivity()) //1
+            Glide.with(getActivity())
                     .load(user.getProfile_pic_url()).into(profilPic);
 
-
-            gönderiTv.setText(String.valueOf(userSum.getMedia_count()));
-            takipciTv.setText(String.valueOf(userSum.getFollower_count()));
-            takipTv.setText(String.valueOf(userSum.getFollowing_count()));
-
+            tvMediaNum.setText(String.valueOf(userSum.getMedia_count()));
+            tvFollowersNum.setText(String.valueOf(userSum.getFollower_count()));
+            tvFollowingNum.setText(String.valueOf(userSum.getFollowing_count()));
 
             tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
-
             tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), userSum);
             viewPager.setAdapter(pagerAdapter);
+
             viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
             tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
+
                     viewPager.setCurrentItem(tab.getPosition());
 
                     if (tab.getPosition() == 0) {
 
                         UserMediaFragment userMediaFragment = new UserMediaFragment(userSum);
-
                         FragmentManager manager = getFragmentManager();
                         manager.beginTransaction().replace(R.id.mediaFragment, userMediaFragment).commit();
 
                     }
                     if (tab.getPosition() == 1) {
-                        //new myMediaAsync().execute();
+
                     }
-
-
                 }
 
                 @Override
@@ -161,32 +148,25 @@ public class UserProfile extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-
-            // userMediaFragment.gridView.setAdapter(new ImageAdapter(getActivity(), urlOfUserPhotos));
-            // myMediasFragment.gridView.setAdapter(new ImageAdapter(getActivity(),urlOfMyPhotos));
-
-
-            usersStalkers.setOnClickListener(new View.OnClickListener() {
+            customUsersStalkers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     InstagramConstants.userProfile = false;
-                    SearchFragment fragment = new SearchFragment(stalkers);
+                    SearchFragment fragment = new SearchFragment(userStalkers);
                     FragmentManager manager = getFragmentManager();
-
                     manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
 
                 }
             });
 
-            usersStalking.setOnClickListener(new View.OnClickListener() {
+            customUsersStalking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     InstagramConstants.userProfile = false;
-                    SearchFragment fragment = new SearchFragment(stalking);
+                    SearchFragment fragment = new SearchFragment(userStalking);
                     FragmentManager manager = getFragmentManager();
-
                     manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
 
                 }

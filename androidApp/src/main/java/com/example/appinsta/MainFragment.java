@@ -23,11 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.app.adprogressbarlib.AdCircleProgress;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
