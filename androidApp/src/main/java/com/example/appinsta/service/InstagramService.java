@@ -1,5 +1,6 @@
 package com.example.appinsta.service;
 
+import android.net.Uri;
 import android.widget.LinearLayout;
 
 import java.io.IOException;
@@ -458,27 +459,44 @@ public class InstagramService {
 
 
     }
-    public void getStories(){
+
+    public ArrayList<ArrayList<Uri>> getStories(String username) {
+        ArrayList<ArrayList<Uri>> listUri = new ArrayList<ArrayList<Uri>>();
+        ArrayList<Uri> userStoriesUri = new ArrayList<Uri>();
+        Uri uri = null;
         try {
             InstagramReelsTrayFeedResult result = instagram.sendRequest(new InstagramReelsTrayRequest());
             List<InstagramStoryTray> trays = result.getTray();
             List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
-            for(InstagramStoryTray tray : trays) {
-                if(tray != null) {
+            for (InstagramStoryTray tray : trays) {
+                if (tray != null) {
                     userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk())));
-                    System.out.println("user stories in for loop tray:"+userStories);
                 }
             }
-            for(InstagramUserStoryFeedResult story : userStories) {
-                if(story.getReel() == null) {
+            for (InstagramUserStoryFeedResult story : userStories) {
+                if (story.getReel() == null) {
                     System.out.println("Null check for safety, hardly ever null");
                 } else {
-                    System.out.println(story.getReel().getItems().get(0).getImage_versions2().getCandidates().get(0).getUrl());
+                    if (username.equals(story.getReel().getUser().username)) {
+                        userStoriesUri.clear();
+                        int length = story.getReel().getItems().size();
+                        System.out.println(story.getReel().getUser().username + " adlı kullanıcının " + length + " sayıda hikayesi var");
+                        for (int i = 0; i < length; i++) {
+                            if (story.getReel().getItems().get(i).getVideo_versions() != null) {
+                                uri = Uri.parse(story.getReel().getItems().get(i).getVideo_versions().get(0).getUrl());
+                            } else {
+                                uri = Uri.parse(story.getReel().getItems().get(i).getImage_versions2().getCandidates().get(0).getUrl());
+                            }
+                            userStoriesUri.add(uri);
+                            System.out.println(uri);
+                            listUri.add(userStoriesUri);
+                        }
+                    }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return listUri;
     }
 }

@@ -6,10 +6,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -17,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -156,6 +164,15 @@ public class UserProfile extends Fragment {
 
                 }
             });
+            profilPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent storyIntent=new Intent(getContext(),UserStoryIntent.class);
+                    storyIntent.putExtra("username",user.username);
+                    startActivity(storyIntent);
+
+                }
+            });
 
         }
 
@@ -247,6 +264,7 @@ public class UserProfile extends Fragment {
             });
 
         }
+
     }
     class secAsync extends AsyncTask<String,String,String>{
 

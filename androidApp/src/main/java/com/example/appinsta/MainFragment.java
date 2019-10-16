@@ -4,11 +4,15 @@ package com.example.appinsta;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -16,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -27,7 +33,13 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.service.InstagramService;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,6 +49,7 @@ import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
+import static android.graphics.Color.WHITE;
 import static com.example.appinsta.Compare.compare;
 
 
@@ -72,7 +85,7 @@ public class MainFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-      View view = inflater.inflate(R.layout.main_fragment, container, false);
+        View view = inflater.inflate(R.layout.main_fragment, container, false);
 
         initComponent(view);
         new loginAsynTask().execute();
@@ -102,6 +115,7 @@ public class MainFragment extends Fragment {
         userAction = (CustomView) view.findViewById(R.id.userAction);
         usersStalkers = (CustomView) view.findViewById(R.id.userStalkers);
         usersStalking = (CustomView) view.findViewById(R.id.userStalking);
+
     }
 
 
@@ -137,8 +151,10 @@ public class MainFragment extends Fragment {
 
                 takipTv.setText(String.valueOf(service.myInfo().following_count));
                 takipciTv.setText(String.valueOf(service.myInfo().follower_count));
-                service.getStories();
 
+//                videoView.setVideoURI((Uri) service.getStories().get(0).get(0));
+//                videoView.requestFocus();
+//                videoView.start();
             }
 
         }
