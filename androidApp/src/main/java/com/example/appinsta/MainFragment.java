@@ -151,10 +151,6 @@ public class MainFragment extends Fragment {
 
                 takipTv.setText(String.valueOf(service.myInfo().following_count));
                 takipciTv.setText(String.valueOf(service.myInfo().follower_count));
-
-//                videoView.setVideoURI((Uri) service.getStories().get(0).get(0));
-//                videoView.requestFocus();
-//                videoView.start();
             }
 
         }
