@@ -23,10 +23,6 @@ import com.example.appinsta.R;
 import com.example.appinsta.service.InstagramService;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class UserStoryIntent extends AppCompatActivity {
@@ -54,35 +50,36 @@ public class UserStoryIntent extends AppCompatActivity {
         VideoViewTouchListener();
 
         videoView.setOnTouchListener(new View.OnTouchListener() {
-            float y_down,y_up;
+            float y_down, y_up;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK){
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
-                        y_down=event.getRawY();
+                        y_down = event.getRawY();
                         break;
                     case MotionEvent.ACTION_UP:
-                        y_up=event.getRawY();
+                        y_up = event.getRawY();
                         break;
                 }
-                if (y_down-y_up>500){
+                if (y_down - y_up > 500) {
                     System.out.println("yukarı");
-                }
-                else if (y_up-y_down>500){
+                } else if (y_up - y_down > 500) {
                     System.out.println("aşağı");
                     finish();
-                }
-                else
+                } else
                     VideoViewTouchListener();
                 return true;
             }
         });
+
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 VideoViewTouchListener();
             }
         });
+
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
