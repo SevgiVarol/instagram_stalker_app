@@ -52,11 +52,29 @@ public class UserStoryIntent extends AppCompatActivity {
         listUri = service.getStories(username).get(0);
         seekBar.setMax(listUri.size());
         VideoViewTouchListener();
+
         videoView.setOnTouchListener(new View.OnTouchListener() {
+            float y_down,y_up;
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                VideoViewTouchListener();
-                return false;
+                switch (event.getAction() & MotionEvent.ACTION_MASK){
+                    case MotionEvent.ACTION_DOWN:
+                        y_down=event.getRawY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        y_up=event.getRawY();
+                        break;
+                }
+                if (y_down-y_up>500){
+                    System.out.println("yukarı");
+                }
+                else if (y_up-y_down>500){
+                    System.out.println("aşağı");
+                    finish();
+                }
+                else
+                    VideoViewTouchListener();
+                return true;
             }
         });
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

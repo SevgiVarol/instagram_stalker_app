@@ -3,6 +3,8 @@ package com.example.appinsta;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -32,6 +34,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.appinsta.UserPage.UserStoryIntent;
 import com.example.appinsta.service.InstagramService;
 import com.squareup.picasso.Picasso;
 
@@ -152,6 +155,15 @@ public class MainFragment extends Fragment {
                 takipTv.setText(String.valueOf(service.myInfo().following_count));
                 takipciTv.setText(String.valueOf(service.myInfo().follower_count));
             }
+            profilPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent storyIntent=new Intent(getContext(), UserStoryIntent.class);
+                    storyIntent.putExtra("username",service.myInfo().username);
+                    startActivity(storyIntent);
+
+                }
+            });
 
         }
 
