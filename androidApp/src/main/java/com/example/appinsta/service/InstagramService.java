@@ -59,7 +59,7 @@ public class InstagramService {
     public void login() {
 
         InstagramConstants.log = false;
-        instagram = Instagram4Android.builder().username("simge.keser").password("Com15290107.").build();
+        instagram = Instagram4Android.builder().username("simge.keser").password("Sim152901073854.").build();
 
         instagram.setup();
         try {

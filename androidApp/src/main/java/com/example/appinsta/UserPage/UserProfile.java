@@ -31,10 +31,9 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 
 public class UserProfile extends Fragment {
-
-
+    
     ImageView profilPic;
-    TextView tvFollowingNum, tvFollowersNum, tvMediaNum;
+    TextView tvFollowingCount, tvFollowersCount, tvMediaCount;
     public InstagramUserSummary user;
     CustomView customUsersStalkers, customUsersStalking;
     ViewPager viewPager;
@@ -48,13 +47,11 @@ public class UserProfile extends Fragment {
         // Required empty public constructor
     }
 
-
     @SuppressLint("ValidFragment")
     public UserProfile(InstagramUserSummary user) {
         this.user = user;
 
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,18 +59,17 @@ public class UserProfile extends Fragment {
         View view = inflater.inflate(R.layout.user_profile_page, container, false);
 
         initComponents(view);
-        new userProfilePage().execute();
+        new getUserProfileTask().execute();
 
         return view;
     }
 
-
     private void initComponents(View view) {
 
         profilPic = (CircleImageView) view.findViewById(R.id.profilPic);
-        tvFollowingNum = (TextView) view.findViewById(R.id.tvFollowingNum);
-        tvFollowersNum = (TextView) view.findViewById(R.id.tvFollowersNum);
-        tvMediaNum = (TextView) view.findViewById(R.id.tvMediaNum);
+        tvFollowingCount = (TextView) view.findViewById(R.id.tvFollowingNum);
+        tvFollowersCount = (TextView) view.findViewById(R.id.tvFollowersNum);
+        tvMediaCount = (TextView) view.findViewById(R.id.tvMediaNum);
 
         customUsersStalkers = (CustomView) view.findViewById(R.id.customUsersStalkers);
         customUsersStalking = (CustomView) view.findViewById(R.id.customUsersStalking);
@@ -83,8 +79,7 @@ public class UserProfile extends Fragment {
 
     }
 
-
-    private class userProfilePage extends AsyncTask<String, String, String> {
+    private class getUserProfileTask extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -95,9 +90,9 @@ public class UserProfile extends Fragment {
             Glide.with(getActivity())
                     .load(user.getProfile_pic_url()).into(profilPic);
 
-            tvMediaNum.setText(String.valueOf(userSum.getMedia_count()));
-            tvFollowersNum.setText(String.valueOf(userSum.getFollower_count()));
-            tvFollowingNum.setText(String.valueOf(userSum.getFollowing_count()));
+            tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
+            tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
+            tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
 
             tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
             tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
