@@ -23,7 +23,7 @@
         android:layout_width="match_parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_view"
+            android:id="@+id/userProfilPic"
             android:layout_width="78dp"
             android:layout_height="70dp"
             />
@@ -41,7 +41,7 @@
 
 
                 <TextView
-                    android:id="@+id/text_view_name2"
+                    android:id="@+id/tvUsername"
 
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/text_view_name"
+                    android:id="@+id/tvFullName"
 
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"

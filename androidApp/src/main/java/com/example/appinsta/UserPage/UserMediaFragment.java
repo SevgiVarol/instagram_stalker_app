@@ -46,7 +46,7 @@ public class UserMediaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.user_medias_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_media, container, false);
         gridView = view.findViewById(R.id.userMediasGridView);
         footerLoadingView = view.findViewById(R.id.footerLoadingView);
 

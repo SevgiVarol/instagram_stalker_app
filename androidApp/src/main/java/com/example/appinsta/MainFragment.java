@@ -1,8 +1,6 @@
 package com.example.appinsta;
 
 
-import android.annotation.SuppressLint;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,11 +33,8 @@ import com.example.appinsta.service.InstagramService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dev.niekirk.com.instagram4android.Instagram4Android;
 import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
@@ -95,7 +90,7 @@ public class MainFragment extends Fragment {
         Resources res = getResources();
         drawable = res.getDrawable(R.drawable.circle_shape);
 
-        profilPic = (CircleImageView) view.findViewById(R.id.profilPic);
+        profilPic = (CircleImageView) view.findViewById(R.id.userProfilPic);
         takipTv = (TextView) view.findViewById(R.id.takipTv);
         takipciTv = (TextView) view.findViewById(R.id.takipciTv);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
@@ -127,10 +122,10 @@ public class MainFragment extends Fragment {
 
             mProgress.setVisibility(View.VISIBLE);
 
-            if(!InstagramConstants.log){
+            if(!InstagramConstants.islogged){
 
-                takipTv.setText(String.valueOf(service.myInfo().following_count));
-                takipciTv.setText(String.valueOf(service.myInfo().follower_count));
+                takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
+                takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
 
             }
 
@@ -139,8 +134,12 @@ public class MainFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            if(InstagramConstants.log) {
-                service.login();
+            if(InstagramConstants.islogged) {
+                try {
+                    service.login("simge.keser","Sim15290107.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
                 myFollowers = service.getMyFollowers();
@@ -168,7 +167,7 @@ public class MainFragment extends Fragment {
 
 
             Glide.with(getActivity()) //1
-                    .load(service.myInfo().profile_pic_url).into(profilPic);
+                    .load(service.getLoggedUser().profile_pic_url).into(profilPic);
 
             latestPhoto.setAlpha(0.3f);
 
@@ -182,8 +181,8 @@ public class MainFragment extends Fragment {
                 }
             });
 
-            takipTv.setText(String.valueOf(service.myInfo().following_count));
-            takipciTv.setText(String.valueOf(service.myInfo().follower_count));
+            takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
+            takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
 
             latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
 

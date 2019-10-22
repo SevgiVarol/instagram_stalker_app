@@ -20,10 +20,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.RecyclerViewHolder> implements Filterable {
-    public List<InstagramUserSummary> userList;
-    public List<InstagramUserSummary> userListFull;
-    Context context;
 
+    private List<InstagramUserSummary> userList=null;
+    private Context context;
     private OnListener mListener;
 
     public interface OnListener{
@@ -34,15 +33,15 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView imageView;
-        TextView fullName;
-        TextView username;
+        CircleImageView profilPic;
+        TextView tvFullName;
+        TextView tvUsername;
 
         RecyclerViewHolder(View itemView,OnListener listener) {
             super(itemView);
-            fullName = itemView.findViewById(R.id.text_view_name);
-            username=itemView.findViewById(R.id.text_view_name2);
-            imageView = itemView.findViewById(R.id.image_view);
+            tvFullName = itemView.findViewById(R.id.tvFullName);
+            tvUsername =itemView.findViewById(R.id.tvUsername);
+            profilPic = itemView.findViewById(R.id.userProfilPic);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -56,21 +55,19 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
                 }
             });
 
-
         }
     }
 
-    RecyclerSearch(List<InstagramUserSummary> exampleList,Context context) {
+    RecyclerSearch(List<InstagramUserSummary> userList,Context context) {
 
-        this.userList = exampleList;
-        userListFull = new ArrayList<>(exampleList);
+        this.userList = userList;
         this.context=context;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_tab,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_tab_layout,
                 parent, false);
         return new RecyclerViewHolder(v,mListener);
     }
@@ -78,17 +75,16 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position)  {
 
-        InstagramUserSummary userItem = userList.get(position);
+        InstagramUserSummary user = userList.get(position);
 
         Picasso.with(context)
-                .load(userItem.profile_pic_url)
+                .load(user.profile_pic_url)
                 .fit()
                 .centerCrop()
-                .into(holder.imageView);
+                .into(holder.profilPic);
 
-        holder.fullName.setText(userItem.getFull_name());
-        holder.username.setText(userItem.getUsername());
-
+        holder.tvFullName.setText(user.getFull_name());
+        holder.tvUsername.setText(user.getUsername());
     }
 
 
@@ -108,13 +104,12 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
             List<InstagramUserSummary> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
-                filteredList.addAll(userListFull);
+                filteredList.addAll(userList);
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (InstagramUserSummary item : userListFull) {
+                for (InstagramUserSummary item : userList) {
                     if (item.full_name.toLowerCase().contains(filterPattern) || item.username.toLowerCase().contains(filterPattern)) {
-
                         filteredList.add(item);
                     }
                 }

@@ -2,6 +2,7 @@ package com.example.appinsta.UserPage;
 
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,23 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
+import static com.example.appinsta.Compare.compare;
+
 
 public class UserProfile extends Fragment {
-    
+
     ImageView profilPic;
-    TextView tvFollowingCount, tvFollowersCount, tvMediaCount;
+    TextView tvFollowingCount, tvFollowersCount, tvMediaCount, tvFullname;
     public InstagramUserSummary user;
-    CustomView customUsersStalkers, customUsersStalking;
+    CustomView customViewUserStalkers, customViewUserStalking;
     ViewPager viewPager;
-    List<InstagramUserSummary> userStalking = new ArrayList<>();
-    List<InstagramUserSummary> userStalkers = new ArrayList<>();
+    List<InstagramUserSummary> userStalkingList = new ArrayList<>();
+    List<InstagramUserSummary> userStalkersList = new ArrayList<>();
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
-
 
     public UserProfile() {
         // Required empty public constructor
@@ -51,6 +52,7 @@ public class UserProfile extends Fragment {
     public UserProfile(InstagramUserSummary user) {
         this.user = user;
 
+        // Required empty public constructor
     }
 
     @Override
@@ -58,123 +60,142 @@ public class UserProfile extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.user_profile_page, container, false);
 
-        initComponents(view);
-        new getUserProfileTask().execute();
+       initComponents(view);
+
+        InstagramUser userSum = service.getUser(user.getUsername());
+
+        Glide.with(getActivity()) //1
+                .load(user.getProfile_pic_url()).into(profilPic);
+
+        tvFullname.setText(userSum.getFull_name());
+        tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
+        tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
+        tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
+
+        tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
+        tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        UserProfilePagerAdapter userProfilePagerAdapter = new UserProfilePagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), userSum);
+
+        viewPager.setAdapter(userProfilePagerAdapter);
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        showUserStalkersAndStalking();
 
         return view;
     }
 
     private void initComponents(View view) {
 
-        profilPic = (CircleImageView) view.findViewById(R.id.profilPic);
+        tvFullname = (TextView) view.findViewById(R.id.tvFullname);
+        profilPic = (CircleImageView) view.findViewById(R.id.userProfilPic);
         tvFollowingCount = (TextView) view.findViewById(R.id.tvFollowingNum);
-        tvFollowersCount = (TextView) view.findViewById(R.id.tvFollowersNum);
+        tvFollowersCount =(TextView) view.findViewById(R.id.tvFollowersNum);
         tvMediaCount = (TextView) view.findViewById(R.id.tvMediaNum);
 
-        customUsersStalkers = (CustomView) view.findViewById(R.id.customUsersStalkers);
-        customUsersStalking = (CustomView) view.findViewById(R.id.customUsersStalking);
+        customViewUserStalkers = (CustomView) view.findViewById(R.id.customViewUsersStalkers);
+        customViewUserStalking = (CustomView) view.findViewById(R.id.customViewUsersStalkings);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
 
     }
+    private void showUserStalkersAndStalking() {
 
-    private class getUserProfileTask extends AsyncTask<String, String, String> {
+        customViewUserStalkers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new userStalkersTask().execute();
+
+            }
+        });
+
+        customViewUserStalking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new userStalkingTask().execute();
+            }
+        });
+    }
+
+    private class userStalkingTask extends AsyncTask<String, String, String> {
+
+        private ProgressDialog pd;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            InstagramUser userSum = service.getUser(user.getUsername());
-
-            Glide.with(getActivity())
-                    .load(user.getProfile_pic_url()).into(profilPic);
-
-            tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
-            tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
-            tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
-
-            tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
-            tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
-
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), userSum);
-            viewPager.setAdapter(pagerAdapter);
-
-            viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-            tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-
-                    viewPager.setCurrentItem(tab.getPosition());
-
-                    if (tab.getPosition() == 0) {
-
-                        UserMediaFragment userMediaFragment = new UserMediaFragment(userSum);
-                        FragmentManager manager = getFragmentManager();
-                        manager.beginTransaction().replace(R.id.mediaFragment, userMediaFragment).commit();
-
-                    }
-                    if (tab.getPosition() == 1) {
-
-                    }
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                }
-            });
+            pd = new ProgressDialog(getContext());
+            pd.setMessage("geri takip etmedikleri yükleniyor...");
+            pd.show();
 
         }
+
 
         @Override
         protected String doInBackground(String... strings) {
 
+            if (userStalkingList.isEmpty()) {
+                userStalkingList = compare(service.getFollowers(user.getPk()), service.getFollowing(user.getPk()));
+            }
             return null;
+
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-
-            customUsersStalkers.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    InstagramConstants.userProfile = false;
-                    SearchFragment fragment = new SearchFragment(userStalkers);
-                    FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
-
-                }
-            });
-
-            customUsersStalking.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    InstagramConstants.userProfile = false;
-                    SearchFragment fragment = new SearchFragment(userStalking);
-                    FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
-
-                }
-            });
+            pd.dismiss();
+            SearchFragment fragment = new SearchFragment(userStalkingList);
+            FragmentManager manager = getFragmentManager();
+            manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
 
         }
     }
 
+    private class userStalkersTask extends AsyncTask<String, String, String> {
 
-   /* class myMediaAsync extends AsyncTask<String, String, String> {
 
         private ProgressDialog pd;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(getContext());
+            pd.setMessage("geri takip etmeyenler yükleniyor...");
+            pd.show();
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            if (userStalkersList.isEmpty()) {
+                userStalkersList = compare(service.getFollowing(user.getPk()), service.getFollowers(user.getPk()));
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            pd.dismiss();
+            SearchFragment fragment = new SearchFragment(userStalkersList);
+            FragmentManager manager = getFragmentManager();
+            manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
+        }
+    }
+
+}
+
+
+   /*class myMediaAsync extends AsyncTask<String, String, String> {
+
+        private ProgressDialog pd;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -189,10 +210,12 @@ public class UserProfile extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
+            media = service.urlOfMyPhotos(user.getUsername());
 
             if (urlOfMyPhotos.size() == 0) {
                 myMedia = service.urlOfMyPhotos(user.getUsername());
 
+            for (int i = 0; i < media.size(); i++) {
 
                 for (int i = 0; i < myMedia.size(); i++) {
 
@@ -204,7 +227,6 @@ public class UserProfile extends Fragment {
                 }
             }
             return null;
-
         }
 
         @Override
@@ -216,5 +238,3 @@ public class UserProfile extends Fragment {
 
         }
     }*/
-
-}

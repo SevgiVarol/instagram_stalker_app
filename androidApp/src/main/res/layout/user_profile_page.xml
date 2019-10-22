@@ -31,7 +31,7 @@
     <LinearLayout
         android:id="@+id/cardViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="120dp"
         android:orientation="horizontal"
 
         >
@@ -49,14 +49,14 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
 
-                android:id="@+id/profilPic"
+                android:id="@+id/userProfilPic"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
 
                 android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginRight="4dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -146,6 +146,22 @@
     </LinearLayout>
 
         <LinearLayout
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvFullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:orientation="horizontal">
@@ -157,15 +173,15 @@
                 android:layout_weight="1">
 
                 <com.example.appinsta.CustomView
-                    android:id="@+id/customUsersStalkers"
+                    android:id="@+id/customViewUsersStalkers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:paddingLeft="3dp"
                     android:paddingTop="3dp"
                     android:paddingRight="3dp"
                     android:paddingBottom="3dp"
                     app:Condition="Geri takip etmedikleri"
-                    app:Number="0">
+                    >
 
 
                 </com.example.appinsta.CustomView>
@@ -178,15 +194,15 @@
                 android:layout_weight="1">
 
                 <com.example.appinsta.CustomView
-                    android:id="@+id/customUsersStalking"
+                    android:id="@+id/customViewUsersStalkings"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="62dp"
                     android:paddingLeft="3dp"
                     android:paddingTop="3dp"
                     android:paddingRight="3dp"
                     android:paddingBottom="3dp"
                     app:Condition="Geri takip etmeyenler"
-                    app:Number="0">
+                   >
 
 
                 </com.example.appinsta.CustomView>

@@ -102,7 +102,7 @@
 
                                 <de.hdodenhof.circleimageview.CircleImageView
 
-                                    android:id="@+id/profilPic"
+                                    android:id="@+id/userProfilPic"
                                     android:layout_width="60dp"
                                     android:layout_height="60dp"
 

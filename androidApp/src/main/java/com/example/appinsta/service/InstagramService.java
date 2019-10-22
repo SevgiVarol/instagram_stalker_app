@@ -1,5 +1,7 @@
 package com.example.appinsta.service;
 
+import android.widget.LinearLayout;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetMediaLikersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetStoryViewersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetUserFollowersResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
@@ -32,10 +35,11 @@ public class InstagramService {
     List<InstagramUserSummary> myFollowing = new ArrayList<>();
     List<InstagramUserSummary> myMediaLikers = new ArrayList<>();
 
+
     private List<InstagramUser> storyViewers = null;
     List<InstagramFeedItem> myMedia = new ArrayList<>();
 
-    private List<InstagramFeedItem> story=null;
+    private List<InstagramFeedItem> story = null;
 
     InstagramFeedResult userFeedResult = null;
     InstagramFeedResult myUserFeedResult = null;
@@ -56,50 +60,20 @@ public class InstagramService {
     }
 
 
-    public void login() {
+    public InstagramLoginResult login(String username, String password) throws IOException {
 
-        InstagramConstants.log = false;
-        instagram = Instagram4Android.builder().username("simge.keser").password("Sim152901073854.").build();
+
+        InstagramConstants.islogged = false;
+        instagram = Instagram4Android.builder().username(username).password(password).build();
 
         instagram.setup();
-        try {
-            instagram.login();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return instagram.login();
     }
 
     public InstagramService(Instagram4Android instagram) {
         this.instagram = instagram;
     }
 
-    public InstagramUser myInfo() {
-
-        InstagramSearchUsernameResult result = null;
-        try {
-            result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return result.getUser();
-
-    }
-
-    public InstagramUser getUser(String username) {
-
-        InstagramSearchUsernameResult result = null;
-        try {
-            result = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return result.getUser();
-
-    }
 
     public List<InstagramUserSummary> getFollowers(long pk) {
 
@@ -216,6 +190,34 @@ public class InstagramService {
     }
 
 
+    public InstagramUser getUser(String username) {
+
+        InstagramSearchUsernameResult result = null;
+        try {
+            result = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result.getUser();
+
+    }
+
+    public InstagramUser getLoggedUser() {
+
+        InstagramSearchUsernameResult result = null;
+        try {
+            result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result.getUser();
+
+    }
+
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
 
         if (storyViewers != null) {
@@ -310,21 +312,17 @@ public class InstagramService {
     }
 
 
-
-
     public List<InstagramFeedItem> getMyMedias() {
 
 
-        if (!myMedia.isEmpty())
-            return myMedia;
-
+        if (!myMedia.isEmpty()) return myMedia;
         else {
             String nextMaxId = null;
 
-          do {
+            do {
 
                 try {
-                    myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), nextMaxId,0));
+                    myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), nextMaxId, 0));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -351,13 +349,51 @@ public class InstagramService {
 
 
     public InstagramFeedItem myMedia(int mediaIndex) {
-        return getMyMedias().get(mediaIndex);
+        if (!getMyMedias().isEmpty()) {
+            return getMyMedias().get(mediaIndex);
+        } else {
+            return null;
+        }
     }
 
 
     public List<InstagramUserSummary> getMediaLikers(long mediaId) {
 
-            List<InstagramUserSummary> mediaLikers = new ArrayList<>();
+        List<InstagramUserSummary> mediaLikers = new ArrayList<>();
+
+        InstagramGetMediaLikersResult getMediaLikersResult = null;
+
+        String nextMaxId = null;
+        do {
+
+            try {
+
+
+                getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
+                for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
+                    mediaLikers.add(user);
+
+                }
+            }
+            nextMaxId =myUserFeedResult.getNext_max_id();
+        } while (nextMaxId != null);
+
+        return mediaLikers;
+
+
+    }
+
+    public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
+
+        if (!myMediaLikers.isEmpty()) {
+            return myMediaLikers;
+        } else {
 
             InstagramGetMediaLikersResult getMediaLikersResult = null;
 
@@ -375,77 +411,44 @@ public class InstagramService {
                 }
                 if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
                     for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
-                        mediaLikers.add(user);
+                        myMediaLikers.add(user);
 
                     }
                 }
-                nextMaxId =myUserFeedResult.getNext_max_id();
+                nextMaxId = myUserFeedResult.getNext_max_id();
             } while (nextMaxId != null);
 
-            return mediaLikers;
-
-
-    }
-    public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
-
-       if(!myMediaLikers.isEmpty()){
-           return myMediaLikers;
-       }else {
-
-           InstagramGetMediaLikersResult getMediaLikersResult = null;
-
-           String nextMaxId = null;
-           do {
-
-               try {
-
-
-                   getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
-
-
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-               if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
-                   for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
-                       myMediaLikers.add(user);
-
-                   }
-               }
-               nextMaxId = myUserFeedResult.getNext_max_id();
-           } while (nextMaxId != null);
-
-           return myMediaLikers;
-       }
+            return myMediaLikers;
+        }
 
     }
 
 
-    public List<InstagramFeedItem> urlOfMyPhotos(String username) {
+    public List<InstagramFeedItem> getMyLikedMediaByUser(String username) {
 
 
-            List<InstagramFeedItem> likedMediaList = new ArrayList<>();
-            List<InstagramUserSummary> medialikers = new ArrayList<>();
+        List<InstagramFeedItem> likedMediaList = new ArrayList<>();
+        List<InstagramUserSummary> medialikers = new ArrayList<>();
 
             int mediaNum = getMyMedias().size();
 
-            for (int i = 0; i < mediaNum; i++) {
+        for (int i = 0; i < mediaNum; i++) {
 
-                long mediaId = myMedia(i).getPk();
-                medialikers= getMediaLikers(mediaId);
+            long mediaId = myMedia(i).getPk();
+            medialikers = getMediaLikers(mediaId);
 
-                for ( int j =0 ; j < medialikers.size(); j++) {
+            for (int j = 0; j < medialikers.size(); j++) {
 
-                    if (username.equals(medialikers.get(j).username)) {
+                if (username.equals(medialikers.get(j).username)) {
 
-                        likedMediaList.add(myMedia(i));
+                    likedMediaList.add(myMedia(i));
 
-                    }
                 }
-
             }
 
-            return likedMediaList;
+        }
+
+        return likedMediaList;
 
 
     }
