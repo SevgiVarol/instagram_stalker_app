@@ -12,20 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-      <!--  <activity android:name=".Login.LoginPage">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>-->
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+<activity
+           android:name=".LoginPage"
+           android:theme="@style/Theme.AppCompat.NoActionBar">
+           <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>
+       <activity
+           android:name=".MainActivity"
+           android:theme="@style/Theme.AppCompat.NoActionBar">
+           <intent-filter>
+              <action android:name="com.example.appinsta.Login.LoginPage"/>
+              <category android:name="android.intent.category.LAUNCHER" />
+           </intent-filter>
+       </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
