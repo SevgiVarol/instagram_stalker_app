@@ -6,15 +6,12 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -22,10 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -34,15 +29,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.appinsta.MediaLog.MediaLogs;
 import com.example.appinsta.UserPage.UserStoryIntent;
 import com.example.appinsta.service.InstagramService;
-import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,7 +43,6 @@ import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
-import static android.graphics.Color.WHITE;
 import static com.example.appinsta.Compare.compare;
 
 
@@ -69,7 +59,7 @@ public class MainFragment extends Fragment {
     CustomView mutedStory, latestPhotoLikers, storyStalkers, photoStalkers, usersStalkers, usersStalking, userAction;
 
 
-    EditText editText ;
+    EditText editText;
     ImageView profilPic, latestPhoto;
     TextView takipTv, takipciTv;
 
@@ -77,11 +67,13 @@ public class MainFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     AdCircleProgress mProgress = null;
     Drawable drawable = null;
-    InstagramService service=InstagramService.getInstance();
+    InstagramService service = InstagramService.getInstance();
     private Handler mHandler = new Handler();
     private int i = 0;
+    ArrayList<Uri> listUri;
 
-   public static long pk;
+    public static long pk;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragmentStrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -122,17 +114,14 @@ public class MainFragment extends Fragment {
     }
 
 
-
-
-
     private class loginAsynTask extends AsyncTask<String, String, String> {
 
-        List<InstagramUserSummary> mediaLikers, myFollowers, myFollowing,myStalkers,myStalking;
+        List<InstagramUserSummary> mediaLikers, myFollowers, myFollowing, myStalkers, myStalking;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            listUri = service.getStories(service.myInfo().username);
 
 
             final Timer t = new Timer();
@@ -142,7 +131,6 @@ public class MainFragment extends Fragment {
                         public void run() {
 
 
-
                             mProgress.setAdProgress(i);
                             i++;
                         }
@@ -150,7 +138,7 @@ public class MainFragment extends Fragment {
                 }
             }, 0, 120);
 
-            if(!InstagramConstants.log){
+            if (!InstagramConstants.log) {
 
                 takipTv.setText(String.valueOf(service.myInfo().following_count));
                 takipciTv.setText(String.valueOf(service.myInfo().follower_count));
@@ -159,10 +147,12 @@ public class MainFragment extends Fragment {
             profilPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent storyIntent=new Intent(getContext(), UserStoryIntent.class);
-                    storyIntent.putExtra("username",service.myInfo().username);
-                    startActivity(storyIntent);
-
+                    Intent storyIntent = new Intent(getContext(), UserStoryIntent.class);
+                    Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
+                    mediaLogIntent.putExtra("listUri", listUri);
+                    if (listUri!=null) {
+                        startActivity(mediaLogIntent);
+                    }
                 }
             });
 
@@ -177,19 +167,16 @@ public class MainFragment extends Fragment {
             }*/
 
 
+            myFollowers = service.getMyFollowers();
+            myFollowing = service.getMyFollowing();
 
-                myFollowers = service.getMyFollowers();
-                myFollowing = service.getMyFollowing();
-
-                if (service.myMedia(0) != null){
+            if (service.myMedia(0) != null) {
                 mediaLikers = compare(myFollowers, service.getMyMediaLikers(service.myMedia(0).pk));
-                pk=InstagramService.instagram.getUserId();}
+                pk = InstagramService.instagram.getUserId();
+            }
 
-                myStalking = compare(myFollowers, myFollowing);
-                myStalkers = compare(myFollowing, myFollowers);
-
-
-
+            myStalking = compare(myFollowers, myFollowing);
+            myStalkers = compare(myFollowing, myFollowers);
 
 
             return null;
@@ -202,29 +189,29 @@ public class MainFragment extends Fragment {
             mProgress.setVisibility(View.GONE);
 
 
-
             Glide.with(getActivity()) //1
                     .load(service.myInfo().profile_pic_url).into(profilPic);
 
             latestPhoto.setAlpha(0.3f);
 
-            if (service.myMedia(0) != null){
-            Glide.with(getActivity()).load(service.myMedia( 0).image_versions2.candidates.get(0).url).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
-                @Override
-                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (service.myMedia(0) != null) {
+                Glide.with(getActivity()).load(service.myMedia(0).image_versions2.candidates.get(0).url).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
-                        latestPhoto.setBackground(resource);
+                            latestPhoto.setBackground(resource);
+                        }
                     }
-                }
-            });}
+                });
+            }
 
             takipTv.setText(String.valueOf(service.myInfo().following_count));
             takipciTv.setText(String.valueOf(service.myInfo().follower_count));
 
-            if (mediaLikers!=null){
-            latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));}
-            else latestPhotoLikers.setNumberText(String.valueOf(0));
+            if (mediaLikers != null) {
+                latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
+            } else latestPhotoLikers.setNumberText(String.valueOf(0));
 
             usersStalkers.setNumberText(String.valueOf(myStalkers.size()));
             usersStalking.setNumberText(String.valueOf(myStalking.size()));
@@ -232,8 +219,8 @@ public class MainFragment extends Fragment {
             takipciTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SearchFragment mainFragment= new SearchFragment(myFollowers);
-                    FragmentManager manager= getFragmentManager();
+                    SearchFragment mainFragment = new SearchFragment(myFollowers);
+                    FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
@@ -241,8 +228,8 @@ public class MainFragment extends Fragment {
             latestPhotoLikers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SearchFragment mainFragment= new SearchFragment(mediaLikers);
-                    FragmentManager manager= getFragmentManager();
+                    SearchFragment mainFragment = new SearchFragment(mediaLikers);
+                    FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
@@ -250,8 +237,8 @@ public class MainFragment extends Fragment {
             takipTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SearchFragment mainFragment= new SearchFragment(myFollowing);
-                    FragmentManager manager= getFragmentManager();
+                    SearchFragment mainFragment = new SearchFragment(myFollowing);
+                    FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
@@ -259,16 +246,16 @@ public class MainFragment extends Fragment {
             usersStalkers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SearchFragment mainFragment= new SearchFragment(myStalkers);
-                    FragmentManager manager= getFragmentManager();
+                    SearchFragment mainFragment = new SearchFragment(myStalkers);
+                    FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
             usersStalking.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SearchFragment mainFragment= new SearchFragment(myStalking);
-                    FragmentManager manager= getFragmentManager();
+                    SearchFragment mainFragment = new SearchFragment(myStalking);
+                    FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
@@ -289,7 +276,6 @@ public class MainFragment extends Fragment {
 
         }
     }
-
 
 
 }

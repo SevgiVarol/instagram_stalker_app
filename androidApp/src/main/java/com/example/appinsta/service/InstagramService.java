@@ -460,8 +460,7 @@ public class InstagramService {
 
     }
 
-    public ArrayList<ArrayList<Uri>> getStories(String username) {
-        ArrayList<ArrayList<Uri>> listUri = new ArrayList<ArrayList<Uri>>();
+    public ArrayList<Uri> getStories(String username) {
         ArrayList<Uri> userStoriesUri = new ArrayList<Uri>();
         Uri uri = null;
         try {
@@ -488,15 +487,14 @@ public class InstagramService {
                                 uri = Uri.parse(story.getReel().getItems().get(i).getImage_versions2().getCandidates().get(0).getUrl());
                             }
                             userStoriesUri.add(uri);
-                            System.out.println(uri);
-                            listUri.add(userStoriesUri);
                         }
+                        break;
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return listUri;
+        return userStoriesUri;
     }
 }
