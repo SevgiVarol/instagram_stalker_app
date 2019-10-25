@@ -122,7 +122,7 @@ public class MainFragment extends Fragment {
 
             mProgress.setVisibility(View.VISIBLE);
 
-            if(!InstagramConstants.islogged){
+            if(InstagramConstants.islogged){
 
                 takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
                 takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
@@ -134,7 +134,7 @@ public class MainFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            if(InstagramConstants.islogged) {
+            if(!InstagramConstants.islogged) {
                 try {
                     service.login("simge.keser","Sim15290107.");
                 } catch (IOException e) {

@@ -19,7 +19,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
-public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.RecyclerViewHolder> implements Filterable {
+public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.RecyclerViewHolder> implements Filterable {
 
     private List<InstagramUserSummary> userList=null;
     private Context context;
@@ -58,7 +58,7 @@ public class RecyclerSearch extends RecyclerView.Adapter<RecyclerSearch.Recycler
         }
     }
 
-    RecyclerSearch(List<InstagramUserSummary> userList,Context context) {
+    UserListAdapter(List<InstagramUserSummary> userList, Context context) {
 
         this.userList = userList;
         this.context=context;

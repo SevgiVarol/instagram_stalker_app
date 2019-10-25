@@ -17,7 +17,7 @@ public class InstagramSearchUsersRequest extends InstagramGetRequest<InstagramSe
 
     @Override
     public String getUrl() {
-        return "users/search_tab/?ig_sig_key_version=" + InstagramConstants.API_KEY_VERSION
+        return "users/search/?ig_sig_key_version=" + InstagramConstants.API_KEY_VERSION
                 + "&is_typeahead=true&query="+ query + "&rank_token=" + api.getRankToken();
     }
 

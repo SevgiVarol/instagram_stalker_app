@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.SearchView;
 
@@ -25,16 +24,15 @@ import com.example.appinsta.UserPage.UserProfile;
 
 import java.util.List;
 
-import dev.niekirk.com.instagram4android.Instagram4Android;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements RecyclerSearch.OnListener {
+public class SearchFragment extends Fragment implements UserListAdapter.OnListener {
 
-    private RecyclerSearch adapter;
+    private UserListAdapter adapter;
     List<InstagramUserSummary> userList;
     EditText searchEdit;
 
@@ -87,13 +85,13 @@ public class SearchFragment extends Fragment implements RecyclerSearch.OnListene
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 
         if (userList != null) {
-            adapter = new RecyclerSearch(userList, getActivity());
+            adapter = new UserListAdapter(userList, getActivity());
 
 
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
 
-            adapter.setOnItemClickListener(new RecyclerSearch.OnListener() {
+            adapter.setOnItemClickListener(new UserListAdapter.OnListener() {
                 @Override
                 public void onClick(int position) {
 

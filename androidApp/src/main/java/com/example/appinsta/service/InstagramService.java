@@ -63,7 +63,7 @@ public class InstagramService {
     public InstagramLoginResult login(String username, String password) throws IOException {
 
 
-        InstagramConstants.islogged = false;
+        InstagramConstants.islogged = true;
         instagram = Instagram4Android.builder().username(username).password(password).build();
 
         instagram.setup();

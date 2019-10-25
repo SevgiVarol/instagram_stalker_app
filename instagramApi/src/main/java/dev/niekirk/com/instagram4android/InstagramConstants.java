@@ -6,7 +6,7 @@ package dev.niekirk.com.instagram4android;
 
 public class InstagramConstants {
 
-    public static boolean islogged=true;
+    public static boolean islogged=false;
     public static boolean userProfile=true;
     public static final String ASD = "ASD";
     

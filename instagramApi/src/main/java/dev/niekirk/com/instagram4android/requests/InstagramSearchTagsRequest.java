@@ -17,7 +17,7 @@ public class InstagramSearchTagsRequest extends InstagramGetRequest<InstagramSea
 
     @Override
     public String getUrl() {
-        return "tags/search_tab/?is_typeahead=true&q="+ query + "&rank_token=" + api.getRankToken();
+        return "tags/search/?is_typeahead=true&q="+ query + "&rank_token=" + api.getRankToken();
     }
 
     @Override
