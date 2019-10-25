@@ -30,8 +30,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.service.InstagramService;
-
-import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -54,8 +52,6 @@ public class MainFragment extends Fragment {
 
     CustomView mutedStory, latestPhotoLikers, storyStalkers, photoStalkers, usersStalkers, usersStalking, userAction;
 
-
-    EditText editText ;
     ImageView profilPic, latestPhoto;
     TextView takipTv, takipciTv;
 
@@ -64,8 +60,6 @@ public class MainFragment extends Fragment {
     ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service=InstagramService.getInstance();
-    private Handler mHandler = new Handler();
-    private int i = 0;
 
    public static long pk;
     @Override
@@ -74,8 +68,7 @@ public class MainFragment extends Fragment {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-      View view = inflater.inflate(R.layout.main_fragment, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        View view = inflater.inflate(R.layout.main_fragment, container, false);
 
         initComponent(view);
         new loginAsynTask().execute();
@@ -139,8 +132,6 @@ public class MainFragment extends Fragment {
 
             }*/
 
-
-
                 myFollowers = service.getMyFollowers();
                 myFollowing = service.getMyFollowing();
 
@@ -150,10 +141,6 @@ public class MainFragment extends Fragment {
 
                 myStalking = compare(myFollowers, myFollowing);
                 myStalkers = compare(myFollowing, myFollowers);
-
-
-
-
 
             return null;
 
@@ -235,20 +222,6 @@ public class MainFragment extends Fragment {
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
-
-
-
-
-            /*mutedStory.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SearchFragment fragment = new SearchFragment(finalObjs);
-                    FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
-                }
-            });
-*/
-
 
         }
     }
