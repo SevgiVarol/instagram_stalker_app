@@ -20,11 +20,9 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
-
-            MainFragment mainFragment= new MainFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
+        MainFragment mainFragment= new MainFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.linearLayout, mainFragment).commit();
 
     }
 
