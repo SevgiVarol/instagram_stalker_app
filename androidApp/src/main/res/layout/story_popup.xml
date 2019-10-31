@@ -17,12 +17,12 @@
         android:layout_height="match_parent"
         android:visibility="invisible" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
+    <jp.shts.android.storiesprogressview.StoriesProgressView
+        android:id="@+id/stories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:thumb="@android:color/transparent"
+        android:layout_height="2dp"
+        android:layout_marginTop="8dp"
+        android:background="#009688"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

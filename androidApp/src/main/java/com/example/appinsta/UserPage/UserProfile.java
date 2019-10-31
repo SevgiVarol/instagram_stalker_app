@@ -68,6 +68,7 @@ public class UserProfile extends Fragment {
     public final static ArrayList<String> urlOfMyPhotos = new ArrayList<>();
     TabLayout tabLayout;
     ArrayList<Uri> listUri;
+    List<InstagramFeedItem> stories;
 
     public UserProfile() {
         // Required empty public constructor
@@ -167,7 +168,7 @@ public class UserProfile extends Fragment {
                 public void onClick(View v) {
                     Intent storyIntent = new Intent(getContext(), UserStoryIntent.class);
                     storyIntent.putExtra("listUri", listUri);
-                    if (listUri!=null) {
+                    if (listUri!=null &listUri.size()!=0) {
                         startActivity(storyIntent);
                     }
                 }

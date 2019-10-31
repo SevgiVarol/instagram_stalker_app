@@ -9,10 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import com.example.appinsta.R;
 
-public class MyUserPager extends PagerAdapter {
+public class StoryUserPagerAdapter extends PagerAdapter {
     private Context context;
 
-    public MyUserPager(Context context) {
+    public StoryUserPagerAdapter(Context context) {
         this.context = context;
     }
 

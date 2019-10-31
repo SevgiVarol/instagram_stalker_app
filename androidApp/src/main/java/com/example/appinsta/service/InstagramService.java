@@ -225,9 +225,6 @@ public class InstagramService {
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
 
-        if (storyViewers != null) {
-            return storyViewers;
-        } else {
             InstagramUserStoryFeedResult story = null;
             InstagramGetStoryViewersResult userStoryViewers = null;
 
@@ -250,7 +247,6 @@ public class InstagramService {
             }
             storyViewers = userStoryViewers.getUsers();
             return storyViewers;
-        }
 
     }
 
@@ -259,22 +255,22 @@ public class InstagramService {
         if (story != null) {
             return story;
         } else {
+            story=new ArrayList<>();
             InstagramUserStoryFeedResult storyFeedResult = null;
 
             try {
                 storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
             } catch (IOException e) {
                 e.printStackTrace();
-
-                if (userFeedResult.getItems() != null && !userFeedResult.getItems().isEmpty()) {
-                    for (InstagramFeedItem item : userFeedResult.getItems()) {
-                        story.add(item);
-
-                    }
-                }
-
             }
-            story = storyFeedResult.getReel().getItems();
+            if (storyFeedResult.getReel() != null ) {
+                if (storyFeedResult.getReel().getItems() != null && !storyFeedResult.getReel().getItems().isEmpty()) {
+                for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
+                    story.add(item);
+
+                }}
+            }
+            //story = storyFeedResult.getReel().getItems();
             if (storyFeedResult.getReel() != null) {
                 return story;
             } else return null;

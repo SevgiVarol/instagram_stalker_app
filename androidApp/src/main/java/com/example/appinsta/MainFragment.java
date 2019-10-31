@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.MediaLog.MediaLogs;
-import com.example.appinsta.UserPage.UserStoryIntent;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -40,6 +41,7 @@ import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.InstagramConstants;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
@@ -71,6 +73,8 @@ public class MainFragment extends Fragment {
     private Handler mHandler = new Handler();
     private int i = 0;
     ArrayList<Uri> listUri;
+    ArrayList<String> storyIds;
+    List<InstagramFeedItem> stories;
 
     public static long pk;
 
@@ -121,7 +125,23 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            listUri = service.getStories(service.myInfo().username);
+            stories = service.getStories(service.myInfo().pk);
+            listUri=new ArrayList<>();
+            storyIds =new ArrayList<>();
+            try {
+                for (int i = 0; i < stories.size(); i++) {
+                    if (stories.get(i).getVideo_versions() != null) {
+                        listUri.add(Uri.parse(stories.get(i).getVideo_versions().get(0).getUrl()));
+                    } else {
+                        listUri.add(Uri.parse(stories.get(i).getImage_versions2().getCandidates().get(0).getUrl()));
+                    }
+                    storyIds.add(String.valueOf(stories.get(i).pk));
+                }
+            }catch (Exception e){
+                Log.e("null object reference",e.getMessage());
+            }
+
+
 
 
             final Timer t = new Timer();
@@ -147,10 +167,14 @@ public class MainFragment extends Fragment {
             profilPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent storyIntent = new Intent(getContext(), UserStoryIntent.class);
+                    long userid= service.myInfo().pk;
                     Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
                     mediaLogIntent.putExtra("listUri", listUri);
-                    if (listUri!=null) {
+                    mediaLogIntent.putExtra("userId", userid);
+                    mediaLogIntent.putExtra("storyIds", storyIds);
+                    mediaLogIntent.putExtra("followers", (Serializable) myFollowers);
+
+                    if (listUri!=null & listUri.size()!=0) {
                         startActivity(mediaLogIntent);
                     }
                 }
