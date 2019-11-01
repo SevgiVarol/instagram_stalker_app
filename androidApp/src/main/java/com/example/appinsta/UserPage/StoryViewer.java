@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
-public class UserStoryIntent extends AppCompatActivity implements StoriesProgressView.StoriesListener {
+public class StoryViewer extends AppCompatActivity implements StoriesProgressView.StoriesListener {
     public int storyCount = 0, storyCountForVideo = 0,oldStoryCount=0;
     public int videoDuration;
     VideoView videoView;

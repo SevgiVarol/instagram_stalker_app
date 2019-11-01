@@ -29,7 +29,7 @@
            </intent-filter>
        </activity>
         <activity
-            android:name=".UserPage.UserStoryIntent"
+            android:name=".UserPage.StoryViewer"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />

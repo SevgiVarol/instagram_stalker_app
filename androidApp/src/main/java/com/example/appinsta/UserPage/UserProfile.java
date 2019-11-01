@@ -7,28 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -41,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import dev.niekirk.com.instagram4android.InstagramConstants;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
@@ -239,7 +227,7 @@ public class UserProfile extends Fragment {
         @Override
         protected void onPostExecute(String s){
             cycleProgressBar.setIndeterminate(false);
-            Intent storyIntent = new Intent(getContext(), UserStoryIntent.class);
+            Intent storyIntent = new Intent(getContext(), StoryViewer.class);
             storyIntent.putExtra("listUri", listUri);
             if (listUri!=null &listUri.size()!=0) {
                 startActivity(storyIntent);
