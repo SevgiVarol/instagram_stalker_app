@@ -1,7 +1,6 @@
 package com.example.appinsta;
 
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -71,7 +69,7 @@ public class MainFragment extends Fragment {
     ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service = InstagramService.getInstance();
-    ArrayList<Uri> listUri;
+    ArrayList<Uri> storyUrlList;
     ArrayList<String> storyIds;
     List<InstagramFeedItem> stories;
 
@@ -126,14 +124,14 @@ public class MainFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             stories = service.getStories(service.getLoggedUser().pk);
-            listUri=new ArrayList<>();
+            storyUrlList =new ArrayList<>();
             storyIds =new ArrayList<>();
             try {
                 for (int counter = 0; counter < stories.size(); counter++) {
                     if (stories.get(counter).getVideo_versions() != null) {
-                        listUri.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
+                        storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
                     } else {
-                        listUri.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                        storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
                     }
                     storyIds.add(String.valueOf(stories.get(counter).pk));
                 }
@@ -157,12 +155,12 @@ public class MainFragment extends Fragment {
 
                     long userid= service.getLoggedUser().pk;
                     Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
-                    mediaLogIntent.putExtra("listUri", listUri);
+                    mediaLogIntent.putExtra("storyUrlList", storyUrlList);
                     mediaLogIntent.putExtra("userId", userid);
                     mediaLogIntent.putExtra("storyIds", storyIds);
                     mediaLogIntent.putExtra("followers", (Serializable) myFollowers);
 
-                    if (listUri!=null & listUri.size()!=0) {
+                    if (storyUrlList !=null & storyUrlList.size()!=0) {
 
                         startActivity(mediaLogIntent);
                     }

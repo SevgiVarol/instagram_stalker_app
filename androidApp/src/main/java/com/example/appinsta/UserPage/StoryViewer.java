@@ -1,10 +1,7 @@
 package com.example.appinsta.UserPage;
 
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +9,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.Nullable;
@@ -32,7 +28,7 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
     public int videoDuration;
     VideoView videoView;
     ImageView storyImageView;
-    ArrayList<Uri> listUri;
+    ArrayList<Uri> storyUrlList;
     int duration;
     private StoriesProgressView storiesProgressView;
     InstagramService service = InstagramService.getInstance();
@@ -46,9 +42,9 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
         storyImageView = findViewById(R.id.storyImageView);
 
         Intent intent = getIntent();
-        listUri = (ArrayList<Uri>) intent.getSerializableExtra("listUri");
+        storyUrlList = (ArrayList<Uri>) intent.getSerializableExtra("storyUrlList");
         storiesProgressView = (StoriesProgressView) findViewById(R.id.stories);
-        storiesProgressView.setStoriesCount(listUri.size()); // <- set stories
+        storiesProgressView.setStoriesCount(storyUrlList.size()); // <- set stories
         storiesProgressView.setStoriesListener(this); // <- set listener
         VideoViewTouchListener();
 
@@ -107,11 +103,11 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
     }
 
     private void VideoViewTouchListener() {
-        if (storyCount < listUri.size() & storyCount >= 0) {
+        if (storyCount < storyUrlList.size() & storyCount >= 0) {
             oldStoryCount=storyCount;
             Picasso
                     .with(getApplicationContext())
-                    .load((listUri.get(storyCount)).toString())
+                    .load((storyUrlList.get(storyCount)).toString())
                     .into(storyImageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -127,7 +123,7 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
                         public void onError() {
                             storyCountForVideo = storyCount;
                             storyImageView.setVisibility(View.INVISIBLE);
-                            videoView.setVideoURI(listUri.get(storyCount));
+                            videoView.setVideoURI(storyUrlList.get(storyCount));
                             videoView.requestFocus();
                             videoView.start();
                             storyCount++;

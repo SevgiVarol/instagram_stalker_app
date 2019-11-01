@@ -34,7 +34,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 public class MediaLogs extends AppCompatActivity {
     InstagramService service;
     private UserListAdapter adapter;
-    ArrayList<Uri> listUri;
+    ArrayList<Uri> storyUrlList;
     long userId;
     ArrayList<String> storyIds;
     TabLayout tabLayout;
@@ -142,7 +142,7 @@ public class MediaLogs extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
-        listUri = (ArrayList<Uri>) getIntent().getSerializableExtra("listUri");
+        storyUrlList = (ArrayList<Uri>) getIntent().getSerializableExtra("storyUrlList");
         userId=getIntent().getLongExtra("userId", 0);
         storyIds=getIntent().getStringArrayListExtra("storyIds");
         followers= (List<InstagramUserSummary>) getIntent().getSerializableExtra("followers");
@@ -152,8 +152,8 @@ public class MediaLogs extends AppCompatActivity {
 
         //ViewPager configrations for image(story)
         pagerImage = findViewById(R.id.pager);
-        pagerImage.setOffscreenPageLimit(listUri.size() - 1);
-        StoryImagePagerAdapter myImagePager = new StoryImagePagerAdapter(getApplicationContext(), listUri);
+        pagerImage.setOffscreenPageLimit(storyUrlList.size() - 1);
+        StoryImagePagerAdapter myImagePager = new StoryImagePagerAdapter(getApplicationContext(), storyUrlList);
         pagerImage.setAdapter(myImagePager);
         pagerImage.setCurrentItem(0);
 

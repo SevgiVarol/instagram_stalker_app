@@ -49,7 +49,7 @@ public class UserProfile extends Fragment {
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
 
-    ArrayList<Uri> listUri;
+    ArrayList<Uri> storyUrlList;
     List<InstagramFeedItem> stories;
     ProgressBar cycleProgressBar;
 
@@ -219,8 +219,8 @@ public class UserProfile extends Fragment {
         }
         @Override
         protected String doInBackground(String... strings) {
-            if (listUri==null){
-                listUri = service.getStories(user.username);
+            if (storyUrlList ==null){
+                storyUrlList = service.getStories(user.username);
             }
             return null;
         }
@@ -228,8 +228,8 @@ public class UserProfile extends Fragment {
         protected void onPostExecute(String s){
             cycleProgressBar.setIndeterminate(false);
             Intent storyIntent = new Intent(getContext(), StoryViewer.class);
-            storyIntent.putExtra("listUri", listUri);
-            if (listUri!=null &listUri.size()!=0) {
+            storyIntent.putExtra("storyUrlList", storyUrlList);
+            if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }
         }
