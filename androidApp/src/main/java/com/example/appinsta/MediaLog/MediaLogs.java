@@ -22,7 +22,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.appinsta.Compare;
 import com.example.appinsta.R;
-import com.example.appinsta.RecyclerSearch;
+import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
 import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 public class MediaLogs extends AppCompatActivity {
     InstagramService service;
-    private RecyclerSearch adapter;
+    private UserListAdapter adapter;
     ArrayList<Uri> listUri;
     long userId;
     ArrayList<String> storyIds;
@@ -185,13 +185,13 @@ public class MediaLogs extends AppCompatActivity {
                 int index=tabLayout.getSelectedTabPosition();
                 switch (index){
                     case 0:
-                        adapter= (RecyclerSearch) recycler_all.getAdapter();
+                        adapter= (UserListAdapter) recycler_all.getAdapter();
                         break;
                     case 1:
-                        adapter= (RecyclerSearch) recycler_not_follow.getAdapter();
+                        adapter= (UserListAdapter) recycler_not_follow.getAdapter();
                         break;
                     case 2:
-                        adapter= (RecyclerSearch) recycler_not_watch.getAdapter();
+                        adapter= (UserListAdapter) recycler_not_watch.getAdapter();
                 }
                 adapter.getFilter().filter(editable);
             }
@@ -212,18 +212,18 @@ public class MediaLogs extends AppCompatActivity {
     public void SetLayouts(int pos){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         if(observers!=null) {
-            adapter = new RecyclerSearch(observer_list.get(pos), this);
+            adapter = new UserListAdapter(observer_list.get(pos), this);
             recycler_all.setLayoutManager(layoutManager);
             recycler_all.setAdapter(adapter);
 
             recycler_not_follow.setLayoutManager(new LinearLayoutManager(this));
             List<InstagramUser> resultNotFollow= Compare.compareWatchedStoryAndUnfollowing(observer_list.get(pos),followers);
-            adapter = new RecyclerSearch(resultNotFollow, this);
+            adapter = new UserListAdapter(resultNotFollow, this);
             recycler_not_follow.setAdapter(adapter);
 
             recycler_not_watch.setLayoutManager(new LinearLayoutManager(this));
             List<InstagramUserSummary> resultNotWatch= Compare.compareUnwatchedStoryAndFollowing(followers,observer_list.get(pos));
-            adapter = new RecyclerSearch(resultNotWatch, this);
+            adapter = new UserListAdapter(resultNotWatch, this);
             recycler_not_watch.setAdapter(adapter);
             /*adapter.setOnItemClickListener(new RecyclerSearch.OnListener() {
                 @Override

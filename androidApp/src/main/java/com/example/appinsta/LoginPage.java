@@ -40,7 +40,7 @@ public class LoginPage extends AppCompatActivity {
         String name = etName.getText().toString();
         String password = etPassword.getText().toString();
         try {
-            InstagramLoginResult loginResult = service.login(name, password);
+            InstagramLoginResult loginResult = service.login("insta.ben.sevgi", "151816043");
             if (loginResult.getStatus().equals("fail")) {
                 throw new Exception();
             } else {

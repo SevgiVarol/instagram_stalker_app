@@ -1,6 +1,7 @@
 package com.example.appinsta;
 
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,12 +21,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.app.adprogressbarlib.AdCircleProgress;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -36,8 +39,6 @@ import com.example.appinsta.service.InstagramService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.InstagramConstants;
@@ -67,7 +68,7 @@ public class MainFragment extends Fragment {
 
     RelativeLayout theLayout;
     SwipeRefreshLayout swipeRefreshLayout;
-    AdCircleProgress mProgress = null;
+    ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service = InstagramService.getInstance();
     private Handler mHandler = new Handler();
@@ -94,11 +95,12 @@ public class MainFragment extends Fragment {
 
 
     private void initComponent(View view) {
+
         mProgress = view.findViewById(R.id.progress_bar);
         Resources res = getResources();
         drawable = res.getDrawable(R.drawable.circle_shape);
 
-        profilPic = (CircleImageView) view.findViewById(R.id.profilPic);
+        profilPic = (CircleImageView) view.findViewById(R.id.userProfilPic);
         takipTv = (TextView) view.findViewById(R.id.takipTv);
         takipciTv = (TextView) view.findViewById(R.id.takipciTv);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
@@ -125,7 +127,7 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            stories = service.getStories(service.myInfo().pk);
+            stories = service.getStories(service.getLoggedUser().pk);
             listUri=new ArrayList<>();
             storyIds =new ArrayList<>();
             try {
@@ -142,32 +144,19 @@ public class MainFragment extends Fragment {
             }
 
 
+            mProgress.setVisibility(View.VISIBLE);
 
+            if(InstagramConstants.islogged){
 
-            final Timer t = new Timer();
-            t.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
+                takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
+                takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
 
-
-                            mProgress.setAdProgress(i);
-                            i++;
-                        }
-                    });
-                }
-            }, 0, 120);
-
-            if (!InstagramConstants.log) {
-
-                takipTv.setText(String.valueOf(service.myInfo().following_count));
-                takipciTv.setText(String.valueOf(service.myInfo().follower_count));
             }
 
             profilPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    long userid= service.myInfo().pk;
+                    long userid= service.getLoggedUser().pk;
                     Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
                     mediaLogIntent.putExtra("listUri", listUri);
                     mediaLogIntent.putExtra("userId", userid);
@@ -190,9 +179,8 @@ public class MainFragment extends Fragment {
 
             }*/
 
-
-            myFollowers = service.getMyFollowers();
-            myFollowing = service.getMyFollowing();
+                myFollowers = service.getMyFollowers();
+                myFollowing = service.getMyFollowing();
 
             if (service.myMedia(0) != null) {
                 mediaLikers = compare(myFollowers, service.getMyMediaLikers(service.myMedia(0).pk));
@@ -201,7 +189,6 @@ public class MainFragment extends Fragment {
 
             myStalking = compare(myFollowers, myFollowing);
             myStalkers = compare(myFollowing, myFollowers);
-
 
             return null;
 
@@ -214,7 +201,7 @@ public class MainFragment extends Fragment {
 
 
             Glide.with(getActivity()) //1
-                    .load(service.myInfo().profile_pic_url).into(profilPic);
+                    .load(service.getLoggedUser().profile_pic_url).into(profilPic);
 
             latestPhoto.setAlpha(0.3f);
 
@@ -230,8 +217,8 @@ public class MainFragment extends Fragment {
                 });
             }
 
-            takipTv.setText(String.valueOf(service.myInfo().following_count));
-            takipciTv.setText(String.valueOf(service.myInfo().follower_count));
+            takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
+            takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
 
             if (mediaLikers != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
@@ -283,20 +270,6 @@ public class MainFragment extends Fragment {
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
-
-
-
-
-            /*mutedStory.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SearchFragment fragment = new SearchFragment(finalObjs);
-                    FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
-                }
-            });
-*/
-
 
         }
     }

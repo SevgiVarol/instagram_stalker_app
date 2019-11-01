@@ -49,7 +49,6 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
         listUri = (ArrayList<Uri>) intent.getSerializableExtra("listUri");
         storiesProgressView = (StoriesProgressView) findViewById(R.id.stories);
         storiesProgressView.setStoriesCount(listUri.size()); // <- set stories
-        storiesProgressView.setStoryDuration(3000L); // <- set a story duration
         storiesProgressView.setStoriesListener(this); // <- set listener
         VideoViewTouchListener();
 
@@ -69,14 +68,15 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
                         } else if (y_up - y_down > 500 & y_up != 0) {
                             finish();
                         } else if (x_down > 800) {
-                            storiesProgressView.skip();
                             storiesProgressView.pause();
                             VideoViewTouchListener();
                         } else if (x_down < 200) {
                             storyCount = storyCount - 2;
                             try {
+                                storiesProgressView.pause();
                                 storiesProgressView.startStories(storyCount);
                                 storiesProgressView.reverse();
+                                storiesProgressView.pause();
                             }catch (Exception e){}
 
                             VideoViewTouchListener();
@@ -90,8 +90,8 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                storiesProgressView.pause();
-                VideoViewTouchListener();
+
+                //VideoViewTouchListener();
             }
         });
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -115,6 +115,7 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
                     .into(storyImageView, new Callback() {
                         @Override
                         public void onSuccess() {
+                            storiesProgressView.setStoryDuration(3000L);
                             storiesProgressView.startStories(storyCount);
                             videoView.setVisibility(View.GONE);
                             videoView.setVisibility(View.VISIBLE);
@@ -140,21 +141,24 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
 
     @Override
     public void onNext() {
+        Toast.makeText(this,"onNext",Toast.LENGTH_SHORT).show();
         VideoViewTouchListener();
     }
 
     @Override
     public void onPrev() {
+        Toast.makeText(this,"onPrev",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onComplete() {
-
-        //onNext();
+        Toast.makeText(this,"onComplete",Toast.LENGTH_SHORT).show();
+        onNext();
     }
 
     @Override
     protected void onDestroy() {
+        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show();
         // Very important !
         storiesProgressView.destroy();
         super.onDestroy();

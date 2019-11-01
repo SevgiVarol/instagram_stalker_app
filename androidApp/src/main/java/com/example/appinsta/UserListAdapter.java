@@ -8,6 +8,7 @@ import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -21,11 +22,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
-public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.RecyclerViewHolder> implements Filterable {
+public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.RecyclerViewHolder> implements Filterable {
+
     private List<T> userList = null;
     private List<T> userListFull = null;
     private Context context;
-
     private OnListener mListener;
 
     public interface OnListener {
@@ -37,15 +38,15 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView imageView;
-        TextView fullName;
-        TextView username;
+        CircleImageView profilPic;
+        TextView tvFullName;
+        TextView tvUsername;
 
         RecyclerViewHolder(View itemView, OnListener listener) {
             super(itemView);
-            fullName = itemView.findViewById(R.id.text_view_name);
-            username = itemView.findViewById(R.id.text_view_name2);
-            imageView = itemView.findViewById(R.id.image_view);
+            tvFullName = itemView.findViewById(R.id.tvFullName);
+            tvUsername = itemView.findViewById(R.id.tvUsername);
+            profilPic = itemView.findViewById(R.id.userProfilPic);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -59,14 +60,13 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
                 }
             });
 
-
         }
     }
 
+    public UserListAdapter(List<T> userList, Context context) {
 
-    public RecyclerSearch(List<T> list, Context context) {
-        this.userList = list;
-        userListFull = new ArrayList<>(list);
+        this.userList = userList;
+        userListFull = new ArrayList<>(userList);
         this.context = context;
     }
 
@@ -74,7 +74,7 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_tab_layout,
                 parent, false);
         return new RecyclerViewHolder(v, mListener);
     }
@@ -83,25 +83,25 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
 
         if (userList.get(0) instanceof InstagramUserSummary) {
-            InstagramUserSummary userItem = (InstagramUserSummary) userList.get(position);
+            InstagramUserSummary user = (InstagramUserSummary) userList.get(position);
             Picasso.with(context)
-                    .load(userItem.profile_pic_url)
+                    .load(user.profile_pic_url)
                     .fit()
                     .centerCrop()
-                    .into(holder.imageView);
+                    .into(holder.profilPic);
 
-            holder.fullName.setText(userItem.getFull_name());
-            holder.username.setText(userItem.getUsername());
+            holder.tvFullName.setText(user.getFull_name());
+            holder.tvUsername.setText(user.getUsername());
         } else if (userList.get(0) instanceof InstagramUser) {
             InstagramUser userItem = (InstagramUser) userList.get(position);
             Picasso.with(context)
                     .load(userItem.profile_pic_url)
                     .fit()
                     .centerCrop()
-                    .into(holder.imageView);
+                    .into(holder.profilPic);
 
-            holder.fullName.setText(userItem.getFull_name());
-            holder.username.setText(userItem.getUsername());
+            holder.tvFullName.setText(userItem.getFull_name());
+            holder.tvUsername.setText(userItem.getUsername());
         }
     }
 
@@ -116,6 +116,7 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
         return userSummaryFilter;
     }
 
+/*    //Sevgi
     private Filter userSummaryFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -141,7 +142,7 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
                     }
 
                 }
-            }else {
+            } else {
                 filteredList = new ArrayList<>(userListFull);
             }
 
@@ -151,6 +152,45 @@ public class RecyclerSearch<T> extends RecyclerView.Adapter<RecyclerSearch<T>.Re
             return results;
         }
 
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            userList.clear();
+            userList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+
+
+    };*/
+    private Filter userSummaryFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<T> filteredList = new ArrayList<>();
+
+            if (constraint != null && constraint.length() > 0) {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (T item : userListFull) {
+                    if (item instanceof InstagramUser) {
+                    if (((InstagramUser)item).full_name.toLowerCase().contains(filterPattern) || ((InstagramUser) item).username.toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }}
+                    else if (item instanceof InstagramUserSummary) {
+                        {
+                            if (((InstagramUserSummary) item).full_name.toLowerCase().contains(filterPattern) || ((InstagramUserSummary) item).username.toLowerCase().contains(filterPattern)) {
+
+                                filteredList.add(item);
+                            }
+                        } }
+                }
+            }else {
+                filteredList = new ArrayList<>(userListFull);
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
