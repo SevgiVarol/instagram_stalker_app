@@ -71,7 +71,6 @@ public class MainFragment extends Fragment {
     ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service = InstagramService.getInstance();
-    private Handler mHandler = new Handler();
     private int i = 0;
     ArrayList<Uri> listUri;
     ArrayList<String> storyIds;
