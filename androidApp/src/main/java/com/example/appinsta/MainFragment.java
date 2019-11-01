@@ -71,7 +71,6 @@ public class MainFragment extends Fragment {
     ProgressBar mProgress=null;
     Drawable drawable = null;
     InstagramService service = InstagramService.getInstance();
-    private int i = 0;
     ArrayList<Uri> listUri;
     ArrayList<String> storyIds;
     List<InstagramFeedItem> stories;
@@ -130,13 +129,13 @@ public class MainFragment extends Fragment {
             listUri=new ArrayList<>();
             storyIds =new ArrayList<>();
             try {
-                for (int i = 0; i < stories.size(); i++) {
-                    if (stories.get(i).getVideo_versions() != null) {
-                        listUri.add(Uri.parse(stories.get(i).getVideo_versions().get(0).getUrl()));
+                for (int counter = 0; counter < stories.size(); counter++) {
+                    if (stories.get(counter).getVideo_versions() != null) {
+                        listUri.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
                     } else {
-                        listUri.add(Uri.parse(stories.get(i).getImage_versions2().getCandidates().get(0).getUrl()));
+                        listUri.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
                     }
-                    storyIds.add(String.valueOf(stories.get(i).pk));
+                    storyIds.add(String.valueOf(stories.get(counter).pk));
                 }
             }catch (Exception e){
                 Log.e("null object reference",e.getMessage());
