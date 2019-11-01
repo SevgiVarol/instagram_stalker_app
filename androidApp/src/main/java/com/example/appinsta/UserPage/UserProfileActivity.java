@@ -15,7 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
-import com.example.appinsta.Service.InstagramService;
+
+import com.example.appinsta.service.InstagramService;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.Serializable;

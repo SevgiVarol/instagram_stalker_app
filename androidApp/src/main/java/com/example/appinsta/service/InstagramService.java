@@ -32,15 +32,13 @@ public class InstagramService {
     public static Instagram4Android instagram;
     public static String mediasNextMaxId;
     private static InstagramService myService;
-    List<InstagramUserSummary> myFollowing = new ArrayList<>();
+    InstagramUser loggedUser;
+    private List<InstagramUserSummary> myFollowing = new ArrayList<>();
     List<InstagramUserSummary> myMediaLikers = new ArrayList<>();
-
-
     private List<InstagramUser> storyViewers = null;
     List<InstagramFeedItem> myMedia = new ArrayList<>();
-
     private List<InstagramFeedItem> story = null;
-
+    String loggedUserLatestMediaUrl;
     InstagramFeedResult userFeedResult = null;
     InstagramFeedResult myUserFeedResult = null;
 
@@ -107,7 +105,8 @@ public class InstagramService {
 
     public List<InstagramUserSummary> getMyFollowers() {
 
-        if (!myFollowers.isEmpty()) return myFollowers;
+        if (!myFollowers.isEmpty())
+            return myFollowers;
         else {
             InstagramGetUserFollowersResult followersResult = null;
             String nextMaxId = null;
@@ -164,7 +163,8 @@ public class InstagramService {
     public List<InstagramUserSummary> getMyFollowing() {
 
 
-        if (!myFollowing.isEmpty()) return myFollowing;
+        if (!myFollowing.isEmpty())
+            return myFollowing;
         else {
             InstagramGetUserFollowersResult followingResult = null;
             String nextMaxId = null;
@@ -206,16 +206,28 @@ public class InstagramService {
 
     public InstagramUser getLoggedUser() {
 
+        if(loggedUser!=null)return loggedUser;
+        else {
         InstagramSearchUsernameResult result = null;
         try {
             result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
         } catch (IOException e) {
             e.printStackTrace();
         }
+            loggedUser = result.getUser();
+            return loggedUser;
+        }
+    }
+
+    public String getLoggedUserLastMediaUrl(){
 
 
-        return result.getUser();
-
+        if(loggedUserLatestMediaUrl==null){
+            loggedUserLatestMediaUrl=getMyMedias().get(0).image_versions2.candidates.get(1).url;
+            return loggedUserLatestMediaUrl;
+        }
+        else
+            return loggedUserLatestMediaUrl;
     }
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
@@ -342,7 +354,6 @@ public class InstagramService {
 
 
     }
-
     public InstagramFeedItem getMedia(long userId, int mediaIndex) {
         return getMedias(userId).get(mediaIndex);
     }
