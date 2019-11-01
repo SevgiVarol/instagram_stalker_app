@@ -15,7 +15,7 @@ import com.example.appinsta.R;
 public class MyMediasFragment extends Fragment {
 
     static GridView gridView;
-    public MyMediasFragment() {
+    public MyMediasFragment(){
         // Required empty public constructor
     }
 
@@ -26,8 +26,6 @@ public class MyMediasFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_my_media, container, false);
 
         gridView=(GridView)view.findViewById(R.id.gridView);
-
-
 
        // gridView.setAdapter(new ImageAdapter(getActivity(), UserProfile.urlOfMyPhotos));
         return view;
