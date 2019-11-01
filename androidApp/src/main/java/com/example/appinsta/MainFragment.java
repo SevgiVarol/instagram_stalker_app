@@ -156,6 +156,7 @@ public class MainFragment extends Fragment {
             profilPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     long userid= service.getLoggedUser().pk;
                     Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
                     mediaLogIntent.putExtra("listUri", listUri);
@@ -164,6 +165,7 @@ public class MainFragment extends Fragment {
                     mediaLogIntent.putExtra("followers", (Serializable) myFollowers);
 
                     if (listUri!=null & listUri.size()!=0) {
+
                         startActivity(mediaLogIntent);
                     }
                 }

@@ -141,24 +141,20 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
 
     @Override
     public void onNext() {
-        Toast.makeText(this,"onNext",Toast.LENGTH_SHORT).show();
         VideoViewTouchListener();
     }
 
     @Override
     public void onPrev() {
-        Toast.makeText(this,"onPrev",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onComplete() {
-        Toast.makeText(this,"onComplete",Toast.LENGTH_SHORT).show();
         onNext();
     }
 
     @Override
     protected void onDestroy() {
-        Toast.makeText(this,"onDestroy",Toast.LENGTH_SHORT).show();
         // Very important !
         storiesProgressView.destroy();
         super.onDestroy();

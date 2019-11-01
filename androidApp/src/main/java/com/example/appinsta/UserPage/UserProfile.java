@@ -226,7 +226,7 @@ public class UserProfile extends Fragment {
         @Override
         protected void onPreExecute(){
             //Cycle progress bar
-            //cycleProgressBar.setIndeterminate(true);
+            cycleProgressBar.setIndeterminate(true);
 
         }
         @Override
@@ -238,7 +238,7 @@ public class UserProfile extends Fragment {
         }
         @Override
         protected void onPostExecute(String s){
-            //cycleProgressBar.setIndeterminate(false);
+            cycleProgressBar.setIndeterminate(false);
             Intent storyIntent = new Intent(getContext(), UserStoryIntent.class);
             storyIntent.putExtra("listUri", listUri);
             if (listUri!=null &listUri.size()!=0) {
