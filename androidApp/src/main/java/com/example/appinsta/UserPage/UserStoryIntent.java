@@ -69,6 +69,7 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
                         } else if (y_up - y_down > 500 & y_up != 0) {
                             finish();
                         } else if (x_down > 800) {
+                            storiesProgressView.skip();
                             storiesProgressView.pause();
                             VideoViewTouchListener();
                         } else if (x_down < 200) {
@@ -89,6 +90,7 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                storiesProgressView.pause();
                 VideoViewTouchListener();
             }
         });
@@ -147,7 +149,8 @@ public class UserStoryIntent extends AppCompatActivity implements StoriesProgres
 
     @Override
     public void onComplete() {
-        onNext();
+
+        //onNext();
     }
 
     @Override
