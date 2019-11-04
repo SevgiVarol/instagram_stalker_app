@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -66,7 +67,7 @@ public class MainFragment extends Fragment {
 
     RelativeLayout theLayout;
     SwipeRefreshLayout swipeRefreshLayout;
-    ProgressBar mProgress=null;
+    ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
     InstagramService service = InstagramService.getInstance();
     ArrayList<Uri> storyUrlList;
@@ -93,6 +94,7 @@ public class MainFragment extends Fragment {
     private void initComponent(View view) {
 
         mProgress = view.findViewById(R.id.progress_bar);
+        storyProgress = view.findViewById(R.id.progressBar);
         Resources res = getResources();
         drawable = res.getDrawable(R.drawable.circle_shape);
 
@@ -123,26 +125,11 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            stories = service.getStories(service.getLoggedUser().pk);
-            storyUrlList =new ArrayList<>();
-            storyIds =new ArrayList<>();
-            try {
-                for (int counter = 0; counter < stories.size(); counter++) {
-                    if (stories.get(counter).getVideo_versions() != null) {
-                        storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
-                    } else {
-                        storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                    }
-                    storyIds.add(String.valueOf(stories.get(counter).pk));
-                }
-            }catch (Exception e){
-                Log.e("null object reference",e.getMessage());
-            }
-
+            storyUrlList = new ArrayList<>();
 
             mProgress.setVisibility(View.VISIBLE);
 
-            if(InstagramConstants.islogged){
+            if (InstagramConstants.islogged) {
 
                 takipTv.setText(String.valueOf(service.getLoggedUser().following_count));
                 takipciTv.setText(String.valueOf(service.getLoggedUser().follower_count));
@@ -152,18 +139,8 @@ public class MainFragment extends Fragment {
             profilPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    new storyTask().execute();
 
-                    long userid= service.getLoggedUser().pk;
-                    Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
-                    mediaLogIntent.putExtra("storyUrlList", storyUrlList);
-                    mediaLogIntent.putExtra("userId", userid);
-                    mediaLogIntent.putExtra("storyIds", storyIds);
-                    mediaLogIntent.putExtra("followers", (Serializable) myFollowers);
-
-                    if (storyUrlList !=null & storyUrlList.size()!=0) {
-
-                        startActivity(mediaLogIntent);
-                    }
                 }
             });
 
@@ -177,8 +154,9 @@ public class MainFragment extends Fragment {
 
             }*/
 
-                myFollowers = service.getMyFollowers();
-                myFollowing = service.getMyFollowing();
+
+            myFollowers = service.getMyFollowers();
+            myFollowing = service.getMyFollowing();
 
             if (service.myMedia(0) != null) {
                 mediaLikers = compare(myFollowers, service.getMyMediaLikers(service.myMedia(0).pk));
@@ -196,6 +174,7 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             mProgress.setVisibility(View.GONE);
+            storyProgress.setVisibility(View.VISIBLE);
 
 
             Glide.with(getActivity()) //1
@@ -272,5 +251,53 @@ public class MainFragment extends Fragment {
         }
     }
 
+    private class storyTask extends AsyncTask<String, String, String> {
+        long userid;
+
+        @Override
+        protected void onPreExecute() {
+            storyProgress.setIndeterminate(true);
+            storyIds = new ArrayList<>();
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            stories = service.getStories(service.getLoggedUser().pk);
+            if (storyUrlList.size() == 0) {
+                try {
+                    for (int counter = 0; counter < stories.size(); counter++) {
+                        if (stories.get(counter).getVideo_versions() != null) {
+                            storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
+                        } else {
+                            storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                        }
+                        storyIds.add(String.valueOf(stories.get(counter).pk));
+                    }
+                } catch (Exception e) {
+                    Log.e("null object reference", e.getMessage());
+                }
+            }
+            userid = service.getLoggedUser().pk;
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
+            mediaLogIntent.putExtra("storyUrlList", storyUrlList);
+            mediaLogIntent.putExtra("userId", userid);
+            mediaLogIntent.putExtra("storyIds", storyIds);
+
+            if (storyUrlList != null & storyUrlList.size() != 0) {
+
+                startActivity(mediaLogIntent);
+            } else {
+                Toast.makeText(getActivity(), "Hiçbir hikaye bulunamadı", Toast.LENGTH_SHORT).show();
+            }
+            storyProgress.setIndeterminate(false);
+        }
+    }
 
 }

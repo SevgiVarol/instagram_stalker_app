@@ -116,7 +116,6 @@ public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.
         return userSummaryFilter;
     }
 
-/*    //Sevgi
     private Filter userSummaryFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -128,7 +127,6 @@ public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.
                 for (T item : userListFull) {
                     if (item instanceof InstagramUser) {
                         if (((InstagramUser) item).full_name.toLowerCase().contains(filterPattern) || ((InstagramUser) item).username.toLowerCase().contains(filterPattern)) {
-
                             filteredList.add(item);
                         }
                     } else if (item instanceof InstagramUserSummary) {
@@ -138,51 +136,9 @@ public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.
                                 filteredList.add(item);
                             }
                         }
-
                     }
-
                 }
             } else {
-                filteredList = new ArrayList<>(userListFull);
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            userList.clear();
-            userList.addAll((List) results.values);
-            notifyDataSetChanged();
-        }
-
-
-    };*/
-    private Filter userSummaryFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            List<T> filteredList = new ArrayList<>();
-
-            if (constraint != null && constraint.length() > 0) {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (T item : userListFull) {
-                    if (item instanceof InstagramUser) {
-                    if (((InstagramUser)item).full_name.toLowerCase().contains(filterPattern) || ((InstagramUser) item).username.toLowerCase().contains(filterPattern)) {
-                        filteredList.add(item);
-                    }}
-                    else if (item instanceof InstagramUserSummary) {
-                        {
-                            if (((InstagramUserSummary) item).full_name.toLowerCase().contains(filterPattern) || ((InstagramUserSummary) item).username.toLowerCase().contains(filterPattern)) {
-
-                                filteredList.add(item);
-                            }
-                        } }
-                }
-            }else {
                 filteredList = new ArrayList<>(userListFull);
             }
 

@@ -123,6 +123,24 @@
 
                                     />
 
+                                <ProgressBar
+                                    android:id="@+id/progressBar"
+                                    style="?android:attr/progressBarStyle"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+
+                                    android:background="@drawable/progress_circle"
+                                    android:indeterminate="false"
+                                    android:indeterminateBehavior="repeat"
+                                    android:indeterminateDrawable="@drawable/progress_circle_indeterminate"
+                                    android:indeterminateDuration="1000"
+                                    android:indeterminateOnly="false"
+                                    android:visibility="invisible"
+
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
                             </RelativeLayout>
 
                             <LinearLayout

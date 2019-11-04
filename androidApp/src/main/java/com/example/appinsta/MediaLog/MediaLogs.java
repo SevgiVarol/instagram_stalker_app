@@ -1,6 +1,5 @@
 package com.example.appinsta.MediaLog;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +24,7 @@ import com.example.appinsta.R;
 import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
 import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,16 +40,15 @@ public class MediaLogs extends AppCompatActivity {
     TabLayout tabLayout;
     EditText searchEdit;
     ViewPager pagerImage, pagerUser;
-    ArrayList<List<InstagramUser>> observer_list;
+    ArrayList<List<InstagramUser>> observerList;
     List<InstagramUser> observers;
     List<InstagramUserSummary> followers;
-    RecyclerView recycler_all,recycler_not_follow,recycler_not_watch;
+    RecyclerView recyclerAll, recyclerNotFollow, recyclerNotWatch;
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.media_logs);
+        setContentView(R.layout.activity_media_logs);
         init();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -75,7 +74,7 @@ public class MediaLogs extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 //Code Block (Get User Lists)
-                SetLayouts(position);
+                setLayouts(position);
             }
 
             @Override
@@ -124,16 +123,16 @@ public class MediaLogs extends AppCompatActivity {
             }
         });
 
-        for (int i=0;i<storyIds.size();i++){
-            observers=null;
+        for (int i = 0; i < storyIds.size(); i++) {
+            observers = null;
             try {
-                observers=service.getStoryViewers(userId,storyIds.get(i));
-                observer_list.add(observers);
-            }catch (Exception e){
-                Log.e(e.getMessage()," StoryViewer returning null object");
+                observers = service.getStoryViewers(userId, storyIds.get(i));
+                observerList.add(observers);
+            } catch (Exception e) {
+                Log.e(e.getMessage(), " StoryViewer returning null object");
             }
         }
-        SetLayouts(0);
+        setLayouts(0);
 
     }
 
@@ -143,12 +142,12 @@ public class MediaLogs extends AppCompatActivity {
         }
 
         storyUrlList = (ArrayList<Uri>) getIntent().getSerializableExtra("storyUrlList");
-        userId=getIntent().getLongExtra("userId", 0);
-        storyIds=getIntent().getStringArrayListExtra("storyIds");
-        followers= (List<InstagramUserSummary>) getIntent().getSerializableExtra("followers");
-        observer_list=new ArrayList<List<InstagramUser>>();
+        userId = getIntent().getLongExtra("userId", 0);
+        storyIds = getIntent().getStringArrayListExtra("storyIds");
+        observerList = new ArrayList<List<InstagramUser>>();
         service = InstagramService.getInstance();
         tabLayout = findViewById(R.id.tabLayout);
+        followers = service.getMyFollowers();
 
         //ViewPager configrations for image(story)
         pagerImage = findViewById(R.id.pager);
@@ -165,38 +164,42 @@ public class MediaLogs extends AppCompatActivity {
         pagerUser.setCurrentItem(0);
         pagerUser.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        recycler_all = findViewById(R.id.recycler_view);
-        recycler_not_follow = findViewById(R.id.recycler_view2);
-        recycler_not_watch = findViewById(R.id.recycler_view3);
-        recycler_all=ConfigureRecyclerView(recycler_all);
-        recycler_not_follow=ConfigureRecyclerView(recycler_not_follow);
-        recycler_not_watch=ConfigureRecyclerView(recycler_not_watch);
-        searchEdit= (EditText) findViewById(R.id.editTextSearch);
-        searchEdit.addTextChangedListener(new TextWatcher() {
+        recyclerAll = findViewById(R.id.recycler_view);
+        recyclerNotFollow = findViewById(R.id.recycler_view2);
+        recyclerNotWatch = findViewById(R.id.recycler_view3);
+        recyclerAll = configureSizeRecyclerView(recyclerAll);
+        recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
+        recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
+        searchEdit = (EditText) findViewById(R.id.editTextSearch);
+        TextWatcher textListener = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
             }
+
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-                int index=tabLayout.getSelectedTabPosition();
-                switch (index){
+            public void afterTextChanged(Editable s) {
+                int index = tabLayout.getSelectedTabPosition();
+                switch (index) {
                     case 0:
-                        adapter= (UserListAdapter) recycler_all.getAdapter();
+                        adapter = (UserListAdapter) recyclerAll.getAdapter();
                         break;
                     case 1:
-                        adapter= (UserListAdapter) recycler_not_follow.getAdapter();
+                        adapter = (UserListAdapter) recyclerNotFollow.getAdapter();
                         break;
                     case 2:
-                        adapter= (UserListAdapter) recycler_not_watch.getAdapter();
+                        adapter = (UserListAdapter) recyclerNotWatch.getAdapter();
                 }
-                adapter.getFilter().filter(editable);
+                adapter.getFilter().filter(s);
             }
-        });
-
+        };
+        searchEdit.addTextChangedListener(textListener);
+        searchEdit.removeTextChangedListener(textListener);
         searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -209,22 +212,22 @@ public class MediaLogs extends AppCompatActivity {
 
     }
 
-    public void SetLayouts(int pos){
+    public void setLayouts(int pos) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        if(observers!=null) {
-            adapter = new UserListAdapter(observer_list.get(pos), this);
-            recycler_all.setLayoutManager(layoutManager);
-            recycler_all.setAdapter(adapter);
+        if (observers != null) {
+            adapter = new UserListAdapter(observerList.get(pos), this);
+            recyclerAll.setLayoutManager(layoutManager);
+            recyclerAll.setAdapter(adapter);
 
-            recycler_not_follow.setLayoutManager(new LinearLayoutManager(this));
-            List<InstagramUser> resultNotFollow= Compare.compareWatchedStoryAndUnfollowing(observer_list.get(pos),followers);
+            recyclerNotFollow.setLayoutManager(new LinearLayoutManager(this));
+            List<InstagramUser> resultNotFollow = Compare.compareWatchedStoryAndUnfollowing(observerList.get(pos), followers);
             adapter = new UserListAdapter(resultNotFollow, this);
-            recycler_not_follow.setAdapter(adapter);
+            recyclerNotFollow.setAdapter(adapter);
 
-            recycler_not_watch.setLayoutManager(new LinearLayoutManager(this));
-            List<InstagramUserSummary> resultNotWatch= Compare.compareUnwatchedStoryAndFollowing(followers,observer_list.get(pos));
+            recyclerNotWatch.setLayoutManager(new LinearLayoutManager(this));
+            List<InstagramUserSummary> resultNotWatch = Compare.compareUnwatchedStoryAndFollowing(followers, observerList.get(pos));
             adapter = new UserListAdapter(resultNotWatch, this);
-            recycler_not_watch.setAdapter(adapter);
+            recyclerNotWatch.setAdapter(adapter);
             /*adapter.setOnItemClickListener(new RecyclerSearch.OnListener() {
                 @Override
                 public void onClick(int position) {
@@ -242,15 +245,16 @@ public class MediaLogs extends AppCompatActivity {
 
     }
 
-    public RecyclerView ConfigureRecyclerView(RecyclerView recyc){
+    public RecyclerView configureSizeRecyclerView(RecyclerView recyc) {
         recyc.setHasFixedSize(true);
         recyc.setItemViewCacheSize(8);
         recyc.setDrawingCacheEnabled(true);
         recyc.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         return recyc;
     }
+
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

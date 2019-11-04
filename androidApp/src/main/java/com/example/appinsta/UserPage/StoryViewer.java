@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
 public class StoryViewer extends AppCompatActivity implements StoriesProgressView.StoriesListener {
-    public int storyCount = 0, storyCountForVideo = 0,oldStoryCount=0;
+    public int storyCount = 0, storyCountForVideo = 0, oldStoryCount = 0;
     public int videoDuration;
     VideoView videoView;
     ImageView storyImageView;
@@ -33,7 +33,6 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
     private StoriesProgressView storiesProgressView;
     InstagramService service = InstagramService.getInstance();
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +72,8 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
                                 storiesProgressView.startStories(storyCount);
                                 storiesProgressView.reverse();
                                 storiesProgressView.pause();
-                            }catch (Exception e){}
+                            } catch (Exception e) {
+                            }
 
                             VideoViewTouchListener();
                         }
@@ -83,13 +83,6 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
             }
         });
 
-        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-
-                //VideoViewTouchListener();
-            }
-        });
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -104,7 +97,7 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
 
     private void VideoViewTouchListener() {
         if (storyCount < storyUrlList.size() & storyCount >= 0) {
-            oldStoryCount=storyCount;
+            oldStoryCount = storyCount;
             Picasso
                     .with(getApplicationContext())
                     .load((storyUrlList.get(storyCount)).toString())
@@ -129,10 +122,12 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
                             storyCount++;
                         }
                     });
-        } else if(storyCount<0) {
-           storyCount=0;VideoViewTouchListener();
+        } else if (storyCount < 0) {
+            storyCount = 0;
+            VideoViewTouchListener();
+        } else {
+            finish();
         }
-        else { finish();}
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -231,6 +232,8 @@ public class UserProfile extends Fragment {
             storyIntent.putExtra("storyUrlList", storyUrlList);
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
+            }else {
+                Toast.makeText(getActivity(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
         }
     }
