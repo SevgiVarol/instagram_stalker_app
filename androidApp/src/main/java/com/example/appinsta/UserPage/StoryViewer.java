@@ -1,13 +1,14 @@
 package com.example.appinsta.UserPage;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
@@ -30,6 +31,7 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
     ImageView storyImageView;
     ArrayList<Uri> storyUrlList;
     int duration;
+    View reverse, skip;
     private StoriesProgressView storiesProgressView;
     InstagramService service = InstagramService.getInstance();
 
@@ -43,45 +45,64 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
         Intent intent = getIntent();
         storyUrlList = (ArrayList<Uri>) intent.getSerializableExtra("storyUrlList");
         storiesProgressView = (StoriesProgressView) findViewById(R.id.stories);
+        reverse = findViewById(R.id.reverse);
+        skip = findViewById(R.id.skip);
+
         storiesProgressView.setStoriesCount(storyUrlList.size()); // <- set stories
         storiesProgressView.setStoriesListener(this); // <- set listener
         VideoViewTouchListener();
 
-        videoView.setOnTouchListener(new View.OnTouchListener() {
-            float y_down, y_up, x_down;
+        final long[] pressTime = {0L};
+        long limit = 500L;
+
+        View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+            int currentPosition;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        y_down = event.getRawY();
-                        x_down = event.getRawX();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        y_up = event.getRawY();
-                        if (y_down - y_up > 500 & y_up != 0) {
-                        } else if (y_up - y_down > 500 & y_up != 0) {
-                            finish();
-                        } else if (x_down > 800) {
-                            storiesProgressView.pause();
-                            VideoViewTouchListener();
-                        } else if (x_down < 200) {
-                            storyCount = storyCount - 2;
-                            try {
-                                storiesProgressView.pause();
-                                storiesProgressView.startStories(storyCount);
-                                storiesProgressView.reverse();
-                                storiesProgressView.pause();
-                            } catch (Exception e) {
-                            }
-
-                            VideoViewTouchListener();
+                        pressTime[0] = System.currentTimeMillis();
+                        if (videoView.getVisibility() == View.VISIBLE) {
+                            videoView.pause();
+                            currentPosition = videoView.getCurrentPosition();
                         }
-                        break;
+                        storiesProgressView.pause();
+                        return false;
+                    case MotionEvent.ACTION_UP:
+                        long now = System.currentTimeMillis();
+                        if (videoView.getVisibility() == View.VISIBLE) {
+                            videoView.seekTo(currentPosition);
+                            videoView.start();
+                        }
+                        storiesProgressView.resume();
+                        return limit < now - pressTime[0];
                 }
-                return true;
+                return false;
+            }
+        };
+        reverse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storiesProgressView.setStoryDuration(3000000L);
+                if (videoView.getVisibility() == View.VISIBLE) {
+                    videoView.pause();
+                }
+                storiesProgressView.reverse();
             }
         });
+        reverse.setOnTouchListener(onTouchListener);
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                storiesProgressView.setStoryDuration(3000000L);
+                if (videoView.getVisibility() == View.VISIBLE) {
+                    videoView.pause();
+                }
+                storiesProgressView.skip();
+            }
+        });
+        skip.setOnTouchListener(onTouchListener);
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -104,10 +125,9 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
                     .into(storyImageView, new Callback() {
                         @Override
                         public void onSuccess() {
-                            storiesProgressView.setStoryDuration(3000L);
+                            storiesProgressView.setStoryDuration(4000L);
                             storiesProgressView.startStories(storyCount);
-                            videoView.setVisibility(View.GONE);
-                            videoView.setVisibility(View.VISIBLE);
+                            videoView.setVisibility(View.INVISIBLE);
                             storyImageView.setVisibility(View.VISIBLE);
                             storyCount++;
                         }
@@ -115,8 +135,10 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
                         @Override
                         public void onError() {
                             storyCountForVideo = storyCount;
+                            videoView.setVisibility(View.VISIBLE);
                             storyImageView.setVisibility(View.INVISIBLE);
                             videoView.setVideoURI(storyUrlList.get(storyCount));
+                            videoView.seekTo(1);
                             videoView.requestFocus();
                             videoView.start();
                             storyCount++;
@@ -137,6 +159,8 @@ public class StoryViewer extends AppCompatActivity implements StoriesProgressVie
 
     @Override
     public void onPrev() {
+        storyCount = storyCount - 2;
+        VideoViewTouchListener();
     }
 
     @Override
