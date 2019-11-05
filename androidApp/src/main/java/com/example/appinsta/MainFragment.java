@@ -33,6 +33,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.MediaLog.MediaLogs;
+import com.example.appinsta.UserPage.MyMediasFragment;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -126,6 +127,7 @@ public class MainFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             storyUrlList = new ArrayList<>();
+            storyIds = new ArrayList<>();
 
             mProgress.setVisibility(View.VISIBLE);
 
@@ -247,6 +249,14 @@ public class MainFragment extends Fragment {
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
             });
+            photoStalkers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MyMediasFragment mainFragment = new MyMediasFragment();
+                    FragmentManager manager = getFragmentManager();
+                    manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
+                }
+            });
 
         }
     }
@@ -257,7 +267,6 @@ public class MainFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             storyProgress.setIndeterminate(true);
-            storyIds = new ArrayList<>();
 
         }
 

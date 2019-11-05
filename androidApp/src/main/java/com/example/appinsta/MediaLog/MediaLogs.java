@@ -44,6 +44,9 @@ public class MediaLogs extends AppCompatActivity {
     List<InstagramUser> observers;
     List<InstagramUserSummary> followers;
     RecyclerView recyclerAll, recyclerNotFollow, recyclerNotWatch;
+    String key = null;
+    int positionMedia;
+    ArrayList<List<InstagramUserSummary>> observerListForMedia;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,16 +126,39 @@ public class MediaLogs extends AppCompatActivity {
             }
         });
 
-        for (int i = 0; i < storyIds.size(); i++) {
-            observers = null;
-            try {
-                observers = service.getStoryViewers(userId, storyIds.get(i));
-                observerList.add(observers);
-            } catch (Exception e) {
-                Log.e(e.getMessage(), " StoryViewer returning null object");
+        if (key == null) {
+            observerList = new ArrayList<List<InstagramUser>>();
+            for (int i = 0; i < storyIds.size(); i++) {
+                observers = null;
+                try {
+                    observers = service.getStoryViewers(userId, storyIds.get(i));
+                    observerList.add(observers);
+                } catch (Exception e) {
+                    Log.e(e.getMessage(), " StoryViewer returning null object");
+                }
             }
+            setLayouts(0);
+        } else if (key.equals("MEDIA")) {
+            observerListForMedia = new ArrayList<List<InstagramUserSummary>>();
+            for (int i = 0; i < storyIds.size(); i++) {
+                List<InstagramUserSummary> observersForMedia = null;
+                try {
+                    observersForMedia = service.getMyMediaLikers(Long.parseLong(storyIds.get(i)));
+                    observerListForMedia.add(observersForMedia);
+                } catch (Exception e) {
+                    Log.e(e.getMessage(), " StoryViewer returning null object");
+                }
+            }System.out.println("tüm listelerin sayısı:"+observerListForMedia.size());
+            for (int j=0;j<observerListForMedia.size();j++){
+                System.out.println(j+". listenin beğenen sayısı:"+observerListForMedia.get(j).size());
+                for (int k=0; k<observerListForMedia.get(j).size();k++){
+                    System.out.println(j+".listenin "+k+". elemanının adı:"+observerListForMedia.get(j).get(k).username);
+                }
+            }
+            pagerImage.setCurrentItem(positionMedia);
+            setLayouts(positionMedia);
+
         }
-        setLayouts(0);
 
     }
 
@@ -144,7 +170,9 @@ public class MediaLogs extends AppCompatActivity {
         storyUrlList = (ArrayList<Uri>) getIntent().getSerializableExtra("storyUrlList");
         userId = getIntent().getLongExtra("userId", 0);
         storyIds = getIntent().getStringArrayListExtra("storyIds");
-        observerList = new ArrayList<List<InstagramUser>>();
+        key = getIntent().getStringExtra("key");
+        positionMedia = getIntent().getIntExtra("position",0);
+
         service = InstagramService.getInstance();
         tabLayout = findViewById(R.id.tabLayout);
         followers = service.getMyFollowers();
@@ -215,7 +243,7 @@ public class MediaLogs extends AppCompatActivity {
 
     public void setLayouts(int pos) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        if (observers != null) {
+        if (observerList != null) {
             adapter = new UserListAdapter(observerList.get(pos), this);
             recyclerAll.setLayoutManager(layoutManager);
             recyclerAll.setAdapter(adapter);
@@ -241,6 +269,20 @@ public class MediaLogs extends AppCompatActivity {
 
                 }
             });*/
+        }else if (observerListForMedia !=null){
+            adapter = new UserListAdapter(observerListForMedia.get(pos), this);
+            recyclerAll.setLayoutManager(layoutManager);
+            recyclerAll.setAdapter(adapter);
+
+            recyclerNotFollow.setLayoutManager(new LinearLayoutManager(this));
+            List<InstagramUserSummary> resultNotFollow = Compare.compare(observerListForMedia.get(pos), followers);
+            adapter = new UserListAdapter(resultNotFollow, this);
+            recyclerNotFollow.setAdapter(adapter);
+
+            recyclerNotWatch.setLayoutManager(new LinearLayoutManager(this));
+            List<InstagramUserSummary> resultNotWatch = Compare.compare(followers, observerListForMedia.get(pos));
+            adapter = new UserListAdapter(resultNotWatch, this);
+            recyclerNotWatch.setAdapter(adapter);
         }
 
 
@@ -258,5 +300,5 @@ public class MediaLogs extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-    
+
 }

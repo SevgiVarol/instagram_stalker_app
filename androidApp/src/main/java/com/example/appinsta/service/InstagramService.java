@@ -391,10 +391,6 @@ public class InstagramService {
 
     public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
 
-        if (!myMediaLikers.isEmpty()) {
-            return myMediaLikers;
-        } else {
-
             InstagramGetMediaLikersResult getMediaLikersResult = null;
 
             String nextMaxId = null;
@@ -419,7 +415,7 @@ public class InstagramService {
             } while (nextMaxId != null);
 
             return myMediaLikers;
-        }
+
 
     }
 
