@@ -171,35 +171,9 @@ public class MediaLogs extends AppCompatActivity {
         recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
         recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
         searchEdit = (EditText) findViewById(R.id.editTextSearch);
-        TextWatcher textListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int index = tabLayout.getSelectedTabPosition();
-                switch (index) {
-                    case 0:
-                        adapter = (UserListAdapter) recyclerAll.getAdapter();
-                        break;
-                    case 1:
-                        adapter = (UserListAdapter) recyclerNotFollow.getAdapter();
-                        break;
-                    case 2:
-                        adapter = (UserListAdapter) recyclerNotWatch.getAdapter();
-                }
-                adapter.getFilter().filter(s);
-            }
-        };
-        searchEdit.addTextChangedListener(textListener);
-        searchEdit.removeTextChangedListener(textListener);
+        searchEdit.addTextChangedListener(textListener());
+        searchEdit.removeTextChangedListener(textListener());
         searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -256,5 +230,36 @@ public class MediaLogs extends AppCompatActivity {
     public void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public TextWatcher textListener(){
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int index = tabLayout.getSelectedTabPosition();
+                switch (index) {
+                    case 0:
+                        adapter = (UserListAdapter) recyclerAll.getAdapter();
+                        break;
+                    case 1:
+                        adapter = (UserListAdapter) recyclerNotFollow.getAdapter();
+                        break;
+                    case 2:
+                        adapter = (UserListAdapter) recyclerNotWatch.getAdapter();
+                }
+                adapter.getFilter().filter(s);
+            }
+        };
+        return textWatcher;
     }
 }
