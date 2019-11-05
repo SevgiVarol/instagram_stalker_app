@@ -2,18 +2,23 @@ package com.example.appinsta.UserPage;
 
 
 import android.annotation.SuppressLint;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
+
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -26,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
@@ -43,6 +49,10 @@ public class UserProfile extends Fragment {
     List<InstagramUserSummary> userStalkersList = new ArrayList<>();
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
+
+    ArrayList<Uri> storyUrlList;
+    List<InstagramFeedItem> stories;
+    ProgressBar cycleProgressBar;
 
     public UserProfile() {
         // Required empty public constructor
@@ -63,7 +73,6 @@ public class UserProfile extends Fragment {
        initComponents(view);
 
         InstagramUser userSum = service.getUser(user.getUsername());
-
         Glide.with(getActivity()) //1
                 .load(user.getProfile_pic_url()).into(profilPic);
 
@@ -82,6 +91,7 @@ public class UserProfile extends Fragment {
         viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         showUserStalkersAndStalking();
+        showStories();
 
         return view;
     }
@@ -100,6 +110,8 @@ public class UserProfile extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
 
+        cycleProgressBar = view.findViewById(R.id.progressBar);
+
     }
     private void showUserStalkersAndStalking() {
 
@@ -116,6 +128,14 @@ public class UserProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 new userStalkingTask().execute();
+            }
+        });
+    }
+    private void showStories(){
+        profilPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new storyTask().execute();
             }
         });
     }
@@ -190,12 +210,41 @@ public class UserProfile extends Fragment {
         }
     }
 
+    private class storyTask extends AsyncTask<String,String,String>{
+
+        @Override
+        protected void onPreExecute(){
+            //Cycle progress bar
+            cycleProgressBar.setIndeterminate(true);
+
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            if (storyUrlList ==null){
+                storyUrlList = service.getStories(user.username);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s){
+            cycleProgressBar.setIndeterminate(false);
+            Intent storyIntent = new Intent(getContext(), StoryViewer.class);
+            storyIntent.putExtra("storyUrlList", storyUrlList);
+            if (storyUrlList !=null & storyUrlList.size()!=0) {
+                startActivity(storyIntent);
+            }else {
+                Toast.makeText(getActivity(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }
 
 
    /*class myMediaAsync extends AsyncTask<String, String, String> {
 
         private ProgressDialog pd;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();

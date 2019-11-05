@@ -25,9 +25,22 @@
            android:theme="@style/Theme.AppCompat.NoActionBar">
            <intent-filter>
               <action android:name="com.example.appinsta.Login.LoginPage"/>
-              <category android:name="android.intent.category.LAUNCHER" />
+              <category android:name="android.intent.category.DEFAULT" />
            </intent-filter>
        </activity>
+        <activity
+            android:name=".UserPage.StoryViewer"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".MediaLog.MediaLogs"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
