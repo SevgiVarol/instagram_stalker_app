@@ -258,7 +258,7 @@ public class MainFragment extends Fragment {
             photoStalkers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MyMediasFragment mainFragment = new MyMediasFragment();
+                    MyAllMediaFragment mainFragment = new MyAllMediaFragment();
                     FragmentManager manager = getFragmentManager();
                     manager.beginTransaction().replace(R.id.linearLayout, mainFragment).addToBackStack("tag").commit();
                 }
