@@ -224,28 +224,28 @@ public class InstagramService {
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
 
-            InstagramUserStoryFeedResult story = null;
-            InstagramGetStoryViewersResult userStoryViewers = null;
+        InstagramUserStoryFeedResult story = null;
+        InstagramGetStoryViewersResult userStoryViewers = null;
 
-            try {
-                story = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            story = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        try {
+            if (story.getReel() != null) {
+
+                userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
+
             }
 
-
-            try {
-                if (story.getReel() != null) {
-
-                    userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            storyViewers = userStoryViewers.getUsers();
-            return storyViewers;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        storyViewers = userStoryViewers.getUsers();
+        return storyViewers;
 
     }
 
@@ -254,7 +254,7 @@ public class InstagramService {
         if (story != null) {
             return story;
         } else {
-            story=new ArrayList<>();
+            story = new ArrayList<>();
             InstagramUserStoryFeedResult storyFeedResult = null;
 
             try {
@@ -262,12 +262,13 @@ public class InstagramService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (storyFeedResult.getReel() != null ) {
+            if (storyFeedResult.getReel() != null) {
                 if (storyFeedResult.getReel().getItems() != null && !storyFeedResult.getReel().getItems().isEmpty()) {
-                for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
-                    story.add(item);
+                    for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
+                        story.add(item);
 
-                }}
+                    }
+                }
             }
             //story = storyFeedResult.getReel().getItems();
             if (storyFeedResult.getReel() != null) {
@@ -298,7 +299,7 @@ public class InstagramService {
 
     }
 
-    public List<InstagramFeedItem> getMedias(long userId,String nextMaxId) {
+    public List<InstagramFeedItem> getMedias(long userId, String nextMaxId) {
 
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
@@ -381,7 +382,7 @@ public class InstagramService {
 
                 }
             }
-            nextMaxId =myUserFeedResult.getNext_max_id();
+            nextMaxId = myUserFeedResult.getNext_max_id();
         } while (nextMaxId != null);
 
         return mediaLikers;
@@ -390,31 +391,34 @@ public class InstagramService {
     }
 
     public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
+        if (!myMediaLikers.isEmpty()) {
+            myMediaLikers.clear();
+        }
 
-            InstagramGetMediaLikersResult getMediaLikersResult = null;
+        InstagramGetMediaLikersResult getMediaLikersResult = null;
 
-            String nextMaxId = null;
-            do {
+        String nextMaxId = null;
+        do {
 
-                try {
-
-
-                    getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
+            try {
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                getMediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, nextMaxId));
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
+                for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
+                    myMediaLikers.add(user);
+
                 }
-                if (getMediaLikersResult.getUsers() != null && !getMediaLikersResult.getUsers().isEmpty()) {
-                    for (InstagramUserSummary user : getMediaLikersResult.getUsers()) {
-                        myMediaLikers.add(user);
+            }
+            nextMaxId = myUserFeedResult.getNext_max_id();
+        } while (nextMaxId != null);
 
-                    }
-                }
-                nextMaxId = myUserFeedResult.getNext_max_id();
-            } while (nextMaxId != null);
-
-            return myMediaLikers;
+        return myMediaLikers;
 
 
     }
@@ -426,7 +430,7 @@ public class InstagramService {
         List<InstagramFeedItem> likedMediaList = new ArrayList<>();
         List<InstagramUserSummary> medialikers = new ArrayList<>();
 
-            int mediaNum = getMyMedias().size();
+        int mediaNum = getMyMedias().size();
 
         for (int i = 0; i < mediaNum; i++) {
 

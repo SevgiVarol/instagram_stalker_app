@@ -24,8 +24,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userProfilPic"
-            android:layout_width="78dp"
-            android:layout_height="70dp"
+            android:layout_width="67dp"
+            android:layout_height="63dp"
             />
 
         <TableLayout

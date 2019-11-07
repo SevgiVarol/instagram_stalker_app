@@ -185,7 +185,13 @@ public class MainFragment extends Fragment {
             latestPhoto.setAlpha(0.3f);
 
             if (service.myMedia(0) != null) {
-                Glide.with(getActivity()).load(service.myMedia(0).image_versions2.candidates.get(0).url).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
+                String latestPhotoUri = null;
+                try {
+                    latestPhotoUri = service.myMedia(0).image_versions2.candidates.get(0).url;
+                } catch (Exception e) {
+                    latestPhotoUri = service.myMedia(0).getCarousel_media().get(0).image_versions2.candidates.get(0).url;
+                }
+                Glide.with(getActivity()).load(latestPhotoUri).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
