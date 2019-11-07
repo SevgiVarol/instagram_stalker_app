@@ -242,8 +242,7 @@
                                     android:paddingTop="3dp"
                                     android:paddingRight="3dp"
                                     android:paddingBottom="3dp"
-                                    app:Number="0"
-                                    app:Condition="Fotoğraflarımı beğenip beni takip etmeyenler">
+                                    app:Condition="Gönderilerim">
 
 
                                 </com.example.appinsta.CustomView>
