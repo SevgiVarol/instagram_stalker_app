@@ -71,8 +71,9 @@ public class MediaLogs<T> extends AppCompatActivity {
         StoryImagePagerAdapter myImagePager;
         StoryUserPagerAdapter myUserPager;
         TextWatcher textListener;
+
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             }
@@ -152,7 +153,6 @@ public class MediaLogs<T> extends AppCompatActivity {
             searchEdit = (EditText) findViewById(R.id.editTextSearch);
 
 
-
         }
 
 
@@ -197,7 +197,7 @@ public class MediaLogs<T> extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s){
+        protected void onPostExecute(String s) {
             searchEdit.addTextChangedListener(textListener);
             searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -359,16 +359,17 @@ public class MediaLogs<T> extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            if (getIntentIdList.size()>2){
-            for (int i = 2; i < getIntentIdList.size(); i++) {
+            if (getIntentIdList.size() > 2) {
+                for (int i = 2; i < getIntentIdList.size(); i++) {
 
-                try {
-                    observers = (List<T>) service.getStoryViewers(userId, getIntentIdList.get(i));
-                    observerList.add(i, observers);
-                } catch (Exception e) {
-                    Log.e(e.getMessage(), " StoryViewer returning null object");
+                    try {
+                        observers = (List<T>) service.getStoryViewers(userId, getIntentIdList.get(i));
+                        observerList.add(i, observers);
+                    } catch (Exception e) {
+                        Log.e(e.getMessage(), " StoryViewer returning null object");
+                    }
                 }
-            }}
+            }
             return null;
         }
 

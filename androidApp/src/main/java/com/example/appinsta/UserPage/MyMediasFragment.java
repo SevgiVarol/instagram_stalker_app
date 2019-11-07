@@ -76,14 +76,14 @@ public class MyMediasFragment extends Fragment {
                         if (myMediaList.get(counter).getVideo_versions() != null) {
                             try {
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getVideo_versions().get(0).getUrl()));
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
                             }
                         } else {
                             try {
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
