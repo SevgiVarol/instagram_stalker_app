@@ -1,11 +1,10 @@
 package com.example.appinsta;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -29,6 +28,7 @@ public class SearchActivity extends AppCompatActivity implements Serializable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         userList= (List<InstagramUserSummary>) getIntent().getSerializableExtra("userList");
         TextWatcher watcher = new TextWatcher() {

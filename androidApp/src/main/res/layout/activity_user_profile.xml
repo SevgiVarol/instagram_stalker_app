@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserPage.UserProfileActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".UserPage.UserProfileActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,8 +42,7 @@
                     android:orientation="vertical">
 
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/userProfilPic"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
@@ -71,8 +70,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gönderi"
-                        android:textSize="20sp"
-                        android:textColor="#FFFF"/>
+                        android:textColor="#FFFF"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvMediaNum"
@@ -85,6 +84,7 @@
                         android:textStyle="bold" />
 
                 </LinearLayout>
+
                 <LinearLayout
 
                     android:layout_width="0dp"
@@ -97,8 +97,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Takip"
-                        android:textSize="20sp"
-                        android:textColor="#FFFF"/>
+                        android:textColor="#FFFF"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvFollowingNum"
@@ -131,9 +131,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
-                        android:textSize="20sp"
                         android:text="0"
                         android:textColor="#FFFF"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -141,18 +141,18 @@
             </LinearLayout>
 
             <LinearLayout
-                android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/tvFullname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:textColor="#FFF"
-                    android:textSize="15dp"
-                    android:layout_marginLeft="10dp"/>
+                    android:textSize="15dp" />
 
             </LinearLayout>
 
@@ -175,8 +175,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmedikleri"
-                        >
+                        app:Condition="Geri takip etmedikleri">
 
 
                     </com.example.appinsta.CustomView>
@@ -196,8 +195,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmeyenler"
-                        >
+                        app:Condition="Geri takip etmeyenler">
 
 
                     </com.example.appinsta.CustomView>
@@ -207,31 +205,28 @@
             </LinearLayout>
 
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.google.android.material.tabs.TabLayout
+                <android.support.design.widget.TabLayout
                     android:id="@+id/tabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                </android.support.design.widget.TabLayout>
 
-                </com.google.android.material.tabs.TabLayout>
-
-                <androidx.viewpager.widget.ViewPager
+                <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                </androidx.viewpager.widget.ViewPager>
 
+                </android.support.v4.view.ViewPager>
 
 
             </LinearLayout>
 
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>

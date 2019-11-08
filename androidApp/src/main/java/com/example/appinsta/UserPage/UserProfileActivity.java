@@ -4,12 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -17,7 +18,6 @@ import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
 
 import com.example.appinsta.service.InstagramService;
-import com.google.android.material.tabs.TabLayout;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -67,12 +67,28 @@ public class UserProfileActivity extends AppCompatActivity {
         if(userSum.getMedia_count()!=0) {
             userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
         }
-
+        viewPager.setOffscreenPageLimit(0);
         viewPager.setAdapter(userProfilePagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
         showUserStalkersAndStalking();
+
     }
+
+
     private void initComponents() {
 
         tvFullname = (TextView) findViewById(R.id.tvFullname);
@@ -172,4 +188,5 @@ public class UserProfileActivity extends AppCompatActivity {
             startActivity(i);
         }
     }
+
 }

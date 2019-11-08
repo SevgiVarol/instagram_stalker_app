@@ -7,14 +7,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     TextView takipTv, takipciTv;
 
     RelativeLayout theLayout;
-    SwipeRefreshLayout swipeRefreshLayout;
     ProgressBar mProgress = null;
     Drawable drawable = null;
     InstagramUser user;
@@ -115,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-            /*try {
+          /*  try {
                 service.login("simge.keser", "Sim15290107.");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -134,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             latestPhoto.setAlpha(0.3f);
 
 
-            if (service.myMedia(0) != null) {
+            if (service.getLoggedUser().getMedia_count() != 0) {
                 Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
                     @Override
                     public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
@@ -171,8 +168,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if (service.myMedia(0) != null) {
-                mediaLikers = compare(myFollowers, service.getMyMediaLikers(service.myMedia(0).pk));
+            if (service.getLoggedUser().getMedia_count() != 0) {
+                mediaLikers = compare(myFollowers, service.getMediaLikers(service.getLoggedUserMedias(null).get(0).pk));
             }
             if (mediaLikers != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
@@ -192,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
         takipTv = (TextView) findViewById(R.id.takipTv);
         takipciTv = (TextView) findViewById(R.id.takipciTv);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
 
         theLayout = (RelativeLayout) findViewById(R.id.layoutLastestPhoto);

@@ -15,21 +15,20 @@
     <activity android:name=".UserPage.UserProfileActivity" android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     <activity android:name=".SearchActivity" android:windowSoftInputMode="stateHidden" android:theme="@style/Theme.AppCompat.NoActionBar"/>
     <activity
-           android:name=".LoginPage"
-           android:theme="@style/Theme.AppCompat.NoActionBar">
-           <intent-filter>
-              <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.LAUNCHER" />
-           </intent-filter>
-       </activity>
+           android:name=".LoginPage" android:theme="@style/Theme.AppCompat.NoActionBar">
+              <intent-filter>
+                  <action android:name="android.intent.action.MAIN" />
+                  <category android:name="android.intent.category.LAUNCHER" />
+              </intent-filter>
+          </activity>
        <activity
            android:name=".MainActivity"
            android:theme="@style/Theme.AppCompat.NoActionBar">
-           <intent-filter>
+            <intent-filter>
               <action android:name="com.example.appinsta.Login.LoginPage"/>
-              <category android:name="android.intent.category.LAUNCHER" />
-           </intent-filter>
-       </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

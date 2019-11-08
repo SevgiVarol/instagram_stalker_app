@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.StyleableRes;
+
 
 /**
  * Created by OT on 08/06/2017.
