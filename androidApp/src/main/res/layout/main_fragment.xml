@@ -49,10 +49,8 @@
                         <LinearLayout
                             android:id="@+id/cardViewLayout"
                             android:layout_width="match_parent"
-                            android:layout_height="188dp"
-                            android:orientation="horizontal"
-
-                            >
+                            android:layout_height="170dp"
+                            android:orientation="horizontal">
 
 
                             <LinearLayout
@@ -67,11 +65,13 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Takip"
+                                    android:layout_gravity="center"
                                     android:textColor="#FFFFFF"
                                     android:textSize="20sp" />
 
                                 <TextView
                                     android:id="@+id/takipTv"
+                                    android:layout_gravity="center"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:paddingTop="10dp"
@@ -84,10 +84,9 @@
 
                             <RelativeLayout
 
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_alignTop="@+id/cardViewLayout"
-                                android:layout_weight="1"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -109,6 +108,7 @@
 
                                 <ProgressBar
                                     android:id="@+id/progress_bar"
+                                    android:layout_gravity="center"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
                                     android:backgroundTintMode="add"
@@ -117,6 +117,7 @@
 
                                 <ProgressBar
                                     android:id="@+id/progressBar"
+                                    android:layout_gravity="center"
                                     style="?android:attr/progressBarStyle"
                                     android:layout_width="70dp"
                                     android:layout_height="70dp"
@@ -145,6 +146,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     android:text="Takipçi"
                                     android:textColor="#FFFFFF"
                                     android:textSize="20sp" />
@@ -167,13 +169,13 @@
                         <androidx.viewpager.widget.ViewPager
                             android:id="@+id/main_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="450dp">
+                            android:layout_height="wrap_content">
                             <LinearLayout
                                 android:id="@+id/layoutStaticks"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"
-                                android:paddingTop="50dp">
+                                android:paddingTop="12dp">
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
@@ -281,16 +283,16 @@
                             <LinearLayout
                                 android:id="@+id/layoutMedia"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:orientation="vertical">
-                                <TextView
+<!--                                <TextView
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="15dp"
                                     android:text="TÜM GÖNDERİLERİM"
-                                    android:textAlignment="center"/>
+                                    android:textAlignment="center"/>-->
                                 <LinearLayout
                                     android:id="@+id/media"
-                                    android:layout_marginTop="37dp"
+                                    android:layout_marginTop="15dp"
                                     android:orientation="horizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent">
