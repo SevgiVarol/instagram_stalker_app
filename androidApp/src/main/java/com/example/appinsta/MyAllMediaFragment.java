@@ -3,6 +3,7 @@ package com.example.appinsta;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -36,6 +38,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 public class MyAllMediaFragment extends Fragment {
 
     static GridView gridView;
+    ProgressBar footerLoadingView;
     List<InstagramFeedItem> myMediaList;
     InstagramService service = InstagramService.getInstance();
     ArrayList<Uri> mediaUrlList;
@@ -50,8 +53,11 @@ public class MyAllMediaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_my_media, container, false);
-        gridView = (GridView) view.findViewById(R.id.gridView);
+        View view = inflater.inflate(R.layout.fragment_user_media, container, false);
+        view.setBackgroundColor(Color.TRANSPARENT);
+        view.setPadding(10,0,10,30);
+        gridView = (GridView) view.findViewById(R.id.userMediasGridView);
+        footerLoadingView = view.findViewById(R.id.footerLoadingView);
 
         mediaUrlList = new ArrayList<>();
         mediaIdList = new ArrayList<>();
@@ -102,6 +108,7 @@ public class MyAllMediaFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            footerLoadingView.setVisibility(View.GONE);
             gridView.setAdapter(new ImageAdapter(getActivity(), myMediaList));
             gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override

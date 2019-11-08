@@ -26,17 +26,9 @@
             />
 
 
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
-            android:id="@+id/swipeRefresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <ScrollView
+            <!--<ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent">-->
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -172,141 +164,158 @@
                         </LinearLayout>
 
 
-
-                        <LinearLayout
+                        <androidx.viewpager.widget.ViewPager
+                            android:id="@+id/main_pager"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:paddingTop="50dp"
-
-
-                            >
-
+                            android:layout_height="450dp">
                             <LinearLayout
+                                android:id="@+id/layoutStaticks"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:paddingTop="50dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/mutedStory"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Condition="Hikayelerimi sessize alanlar"
+                                        app:Number="0">
+                                    </com.example.appinsta.CustomView>
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/latestPhotoLikers"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Number="0"
+                                        app:Condition="Son fotoğrafımı beğenmeyen takipçiler">
+                                    </com.example.appinsta.CustomView>
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/storyStalkers"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Number="0"
+                                        app:Condition="Hikayelerimi izleyip beni takip etmeyenler">
+                                    </com.example.appinsta.CustomView>
+
+                                    <!--<com.example.appinsta.CustomView
+                                        android:id="@+id/photoStalkers"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Number="0"
+                                        app:Condition="Fotoğraflarımı beğenip beni takip etmeyenler">
+                                    </com.example.appinsta.CustomView>-->
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/userStalking"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Condition="Geri takip etmediklerim">
+                                    </com.example.appinsta.CustomView>
+
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/userStalkers"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Condition="Beni geri takip etmeyenler">
+                                    </com.example.appinsta.CustomView>
+
+
+                                    <com.example.appinsta.CustomView
+                                        android:id="@+id/userAction"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingLeft="3dp"
+                                        android:paddingTop="3dp"
+                                        android:paddingRight="3dp"
+                                        android:paddingBottom="3dp"
+                                        app:Condition="Kişi hareketleri">
+                                    </com.example.appinsta.CustomView>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/layoutMedia"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
                                 android:orientation="vertical">
-
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/mutedStory"
+                                <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Condition="Hikayelerimi sessize alanlar"
-                                    app:Number="0"
-                                    >
-
-
-                                </com.example.appinsta.CustomView>
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/latestPhotoLikers"
+                                    android:text="TÜM GÖNDERİLERİM"
+                                    android:textAlignment="center"/>
+                                <LinearLayout
+                                    android:id="@+id/media"
+                                    android:layout_marginTop="37dp"
+                                    android:orientation="horizontal"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Number="0"
-                                    app:Condition="Son fotoğrafımı beğenmeyen takipçiler"
-                                   >
+                                    android:layout_height="match_parent">
 
-
-                                </com.example.appinsta.CustomView>
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/storyStalkers"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Number="0"
-                                    app:Condition="Hikayelerimi izleyip beni takip etmeyenler">
-
-
-                                </com.example.appinsta.CustomView>
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/photoStalkers"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Condition="Gönderilerim">
-
-
-                                </com.example.appinsta.CustomView>
-
+                                </LinearLayout>
 
                             </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/userStalking"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Condition="Geri takip etmediklerim">
+                        </androidx.viewpager.widget.ViewPager>
 
 
-                                </com.example.appinsta.CustomView>
-
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/userStalkers"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Condition="Beni geri takip etmeyenler">
-
-
-                                </com.example.appinsta.CustomView>
-
-
-                                <com.example.appinsta.CustomView
-                                    android:id="@+id/userAction"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:paddingLeft="3dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="3dp"
-                                    android:paddingBottom="3dp"
-                                    app:Condition="Kişi hareketleri">
-
-
-                                </com.example.appinsta.CustomView>
-
-
-                            </LinearLayout>
-
-                        </LinearLayout>
                     </LinearLayout>
                     <include layout="@layout/content_user" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </ScrollView>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <!--</ScrollView>-->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_navigation_menu"
+            app:itemIconTint="@drawable/bottom_nav_colors"
+            app:itemTextColor="@drawable/bottom_nav_colors">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
     </RelativeLayout>
 
 

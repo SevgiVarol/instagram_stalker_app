@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MediaLog.MediaLogs"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
