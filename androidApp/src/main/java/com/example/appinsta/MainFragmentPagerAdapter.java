@@ -22,7 +22,7 @@ public class MainFragmentPagerAdapter extends PagerAdapter {
         int resId=0;
         switch (position){
             case 0:
-                resId=R.id.layoutStaticks;
+                resId=R.id.layoutStats;
                 break;
             case 1:
                 resId=R.id.layoutMedia;

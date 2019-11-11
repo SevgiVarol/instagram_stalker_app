@@ -224,18 +224,18 @@ public class InstagramService {
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
 
-        InstagramUserStoryFeedResult story = null;
+        InstagramUserStoryFeedResult storyFeedResult = null;
         InstagramGetStoryViewersResult userStoryViewers = null;
 
         try {
-            story = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+            storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
 
         try {
-            if (story.getReel() != null) {
+            if (storyFeedResult.getReel() != null) {
 
                 userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
 

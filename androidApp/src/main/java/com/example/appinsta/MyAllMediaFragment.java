@@ -2,7 +2,6 @@ package com.example.appinsta;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -19,14 +18,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.MediaLog.MediaLogs;
-import com.example.appinsta.R;
 import com.example.appinsta.UserPage.ImageAdapter;
 import com.example.appinsta.service.InstagramService;
 
@@ -61,13 +58,13 @@ public class MyAllMediaFragment extends Fragment {
 
         mediaUrlList = new ArrayList<>();
         mediaIdList = new ArrayList<>();
-        new loadAsynTask().execute();
+        new init().execute();
 
         return view;
 
     }
 
-    private class loadAsynTask extends AsyncTask<String, String, String> {
+    private class init extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -120,38 +117,20 @@ public class MyAllMediaFragment extends Fragment {
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    new mediaLogIntent(position).execute();
+                    if (mediaUrlList != null & mediaUrlList.size() != 0) {
+
+                        Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
+                        mediaLogIntent.putExtra("storyUrlList", mediaUrlList);
+                        mediaLogIntent.putExtra("userId", userid);
+                        mediaLogIntent.putExtra("storyIds", mediaIdList);
+                        mediaLogIntent.putExtra("key", "MEDIA");
+                        mediaLogIntent.putExtra("position", position);
+                        startActivity(mediaLogIntent);
+                    } else {
+                        Toast.makeText(getActivity(), "Media bulunamadı", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
-        }
-    }
-
-    private class mediaLogIntent extends AsyncTask<String, String, String> {
-        int position;
-
-        public mediaLogIntent(int position) {
-            this.position = position;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (mediaUrlList != null & mediaUrlList.size() != 0) {
-
-                Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
-                mediaLogIntent.putExtra("storyUrlList", mediaUrlList);
-                mediaLogIntent.putExtra("userId", userid);
-                mediaLogIntent.putExtra("storyIds", mediaIdList);
-                mediaLogIntent.putExtra("key", "MEDIA");
-                mediaLogIntent.putExtra("position", position);
-                startActivity(mediaLogIntent);
-            } else {
-                Toast.makeText(getActivity(), "Media bulunamadı", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 

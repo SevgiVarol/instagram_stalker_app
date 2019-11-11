@@ -277,9 +277,9 @@ public class MainFragment extends Fragment {
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    if (menuItem.getTitle().equals("Gönderiler")) {
+                    if (menuItem.getItemId() == 2131230744) {
                         mainViewPager.setCurrentItem(1);
-                    } else {
+                    } else if (menuItem.getItemId() == 2131230737) {
                         mainViewPager.setCurrentItem(0);
                     }
                     return false;

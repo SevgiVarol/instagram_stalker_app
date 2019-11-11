@@ -13,22 +13,13 @@
         android:id="@+id/layoutLastestPhoto"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#000000"
-
-        >
+        android:background="#000000">
 
 
         <ImageView
             android:id="@+id/latestPhoto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            />
-
-
-            <!--<ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">-->
+            android:layout_height="match_parent"/>
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -171,7 +162,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             <LinearLayout
-                                android:id="@+id/layoutStaticks"
+                                android:id="@+id/layoutStats"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="horizontal"
@@ -220,18 +211,6 @@
                                         app:Number="0"
                                         app:Condition="Hikayelerimi izleyip beni takip etmeyenler">
                                     </com.example.appinsta.CustomView>
-
-                                    <!--<com.example.appinsta.CustomView
-                                        android:id="@+id/photoStalkers"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:paddingLeft="3dp"
-                                        android:paddingTop="3dp"
-                                        android:paddingRight="3dp"
-                                        android:paddingBottom="3dp"
-                                        app:Number="0"
-                                        app:Condition="Fotoğraflarımı beğenip beni takip etmeyenler">
-                                    </com.example.appinsta.CustomView>-->
 
                                 </LinearLayout>
 
@@ -285,11 +264,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
-<!--                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="15dp"
-                                    android:text="TÜM GÖNDERİLERİM"
-                                    android:textAlignment="center"/>-->
+
                                 <LinearLayout
                                     android:id="@+id/media"
                                     android:layout_marginTop="15dp"
@@ -307,7 +282,6 @@
                     </LinearLayout>
                     <include layout="@layout/content_user" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            <!--</ScrollView>-->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
