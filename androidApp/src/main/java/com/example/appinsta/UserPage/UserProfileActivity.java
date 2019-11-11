@@ -47,7 +47,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        user= (InstagramUserSummary) getIntent().getSerializableExtra("user");
+        user = (InstagramUserSummary) getIntent().getSerializableExtra("user");
         InstagramUser userSum = service.getUser(user.getUsername());
 
         initComponents();
@@ -64,10 +64,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        if(userSum.getMedia_count()!=0) {
-            userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
-        }
-        viewPager.setOffscreenPageLimit(0);
+        userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
         viewPager.setAdapter(userProfilePagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -76,9 +73,11 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
@@ -94,7 +93,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFullname = (TextView) findViewById(R.id.tvFullname);
         profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
         tvFollowingCount = (TextView) findViewById(R.id.tvFollowingNum);
-        tvFollowersCount =(TextView) findViewById(R.id.tvFollowersNum);
+        tvFollowersCount = (TextView) findViewById(R.id.tvFollowersNum);
         tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
         customViewUserStalkers = (CustomView) findViewById(R.id.customViewUsersStalkers);
@@ -104,6 +103,7 @@ public class UserProfileActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
 
     }
+
     private void showUserStalkersAndStalking() {
 
         customViewUserStalkers.setOnClickListener(new View.OnClickListener() {

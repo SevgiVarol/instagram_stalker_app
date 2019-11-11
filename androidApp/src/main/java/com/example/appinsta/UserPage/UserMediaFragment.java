@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.appinsta.R;
 import com.example.appinsta.service.InstagramService;
@@ -25,6 +26,7 @@ public class UserMediaFragment extends Fragment {
 
     InstagramService service = InstagramService.getInstance();
     GridView gridView;
+    TextView infoTv;
     public List<InstagramFeedItem> mediaList = new ArrayList<>();
     InstagramUser user;
     Boolean isLoadingNextMedias = false;
@@ -47,6 +49,7 @@ public class UserMediaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_media, container, false);
         gridView = view.findViewById(R.id.userMediasGridView);
         footerLoadingView = view.findViewById(R.id.footerLoadingView);
+        infoTv = view.findViewById(R.id.nullMediaInfo);
 
         getUserMedia= new getUserMedia().execute();
 
@@ -69,8 +72,12 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            imageListAdapter = new ImageAdapter(getActivity(), mediaList);
-            gridView.setAdapter(imageListAdapter);
+            if (mediaList.size() != 0){
+                imageListAdapter = new ImageAdapter(getActivity(), mediaList);
+                gridView.setAdapter(imageListAdapter);
+            }else{
+                infoTv.setVisibility(View.VISIBLE);
+            }
 
             gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
@@ -108,8 +115,8 @@ public class UserMediaFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            imageListAdapter.setData(mediaList);
-            imageListAdapter.notifyDataSetChanged();
+            //imageListAdapter.setData(mediaList);
+//            imageListAdapter.notifyDataSetChanged();
             footerLoadingView.setVisibility(View.GONE);
             isLoadingNextMedias = false;
         }
