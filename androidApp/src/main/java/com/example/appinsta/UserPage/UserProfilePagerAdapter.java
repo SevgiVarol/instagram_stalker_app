@@ -29,7 +29,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new UserMediaFragment(user);
                 break;
             case 1:
-                fragment = new LikedMediasByUser(user.getUsername());
+                fragment = new LikedMediasByUserFragment(user.getUsername());
                 break;
             default:
                 fragment = new Fragment();
