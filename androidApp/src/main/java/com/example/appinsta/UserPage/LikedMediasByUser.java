@@ -21,7 +21,7 @@ import java.util.List;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 
-public class LoggedUserLikedMediasFragment extends Fragment {
+public class LikedMediasByUser extends Fragment {
 
     GridView gridView;
     InstagramService service = InstagramService.getInstance();
@@ -32,7 +32,7 @@ public class LoggedUserLikedMediasFragment extends Fragment {
     Boolean isLoadingNextMedias = false;
     AsyncTask getLoggedUserLikedMediaTask;
 
-    public LoggedUserLikedMediasFragment(String username) {
+    public LikedMediasByUser(String username) {
         this.username=username;
     }
 
