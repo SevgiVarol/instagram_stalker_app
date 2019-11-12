@@ -277,10 +277,11 @@ public class MainFragment extends Fragment {
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                    if (menuItem.getItemId() == 2131230744) {
-                        mainViewPager.setCurrentItem(1);
-                    } else if (menuItem.getItemId() == 2131230737) {
+                    if (menuItem.getItemId() == R.id.action_home) {
                         mainViewPager.setCurrentItem(0);
+                    }
+                    else if (menuItem.getItemId() == R.id.action_media) {
+                        mainViewPager.setCurrentItem(1);
                     }
                     return false;
                 }
