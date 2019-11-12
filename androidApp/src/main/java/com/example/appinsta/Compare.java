@@ -19,6 +19,7 @@ public class Compare {
     public Compare(Instagram4Android instagram) {
         this.instagram = instagram;
     }
+
     public Compare() {
 
     }
@@ -43,7 +44,7 @@ public class Compare {
 
         List<InstagramUser> results = new ArrayList<>();
 
-        for (InstagramUser user1: list1) {
+        for (InstagramUser user1 : list1) {
 
             boolean found = false;
 
@@ -65,7 +66,7 @@ public class Compare {
 
         List<InstagramUserSummary> results = new ArrayList<>();
 
-        for (InstagramUserSummary user1: list1) {
+        for (InstagramUserSummary user1 : list1) {
 
             boolean found = false;
 
@@ -82,6 +83,7 @@ public class Compare {
         return results;
 
     }
+
     public List<InstagramUserSummary> peopleIdontFollow(long userId) {
         service = new InstagramService(instagram);
 
@@ -100,61 +102,61 @@ public class Compare {
 
     }
 
-   /* public List<InstagramUserSummary> peopleIdontFollow(long userId) {
+    /* public List<InstagramUserSummary> peopleIdontFollow(long userId) {
 
-        user = new User(instagram);
-        //benim takip etmediklerim
-        return compare(user.getFollowers(userId), user.getFollowing(userId));
-
-
-    }
-
-    public List<InstagramUserSummary> peopledontFollowme(long userId) {
-
-        user = new User(instagram);
-        //beni takip etmeyenler
-        return compare(user.getFollowing(userId), user.getFollowers(userId));
+         user = new User(instagram);
+         //benim takip etmediklerim
+         return compare(user.getFollowers(userId), user.getFollowing(userId));
 
 
-    }
+     }
+
+     public List<InstagramUserSummary> peopledontFollowme(long userId) {
+
+         user = new User(instagram);
+         //beni takip etmeyenler
+         return compare(user.getFollowing(userId), user.getFollowers(userId));
+
+
+     }
 
 
 
 
-    public List<InstagramUserSummary> unwatchedStoryAndFollowing(long userId, int storyIndex) {
+     public List<InstagramUserSummary> unwatchedStoryAndFollowing(long userId, int storyIndex) {
 
-        story = new Story(instagram);
-        user = new User(instagram);
+         story = new Story(instagram);
+         user = new User(instagram);
 
-        String storyId = story.getStory(userId, storyIndex).id;
+         String storyId = story.getStory(userId, storyIndex).id;
 
-        return compareUnwatchedStoryAndFollowing(user.getFollowers(userId), story.getStoryViewers(userId, storyId));
+         return compareUnwatchedStoryAndFollowing(user.getFollowers(userId), story.getStoryViewers(userId, storyId));
 
-    }
+     }
 
-    public List<InstagramUserSummary> mediaLikersAndUnfollowing(long userId, int photoIndex) {
+     public List<InstagramUserSummary> mediaLikersAndUnfollowing(long userId, int photoIndex) {
 
-        media = new Media(instagram);
-        user = new User(instagram);
+         media = new Media(instagram);
+         user = new User(instagram);
 
-        long mediaId = media.getMedia(userId, photoIndex).getPk();
+         long mediaId = media.getMedia(userId, photoIndex).getPk();
 
-        return compare(media.getMediaLikers(mediaId), user.getFollowers(userId));
+         return compare(media.getMediaLikers(mediaId), user.getFollowers(userId));
 
-    }
+     }
 
-    public List<InstagramUser> wachedStoryAndUnfollowing(long userId, int storyIndex) {
-
-
-        story = new Story(instagram);
-        user = new User(instagram);
-
-        String storyId = story.getStory(userId, storyIndex).id;
-
-        return compareWatchedStoryAndUnfollowing(story.getStoryViewers(userId, storyId), user.getFollowers(userId));
+     public List<InstagramUser> wachedStoryAndUnfollowing(long userId, int storyIndex) {
 
 
-    }
+         story = new Story(instagram);
+         user = new User(instagram);
+
+         String storyId = story.getStory(userId, storyIndex).id;
+
+         return compareWatchedStoryAndUnfollowing(story.getStoryViewers(userId, storyId), user.getFollowers(userId));
+
+
+     }
 
 
 */

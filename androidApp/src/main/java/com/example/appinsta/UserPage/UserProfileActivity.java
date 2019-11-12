@@ -1,7 +1,7 @@
 package com.example.appinsta.UserPage;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,8 +9,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
@@ -40,6 +42,11 @@ public class UserProfileActivity extends AppCompatActivity {
     List<InstagramUserSummary> userStalkersList = new ArrayList<>();
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
+
+    ArrayList<Uri> storyUrlList;
+    List<InstagramFeedItem> stories;
+    ProgressBar cycleProgressBar;
+
     private UserProfilePagerAdapter userProfilePagerAdapter;
 
     @Override
@@ -84,6 +91,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
         showUserStalkersAndStalking();
+        showStories();
 
     }
 
@@ -102,6 +110,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
+        cycleProgressBar = view.findViewById(R.id.progressBar);
+
     }
 
     private void showUserStalkersAndStalking() {
@@ -117,6 +127,14 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new userStalkingTask().execute();
+            }
+        });
+    }
+    private void showStories(){
+        profilPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new storyTask().execute();
             }
         });
     }
@@ -186,6 +204,34 @@ public class UserProfileActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), SearchActivity.class);
             i.putExtra("userList", (Serializable) userStalkersList);
             startActivity(i);
+        }
+    }
+
+    private class storyTask extends AsyncTask<String,String,String>{
+
+        @Override
+        protected void onPreExecute(){
+            //Cycle progress bar
+            cycleProgressBar.setIndeterminate(true);
+
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            if (storyUrlList ==null){
+                storyUrlList = service.getStories(user.username);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s){
+            cycleProgressBar.setIndeterminate(false);
+            Intent storyIntent = new Intent(getContext(), StoryViewer.class);
+            storyIntent.putExtra("storyUrlList", storyUrlList);
+            if (storyUrlList !=null & storyUrlList.size()!=0) {
+                startActivity(storyIntent);
+            }else {
+                Toast.makeText(getActivity(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
