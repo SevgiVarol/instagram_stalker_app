@@ -5,14 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_light_background"
     android:orientation="vertical">
 
     <androidx.viewpager.widget.ViewPager
+        android:background="@color/cardview_dark_background"
         android:id="@+id/pager"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
-        android:background="@color/browser_actions_bg_grey"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,24 +22,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/pager"
-        app:tabIndicatorColor="@color/browser_actions_bg_grey"
-        app:tabSelectedTextColor="#000000"
-        app:tabTextColor="#80000000">
+        app:tabIndicatorColor="@color/browser_actions_title_color"
+        app:tabSelectedTextColor="#FFFFFF"
+        app:tabTextColor="#CCCCCC">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hepsi" />
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Takip Etmeyenler" />
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bakmayan Takipçilerim" />
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.tabs.TabLayout>
 

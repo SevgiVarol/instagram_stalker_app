@@ -29,7 +29,7 @@ public class MyMediasFragment extends Fragment {
 
 
 
-       // gridView.setAdapter(new ImageAdapter(getActivity(), UserProfile.urlOfMyPhotos));
+        // gridView.setAdapter(new ImageAdapter(getActivity(), UserProfile.urlOfMyPhotos));
         return view;
 
     }
