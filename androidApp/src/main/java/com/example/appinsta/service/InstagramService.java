@@ -215,10 +215,10 @@ public class InstagramService {
             InstagramSearchUsernameResult result = null;
             try {
                 result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
+                loggedUser = result.getUser();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            loggedUser = result.getUser();
             return loggedUser;
         }
     }
