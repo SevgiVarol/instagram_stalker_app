@@ -1,20 +1,21 @@
 package com.example.appinsta.DataBase;
 
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
+
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.Query;
 
 import java.util.List;
 
 @Dao
 public interface LoggedUserDao {
-    @Query("SELECT * FROM loggedusersentity")
-    List<LoggedUsersEntity> getLastUser();
+    @Query("SELECT * FROM loggedUserTable")
+    List<LoggedUserItem> getLastUser();
 
     @Insert
-    void insertLastLogged(LoggedUsersEntity loggedusersentity);
+    void insertLastLogged(LoggedUserItem loggedusersentity);
 
     @Delete
-    void deleteLogged(LoggedUsersEntity loggedusersentity);
+    void deleteLogged(LoggedUserItem loggedusersentity);
 }

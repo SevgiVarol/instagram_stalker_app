@@ -1,11 +1,12 @@
 package com.example.appinsta.DataBase;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity
-public class LoggedUsersEntity {
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "loggedUserTable")
+public class LoggedUserItem {
     @PrimaryKey(autoGenerate = true)
     public int uid=0;
 
