@@ -110,7 +110,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
-        cycleProgressBar = view.findViewById(R.id.progressBar);
+        cycleProgressBar = findViewById(R.id.progressBar);
 
     }
 
@@ -225,12 +225,12 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s){
             cycleProgressBar.setIndeterminate(false);
-            Intent storyIntent = new Intent(getContext(), StoryViewer.class);
+            Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
             storyIntent.putExtra("storyUrlList", storyUrlList);
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }else {
-                Toast.makeText(getActivity(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
         }
     }

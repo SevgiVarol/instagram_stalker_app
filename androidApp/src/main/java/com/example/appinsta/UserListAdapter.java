@@ -109,7 +109,7 @@ public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.
 
     @Override
     public int getItemCount() {
-        return userSummaryList.size();
+        return userList.size();
     }
 
     @Override
@@ -151,8 +151,8 @@ public class UserListAdapter<T> extends RecyclerView.Adapter<UserListAdapter<T>.
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            userSummaryList.clear();
-            userSummaryList.addAll((List) results.values);
+            userList.clear();
+            userList.addAll((List) results.values);
             notifyDataSetChanged();
         }
 

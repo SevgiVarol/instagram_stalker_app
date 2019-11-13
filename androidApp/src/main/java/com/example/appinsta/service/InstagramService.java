@@ -349,9 +349,9 @@ public class InstagramService {
     }
 
 
-    public List<InstagramUserSummary> getMyMediaLikers(long mediaId) {
+    public List<InstagramUserSummary> getMediaLikers(long mediaId) {
 
-       InstagramGetMediaLikersResult mediaLikersResult = null;
+        InstagramGetMediaLikersResult mediaLikersResult = null;
 
         try {
             mediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, null));
@@ -361,7 +361,7 @@ public class InstagramService {
 
         return mediaLikersResult.getUsers();
 
-
+    }
 
     public List<InstagramFeedItem> getMyLikedMediaByUser(String username) {
 
@@ -419,7 +419,7 @@ public class InstagramService {
             List<InstagramStoryTray> trays = result.getTray();
             List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
             for (InstagramStoryTray tray : trays) {
-                if (tray != null) {
+                if (tray != null & tray.getUser().username.equals(username)) {
                     userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk())));
                 }
             }
