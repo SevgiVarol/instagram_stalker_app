@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".SearchFragment">
+    tools:context=".SearchActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:orientation="vertical"
             >
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextSearch"
                 android:hint="Ara"
+                android:inputType="text"
+                android:maxLines="1"
                 />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </android.support.design.widget.TextInputLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -45,4 +46,4 @@
     </LinearLayout>
 
 
-</FrameLayout>
+</LinearLayout>

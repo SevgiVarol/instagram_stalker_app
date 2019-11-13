@@ -1,20 +1,13 @@
 package com.example.appinsta.UserPage;
-
-
-import android.annotation.SuppressLint;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,10 +16,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.CustomView;
 import com.example.appinsta.R;
-import com.example.appinsta.SearchFragment;
-import com.example.appinsta.service.InstagramService;
-import com.google.android.material.tabs.TabLayout;
+import com.example.appinsta.SearchActivity;
 
+import com.example.appinsta.service.InstagramService;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +31,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 import static com.example.appinsta.Compare.compare;
 
-
-public class UserProfile extends Fragment {
+public class UserProfileActivity extends AppCompatActivity {
 
     ImageView profilPic;
     TextView tvFollowingCount, tvFollowersCount, tvMediaCount, tvFullname;
@@ -54,26 +47,19 @@ public class UserProfile extends Fragment {
     List<InstagramFeedItem> stories;
     ProgressBar cycleProgressBar;
 
-    public UserProfile() {
-        // Required empty public constructor
-    }
-
-    @SuppressLint("ValidFragment")
-    public UserProfile(InstagramUserSummary user) {
-        this.user = user;
-
-        // Required empty public constructor
-    }
+    private UserProfilePagerAdapter userProfilePagerAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.user_profile_page, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_profile);
 
-       initComponents(view);
-
+        user = (InstagramUserSummary) getIntent().getSerializableExtra("user");
         InstagramUser userSum = service.getUser(user.getUsername());
-        Glide.with(getActivity()) //1
+
+        initComponents();
+
+        Glide.with(getApplicationContext()) //1
                 .load(user.getProfile_pic_url()).into(profilPic);
 
         tvFullname.setText(userSum.getFull_name());
@@ -85,42 +71,55 @@ public class UserProfile extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        UserProfilePagerAdapter userProfilePagerAdapter = new UserProfilePagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), userSum);
-
+        userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
         viewPager.setAdapter(userProfilePagerAdapter);
-        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
 
         showUserStalkersAndStalking();
         showStories();
 
-        return view;
     }
 
-    private void initComponents(View view) {
 
-        tvFullname = (TextView) view.findViewById(R.id.tvFullname);
-        profilPic = (CircleImageView) view.findViewById(R.id.userProfilPic);
-        tvFollowingCount = (TextView) view.findViewById(R.id.tvFollowingNum);
-        tvFollowersCount =(TextView) view.findViewById(R.id.tvFollowersNum);
-        tvMediaCount = (TextView) view.findViewById(R.id.tvMediaNum);
+    private void initComponents() {
 
-        customViewUserStalkers = (CustomView) view.findViewById(R.id.customViewUsersStalkers);
-        customViewUserStalking = (CustomView) view.findViewById(R.id.customViewUsersStalkings);
+        tvFullname = (TextView) findViewById(R.id.tvFullname);
+        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
+        tvFollowingCount = (TextView) findViewById(R.id.tvFollowingNum);
+        tvFollowersCount = (TextView) findViewById(R.id.tvFollowersNum);
+        tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
-        tabLayout = view.findViewById(R.id.tabLayout);
-        viewPager = view.findViewById(R.id.viewPager);
+        customViewUserStalkers = (CustomView) findViewById(R.id.customViewUsersStalkers);
+        customViewUserStalking = (CustomView) findViewById(R.id.customViewUsersStalkings);
 
-        cycleProgressBar = view.findViewById(R.id.progressBar);
+        tabLayout = findViewById(R.id.tabLayout);
+        viewPager = findViewById(R.id.viewPager);
+
+        cycleProgressBar = findViewById(R.id.progressBar);
 
     }
+
     private void showUserStalkersAndStalking() {
 
         customViewUserStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 new userStalkersTask().execute();
-
             }
         });
 
@@ -147,7 +146,7 @@ public class UserProfile extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext());
+            pd = new ProgressDialog(UserProfileActivity.this);
             pd.setMessage("geri takip etmedikleri yükleniyor...");
             pd.show();
 
@@ -168,27 +167,25 @@ public class UserProfile extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             pd.dismiss();
-            SearchFragment fragment = new SearchFragment(userStalkingList);
-            FragmentManager manager = getFragmentManager();
-            manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
+            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+            i.putExtra("userList", (Serializable) userStalkingList);
+            startActivity(i);
 
         }
     }
 
     private class userStalkersTask extends AsyncTask<String, String, String> {
 
-
         private ProgressDialog pd;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(getContext());
+            pd = new ProgressDialog(UserProfileActivity.this);
             pd.setMessage("geri takip etmeyenler yükleniyor...");
             pd.show();
 
         }
-
 
         @Override
         protected String doInBackground(String... strings) {
@@ -204,9 +201,9 @@ public class UserProfile extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             pd.dismiss();
-            SearchFragment fragment = new SearchFragment(userStalkersList);
-            FragmentManager manager = getFragmentManager();
-            manager.beginTransaction().replace(R.id.linearLayout, fragment).addToBackStack("tag").commit();
+            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+            i.putExtra("userList", (Serializable) userStalkersList);
+            startActivity(i);
         }
     }
 
@@ -228,62 +225,14 @@ public class UserProfile extends Fragment {
         @Override
         protected void onPostExecute(String s){
             cycleProgressBar.setIndeterminate(false);
-            Intent storyIntent = new Intent(getContext(), StoryViewer.class);
+            Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
             storyIntent.putExtra("storyUrlList", storyUrlList);
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }else {
-                Toast.makeText(getActivity(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 }
-
-
-   /*class myMediaAsync extends AsyncTask<String, String, String> {
-
-        private ProgressDialog pd;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            pd = new ProgressDialog(getContext());
-            pd.setMessage("Loading...");
-
-
-            pd.show();
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            media = service.urlOfMyPhotos(user.getUsername());
-
-            if (urlOfMyPhotos.size() == 0) {
-                myMedia = service.urlOfMyPhotos(user.getUsername());
-
-            for (int i = 0; i < media.size(); i++) {
-
-                for (int i = 0; i < myMedia.size(); i++) {
-
-                    if (myMedia.get(i).image_versions2 == null) {
-                        urlOfMyPhotos.add(myMedia.get(i).carousel_media.get(0).image_versions2.candidates.get(0).url);
-                    } else {
-                        urlOfMyPhotos.add(myMedia.get(i).image_versions2.candidates.get(0).url);
-                    }
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            pd.dismiss();
-            //myMediasFragment.gridView.setAdapter(new ImageAdapter(getActivity(),urlOfMyPhotos));
-
-        }
-    }*/

@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+
 
 import com.example.appinsta.R;
 import com.example.appinsta.service.InstagramService;
@@ -19,81 +20,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 
+public class LikedMediasByUserFragment extends Fragment {
 
-public class UserMediaFragment extends Fragment {
-
+    GridView gridView;
     InstagramService service = InstagramService.getInstance();
-    GridView mediasGridView;
-    TextView tvInfoText;
-    public List<InstagramFeedItem> mediaList = new ArrayList<>();
-    InstagramUser user;
-    Boolean isLoadingNextMedias = false;
+    public List<InstagramFeedItem> myLikedMediaList = new ArrayList<>();
+    String username;
     ImageAdapter imageListAdapter;
     ProgressBar footerLoadingView;
-    AsyncTask getUserMedia;
+    Boolean isLoadingNextMedias = false;
+    AsyncTask getLoggedUserLikedMediaTask;
 
-    public UserMediaFragment() {
-        // Required empty public constructor
+    public LikedMediasByUserFragment(String username) {
+        this.username=username;
     }
-
-    public UserMediaFragment(InstagramUser user) {
-        this.user = user;
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view= inflater.inflate(R.layout.fragment_my_media, container, false);
 
-        View view = inflater.inflate(R.layout.fragment_user_media, container, false);
-        mediasGridView = view.findViewById(R.id.userMediasGridView);
-        footerLoadingView = view.findViewById(R.id.footerLoadingView);
-        tvInfoText = view.findViewById(R.id.nullMediaInfo);
+        gridView = (GridView) view.findViewById(R.id.myLikedMediasGridView);
+        footerLoadingView = view.findViewById(R.id.likedMediasfooterLoadingView);
 
-        getUserMedia= new getUserMediaTask().execute();
+        getLoggedUserLikedMediaTask = new getLoggedUserLikedMediaTask().execute();
 
         return view;
     }
 
-    private class getUserMediaTask extends AsyncTask<String, String, String> {
+    public class getLoggedUserLikedMediaTask extends AsyncTask<String, String, String> {
+
         @Override
         protected String doInBackground(String... strings) {
 
-            if (mediaList.isEmpty()) {
-                mediaList = service.getUserMedias(user.getPk());
+            if(myLikedMediaList.isEmpty()) {
+                myLikedMediaList = service.getMyLikedMediaByUser(username);
             }
-
             return null;
         }
+
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            try {
-                if (mediaList.size() != 0){
-                    imageListAdapter = new ImageAdapter(getActivity(), mediaList);
-                    mediasGridView.setAdapter(imageListAdapter);
-                }else{
-                    tvInfoText.setVisibility(View.VISIBLE);
-                }
-            }catch (Exception e){
-                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
-                tvInfoText.setVisibility(View.VISIBLE);
-            }
+            imageListAdapter = new ImageAdapter(getActivity(), myLikedMediaList);
+            gridView.setAdapter(imageListAdapter);
 
-            mediasGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
                     if (totalItemCount - 1 == view.getLastVisiblePosition()) {
 
-                        if (totalItemCount < user.getMedia_count() && !isLoadingNextMedias) {
+                        if (!isLoadingNextMedias && InstagramService.myMediasNextMaxId!=null)
+                        {
                             footerLoadingView.setVisibility(View.VISIBLE);
                             isLoadingNextMedias = true;
-                            new getUserMediasNextPage().execute();
+                            new getLikedMediasNextPage().execute();
                         }
                     }
                 }
@@ -106,13 +92,13 @@ public class UserMediaFragment extends Fragment {
         }
     }
 
-    private class getUserMediasNextPage extends AsyncTask<String, String, String> {
+    private class getLikedMediasNextPage extends AsyncTask<String, String, String> {
+
         @Override
         protected String doInBackground(String... strings) {
 
-            List<InstagramFeedItem> nextMedias = service.getUserMedias(user.getPk(), InstagramService.mediasNextMaxId);
-            if (nextMedias != null){mediaList.addAll(nextMedias);}
-
+            List<InstagramFeedItem> nextMedias = service.getMyLikedNextMediaByUser(username,InstagramService.myMediasNextMaxId);
+            myLikedMediaList.addAll(nextMedias);
             return null;
         }
 
@@ -120,17 +106,15 @@ public class UserMediaFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            //imageListAdapter.setData(mediaList);
+            imageListAdapter.setData(myLikedMediaList);
             imageListAdapter.notifyDataSetChanged();
             footerLoadingView.setVisibility(View.GONE);
             isLoadingNextMedias = false;
         }
     }
-
-
     @Override
     public void onPause() {
         super.onPause();
-        getUserMedia.cancel(true);
+        getLoggedUserLikedMediaTask.cancel(true);
     }
 }
