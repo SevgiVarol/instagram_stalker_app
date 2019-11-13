@@ -1,10 +1,10 @@
 package com.example.appinsta.UserPage;
 
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 
@@ -16,8 +16,8 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
 
     UserProfilePagerAdapter(@NonNull FragmentManager fm, int behavior, InstagramUser user) {
         super(fm);
-        this.noOfTab=behavior;
-        this.user=user;
+        this.noOfTab = behavior;
+        this.user = user;
     }
 
     @NonNull
@@ -29,7 +29,7 @@ public class UserProfilePagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new UserMediaFragment(user);
                 break;
             case 1:
-                fragment = new MyMediasFragment();
+                fragment = new LikedMediasByUserFragment(user.getUsername());
                 break;
             default:
                 fragment = new Fragment();

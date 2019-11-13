@@ -1,6 +1,7 @@
 package com.example.appinsta;
 
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,9 +9,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +72,7 @@ public class MyAllMediaFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            myMediaList = service.getMyMedias();
+            myMediaList = service.getLoggedUserMedias();
             if (mediaUrlList.size() == 0) {
                 try {
                     for (int counter = 0; counter < myMediaList.size(); counter++) {
@@ -119,7 +119,7 @@ public class MyAllMediaFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (mediaUrlList != null & mediaUrlList.size() != 0) {
 
-                        Intent mediaLogIntent = new Intent(getContext(), MediaLogs.class);
+                        Intent mediaLogIntent = new Intent(getActivity(), MediaLogs.class);
                         mediaLogIntent.putExtra("storyUrlList", mediaUrlList);
                         mediaLogIntent.putExtra("userId", userid);
                         mediaLogIntent.putExtra("storyIds", mediaIdList);
@@ -135,13 +135,13 @@ public class MyAllMediaFragment extends Fragment {
     }
 
     public void itemLongClickPopup(int position) {
-        ConstraintLayout layout = new ConstraintLayout(getContext());
+        ConstraintLayout layout = new ConstraintLayout(getActivity());
         ConstraintLayout.LayoutParams clp = new ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.WRAP_CONTENT,
                 ConstraintLayout.LayoutParams.WRAP_CONTENT);
-        VideoView videoView = new VideoView(getContext());
-        ImageView imageView = new ImageView(getContext());
-        Dialog dialog = new Dialog(getContext());
+        VideoView videoView = new VideoView(getActivity());
+        ImageView imageView = new ImageView(getActivity());
+        Dialog dialog = new Dialog(getActivity());
         if (myMediaList.get(position).getVideo_versions() != null) {
 
             Uri videoUri = mediaUrlList.get(position);
@@ -154,7 +154,7 @@ public class MyAllMediaFragment extends Fragment {
         } else {
             Uri imageUri = mediaUrlList.get(position);
 
-            Glide.with(getContext()).load(imageUri).into(imageView);
+            Glide.with(getActivity()).load(imageUri).into(imageView);
             videoView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
             layout.addView(imageView, clp);

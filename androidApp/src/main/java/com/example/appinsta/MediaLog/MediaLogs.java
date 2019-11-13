@@ -6,6 +6,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,18 +21,10 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-
 import com.example.appinsta.Compare;
 import com.example.appinsta.R;
 import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -316,7 +315,7 @@ public class MediaLogs<T> extends AppCompatActivity {
             }
 
             try {
-                observers = new ArrayList<>((List<T>) service.getMyMediaLikers(Long.parseLong(getIntentIdList.get(positionMedia))));
+                observers = new ArrayList<>((List<T>) service.getMediaLikers(Long.parseLong(getIntentIdList.get(positionMedia))));
                 observerList.add(positionMedia, observers);
             } catch (Exception e) {
                 Log.e(e.getMessage(), " MediaLikers returning null object");
@@ -331,7 +330,7 @@ public class MediaLogs<T> extends AppCompatActivity {
             for (int i = 0; i < getIntentIdList.size(); i++) {
 
                 try {
-                    observers = new ArrayList<>((List<T>) service.getMyMediaLikers(Long.parseLong(getIntentIdList.get(i))));
+                    observers = new ArrayList<>((List<T>) service.getMediaLikers(Long.parseLong(getIntentIdList.get(i))));
                     observerList.set(i, observers);
                 } catch (Exception e) {
                     Log.e(e.getMessage(), " MediaLikers returning null object");

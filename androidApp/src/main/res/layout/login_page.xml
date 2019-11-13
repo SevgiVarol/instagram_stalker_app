@@ -63,7 +63,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/com_facebook_button_background_color_focused"
             android:onClick="loginOnClick"
             android:shadowColor="#432B2929"
             android:text="Log In"

@@ -1,31 +1,23 @@
 package com.example.appinsta;
 
-import android.content.Context;
-import android.view.LayoutInflater;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
 
-public class MainFragmentPagerAdapter extends PagerAdapter {
-    private Context context;
-
-    public MainFragmentPagerAdapter(Context context) {
-        this.context = context;
-    }
+public class MainPageViewPagerAdapter extends PagerAdapter {
 
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        int resId=0;
-        switch (position){
+        int resId = 0;
+        switch (position) {
             case 0:
-                resId=R.id.layoutStats;
+                resId = R.id.layoutStats;
                 break;
             case 1:
-                resId=R.id.layoutMedia;
+                resId = R.id.layoutMedia;
                 break;
         }
         return container.findViewById(resId);

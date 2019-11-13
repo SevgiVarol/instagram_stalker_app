@@ -159,14 +159,5 @@ public class Compare {
      }
 
 
- */
-    public List<InstagramUserSummary> dislikedMediaandFollowing(long userId, int photoIndex) {
-
-        service = new InstagramService(instagram);
-
-        long mediaId = service.getMedia(userId, photoIndex).getPk();
-
-        return compare(service.getFollowers(userId), service.getMediaLikers(mediaId));
-
-    }
+*/
 }

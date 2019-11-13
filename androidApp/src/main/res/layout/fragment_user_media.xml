@@ -7,7 +7,12 @@
     android:id="@+id/mediaFragment"
     android:orientation="vertical"
     android:weightSum="1">
-
+        <TextView
+            android:id="@+id/nullMediaInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Kullanıcıya ait gönderi bulunmamaktadır."/>
         <GridView
             android:id="@+id/userMediasGridView"
             android:layout_width="match_parent"
