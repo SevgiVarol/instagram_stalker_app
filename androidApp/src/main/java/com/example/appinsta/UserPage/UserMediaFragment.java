@@ -1,9 +1,11 @@
 package com.example.appinsta.UserPage;
 
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ public class UserMediaFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @SuppressLint("ValidFragment")
     public UserMediaFragment(InstagramUser user) {
         this.user = user;
     }
@@ -72,10 +75,15 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            if (mediaList.size() != 0){
-                imageListAdapter = new ImageAdapter(getActivity(), mediaList);
-                gridView.setAdapter(imageListAdapter);
-            }else{
+            try {
+                if (mediaList.size() != 0){
+                    imageListAdapter = new ImageAdapter(getActivity(), mediaList);
+                    gridView.setAdapter(imageListAdapter);
+                }else{
+                    infoTv.setVisibility(View.VISIBLE);
+                }
+            }catch (Exception e){
+                infoTv.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
                 infoTv.setVisibility(View.VISIBLE);
             }
 
@@ -106,7 +114,7 @@ public class UserMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             List<InstagramFeedItem> nextMedias = service.getUserMedias(user.getPk(), InstagramService.mediasNextMaxId);
-            mediaList.addAll(nextMedias);
+            if (nextMedias != null){mediaList.addAll(nextMedias);}
 
             return null;
         }

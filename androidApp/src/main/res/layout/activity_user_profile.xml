@@ -191,7 +191,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmedikleri">
+                        app:Condition="Geri takip etmeyenler">
 
 
                     </com.example.appinsta.CustomView>
@@ -211,7 +211,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmeyenler">
+                        app:Condition="Geri takip etmedikleri">
 
 
                     </com.example.appinsta.CustomView>
