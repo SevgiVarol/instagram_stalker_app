@@ -1,4 +1,4 @@
-package com.example.appinsta.DataBase;
+package com.example.appinsta.database;
 
 
 import android.arch.persistence.room.Dao;

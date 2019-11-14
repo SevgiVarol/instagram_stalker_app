@@ -1,9 +1,8 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;

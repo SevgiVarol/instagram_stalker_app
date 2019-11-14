@@ -1,4 +1,4 @@
-package com.example.appinsta.MediaLog;
+package com.example.appinsta.medialog;
 
 
 import android.content.Context;

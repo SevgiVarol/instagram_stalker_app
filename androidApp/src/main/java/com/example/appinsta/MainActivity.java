@@ -1,10 +1,12 @@
 package com.example.appinsta;
 import android.app.FragmentManager;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,7 +30,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.appinsta.MediaLog.MediaLogs;
+import com.example.appinsta.database.LoggedUserDao;
+import com.example.appinsta.database.LoggedUserItem;
+import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -49,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     List<InstagramUserSummary> mediaLikers, myFollowers, myFollowing, myStalkers, myStalking;
 
     ImageView profilPic, latestPhoto;
-    TextView takipTv, takipciTv;
+    TextView takipTv, takipciTv, logoutOption;
 
     RelativeLayout theLayout;
     ProgressBar mProgress = null, storyProgress;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     BottomNavigationView bottomNavigationView;
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
+    Button collapsedMenuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +130,28 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
             }
         });
+        collapsedMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (logoutOption.getVisibility() == View.GONE){logoutOption.setVisibility(View.VISIBLE);}
+                else {logoutOption.setVisibility(View.GONE);}
+                logoutOption.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AppDatabaseForLogin database = Room.databaseBuilder(getApplicationContext(), AppDatabaseForLogin.class, "logOfLogins").allowMainThreadQueries().build();
+                        LoggedUserDao loggedUserDao = database.loggedUserDao();
+                        List<LoggedUserItem> items = loggedUserDao.getLastUser();
+                        loggedUserDao.deleteLogged(items.get(0));
 
+                        Intent backToLogin = new Intent(getApplicationContext(), LoginPage.class);
+                        service.logout();
+                        finish();
+                        startActivity(backToLogin);
+                    }
+                });
+
+            }
+        });
     }
 
     private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
@@ -244,6 +271,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
+        collapsedMenuButton = findViewById(R.id.collapsedMenu);
+        logoutOption = findViewById(R.id.logout);
 
     }
     private class storyTask extends AsyncTask<String, String, String> {

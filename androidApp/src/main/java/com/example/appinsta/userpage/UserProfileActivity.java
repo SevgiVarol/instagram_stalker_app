@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
