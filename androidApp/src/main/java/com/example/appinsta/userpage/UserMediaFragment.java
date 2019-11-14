@@ -1,9 +1,10 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,7 +122,12 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             //imageListAdapter.setData(mediaList);
-            imageListAdapter.notifyDataSetChanged();
+            try {
+                imageListAdapter.notifyDataSetChanged();
+            }catch (Exception e){
+                Log.e("null object reference",e.getMessage().toString());
+            }
+
             footerLoadingView.setVisibility(View.GONE);
             isLoadingNextMedias = false;
         }
