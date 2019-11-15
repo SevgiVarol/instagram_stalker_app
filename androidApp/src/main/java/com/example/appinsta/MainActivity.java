@@ -1,11 +1,9 @@
 package com.example.appinsta;
 
 import android.app.FragmentManager;
-import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,7 +15,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,12 +134,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         collapsedMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopup(view);
+                showUpsideOptionMenu(view);
             }
         });
     }
 
-    public void showPopup(View v) {
+    public void showUpsideOptionMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.main_options_menu, popup.getMenu());

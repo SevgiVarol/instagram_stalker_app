@@ -11,7 +11,6 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,7 +26,7 @@ public class LoginPage extends AppCompatActivity {
     private long backPressedTime;
     LoggedUserItem loggedUserItem, lastLoggedUser;
     InstaDatabase instaDatabase;
-    Dialog waitForLoadingDialog;
+    Dialog loginDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class LoginPage extends AppCompatActivity {
         createDialogComponents();
         String name = etName.getText().toString();
         String password = etPassword.getText().toString();
-        new newLoginActionForDb(name, password).execute();
+        new saveUserAndLogin(name, password).execute();
     }
 
     //Back press trigger
@@ -65,12 +64,12 @@ public class LoginPage extends AppCompatActivity {
     }
 
     public void createDialogComponents() {
-        waitForLoadingDialog = new Dialog(this);
-        waitForLoadingDialog.setContentView(R.layout.waiting_for_loading);
-        waitForLoadingDialog.setCanceledOnTouchOutside(false);
-        waitForLoadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        waitForLoadingDialog.show();
-        waitForLoadingDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+        loginDialog = new Dialog(this);
+        loginDialog.setContentView(R.layout.waiting_for_loading);
+        loginDialog.setCancelable(false);
+        loginDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        loginDialog.show();
+        loginDialog.setOnKeyListener(new Dialog.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -81,6 +80,10 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private class loginWithLastUser extends AsyncTask<String, String, String> {
+        @Override
+        protected void onPreExecute(){
+            createDialogComponents();
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -91,7 +94,6 @@ public class LoginPage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             if (lastLoggedUser != null) {
-                createDialogComponents();
                 //giriş fonksiyonunu çağır
                 new login(lastLoggedUser).execute();
             } else {
@@ -100,11 +102,11 @@ public class LoginPage extends AppCompatActivity {
         }
     }
 
-    private class newLoginActionForDb extends AsyncTask<String, String, String> {
+    private class saveUserAndLogin extends AsyncTask<String, String, String> {
 
         String name, password;
 
-        public newLoginActionForDb(String name, String password) {
+        public saveUserAndLogin(String name, String password) {
             this.name = name;
             this.password = password;
         }
@@ -150,7 +152,7 @@ public class LoginPage extends AppCompatActivity {
                     finish();
                 }
             } catch (Exception exc) {
-                waitForLoadingDialog.dismiss();
+                loginDialog.dismiss();
                 runOnUiThread(new Runnable() {
                     public void run() {
                         final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
