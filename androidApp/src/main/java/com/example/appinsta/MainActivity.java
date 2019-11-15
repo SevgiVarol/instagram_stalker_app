@@ -15,6 +15,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,6 +138,28 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 showUpsideOptionMenu(view);
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                if (isTaskRoot()) {
+                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(homeIntent);
+                    return true;
+                } else {
+                    super.onKeyDown(keyCode, event);
+                    return false;
+                }
+
+            default:
+                super.onKeyDown(keyCode, event);
+                return false;
+        }
+
     }
 
     public void showUpsideOptionMenu(View v) {
