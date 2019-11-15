@@ -1,4 +1,4 @@
-package com.example.appinsta.database;
+package com.example.appinsta.database.model;
 
 
 import android.arch.persistence.room.ColumnInfo;

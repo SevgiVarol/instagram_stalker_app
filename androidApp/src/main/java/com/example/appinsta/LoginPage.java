@@ -1,7 +1,6 @@
 package com.example.appinsta;
 
 import android.app.Dialog;
-import android.arch.persistence.room.Room;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,23 +15,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.appinsta.database.LoggedUserDao;
-import com.example.appinsta.database.LoggedUserItem;
+import com.example.appinsta.database.InstaDatabase;
+import com.example.appinsta.database.model.LoggedUserItem;
 import com.example.appinsta.service.InstagramService;
-import java.util.List;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
 public class LoginPage extends AppCompatActivity {
     InstagramService service = InstagramService.getInstance();
     public EditText etName, etPassword;
-    public Button btnLogin;
     private long backPressedTime;
-    LoggedUserDao loggedUserDao;
-    LoggedUserItem loggedUserItem;
+    LoggedUserItem loggedUserItem, lastLoggedUser;
+    InstaDatabase instaDatabase;
     Dialog waitForLoadingDialog;
-    List<LoggedUserItem> items;
-    private loginWithLastUser lastUserTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,58 +36,20 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        AppDatabaseForLogin database = Room.databaseBuilder(this, AppDatabaseForLogin.class, "logOfLogins").allowMainThreadQueries().build();
-        loggedUserDao = database.loggedUserDao();
-        loggedUserItem = new LoggedUserItem();
-        items = loggedUserDao.getLastUser();
+        instaDatabase = InstaDatabase.getInstance(getApplicationContext());
 
-        if (items.size() != 0){
-            createDialogComponents();
-            try {
-                if (service.getLoggedUser() != null){
-                    waitForLoadingDialog.dismiss();
-                    Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                    startActivity(mainActivityIntent);
-                    finish();
-                }
-
-            }catch (Exception e){
-                lastUserTask = (loginWithLastUser) new loginWithLastUser().execute();
-            }
-        }
+        new loginWithLastUser().execute();
         etName = findViewById(R.id.edtEmail);
         etPassword = findViewById(R.id.edtPassword);
-        btnLogin = findViewById(R.id.btnLogin);
 
     }
 
     //Login button onClick
     public void loginOnClick(View view) {
-        btnLogin.setEnabled(false);
-
+        createDialogComponents();
         String name = etName.getText().toString();
         String password = etPassword.getText().toString();
-        try {
-            InstagramLoginResult loginResult = service.login(name, password);
-            if (loginResult.getStatus().equals("fail")) {
-                throw new Exception();
-            } else {
-                try {
-                    loggedUserDao.deleteLogged(items.get(0));
-                }catch (Exception e){}
-
-                loggedUserItem.username = name;
-                loggedUserItem.password = password;
-                loggedUserDao.insertLastLogged(loggedUserItem);
-                Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                startActivity(mainActivityIntent);
-                finish();
-            }
-        } catch (Exception e) {
-            btnLogin.setEnabled(true);
-            Toast.makeText(this, "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT).show();
-        }
-
+        new newLoginActionForDb(name, password).execute();
     }
 
     //Back press trigger
@@ -107,7 +64,7 @@ public class LoginPage extends AppCompatActivity {
         backPressedTime = System.currentTimeMillis();
     }
 
-    public void createDialogComponents(){
+    public void createDialogComponents() {
         waitForLoadingDialog = new Dialog(this);
         waitForLoadingDialog.setContentView(R.layout.waiting_for_loading);
         waitForLoadingDialog.setCanceledOnTouchOutside(false);
@@ -117,8 +74,6 @@ public class LoginPage extends AppCompatActivity {
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    lastUserTask.cancel(true);
-                    waitForLoadingDialog.dismiss();
                 }
                 return true;
             }
@@ -126,19 +81,83 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private class loginWithLastUser extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            lastLoggedUser = instaDatabase.loggedUserDao().getLastUser();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (lastLoggedUser != null) {
+                createDialogComponents();
+                //giriş fonksiyonunu çağır
+                new login(lastLoggedUser).execute();
+            } else {
+                this.cancel(true);
+            }
+        }
+    }
+
+    private class newLoginActionForDb extends AsyncTask<String, String, String> {
+
+        String name, password;
+
+        public newLoginActionForDb(String name, String password) {
+            this.name = name;
+            this.password = password;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            loggedUserItem = new LoggedUserItem();
+            loggedUserItem.username = name;
+            loggedUserItem.password = password;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            lastLoggedUser = instaDatabase.loggedUserDao().getLastUser();
+            if (lastLoggedUser != null) {
+                instaDatabase.loggedUserDao().deleteLogged();
+            }
+            instaDatabase.loggedUserDao().insertLastLogged(loggedUserItem);
+            return null;
+        }
+
+        protected void onPostExecute(String s) {
+            new login(loggedUserItem).execute();
+        }
+    }
+
+    private class login extends AsyncTask<String, String, String> {
+        LoggedUserItem user;
+
+        public login(LoggedUserItem user) {
+            this.user = user;
+        }
+
         @Override
         protected String doInBackground(String... strings) {
             try {
-                InstagramLoginResult loginResult = service.login(items.get(0).username, items.get(0).password);
+                InstagramLoginResult loginResult = service.login(user.username, user.password);
                 if (loginResult.getStatus().equals("fail")) {
                     throw new Exception();
                 } else {
-                    waitForLoadingDialog.dismiss();
                     Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(mainActivityIntent);
                     finish();
                 }
-            } catch (Exception exc) {}
+            } catch (Exception exc) {
+                waitForLoadingDialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+            }
             return null;
         }
     }
