@@ -1,73 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backround"
+
     android:orientation="vertical"
     android:padding="10dp"
     tools:context=".LoginPage">
 
     <LinearLayout
+        android:id="@+id/body"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="100dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/lblHeader"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            app:srcCompat="@drawable/insta_text_logo" />
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_horizontal"
-            android:padding="20dp"
-            android:text="Instagram Stalker Login"
-            android:textColor="#fff"
-            android:textSize="36sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="30dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:background="@drawable/login_layout_style"
+            android:elevation="0dp">
 
-        <EditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.7"
-            android:hint="Email / User Name"
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
+            <EditText
+                android:id="@+id/edtEmail"
 
-        <EditText
-            android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:background="@color/cardview_dark_background"
+                android:hint="Telefon numarası, e-posta adresi veya kullanıcı adı"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textColor="#fff"
+                android:textColorHint="#fff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.7"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_layout_style"
+            android:layout_marginTop="15dp"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            android:elevation="0dp">
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:adjustViewBounds="true"
+                android:alpha="0.5"
+                android:background="@color/cardview_dark_background"
+                android:hint="Şifre"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textColor="#fff"
+                android:textColorHint="#fff"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
+            android:background="#ffffff"
             android:onClick="loginOnClick"
             android:shadowColor="#432B2929"
-            android:text="Log In"
+            android:text="Giriş Yap"
+            android:textAllCaps="false"
             android:textColor="#000" />
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/or_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/body"
+        android:layout_marginTop="20dp">
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YA DA"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"/>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
 
-</RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/or_line">
+        <ImageView
+            android:id="@+id/facebook_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/facebook_logo80x80"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:background="@android:color/transparent"
+            android:text="Facebook ile Giriş Yap"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/facebook_img"
+            app:layout_constraintTop_toBottomOf="@+id/or_line" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
