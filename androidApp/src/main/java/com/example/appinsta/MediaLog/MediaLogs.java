@@ -229,7 +229,9 @@ public class MediaLogs<T> extends AppCompatActivity {
                 @Override
                 public void onPageSelected(int position) {
                     //Code Block (Get User Lists)
+                    searchEdit.setText(null);
                     setLayouts(position);
+
                 }
 
                 @Override
@@ -250,6 +252,7 @@ public class MediaLogs<T> extends AppCompatActivity {
                 recyclerAll.setAdapter(adapter);
 
                 if (key == null) {
+
                     recyclerNotFollow.setLayoutManager(new LinearLayoutManager(this));
                     List<InstagramUser> resultNotFollow = Compare.compareWatchedStoryAndUnfollowing((List<InstagramUser>) observerList.get(pos), followers);
                     adapter = new UserListAdapter(resultNotFollow, this);
