@@ -17,8 +17,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,17 +45,17 @@ import static com.example.appinsta.Compare.compare;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
-    CustomView mutedStory, latestPhotoLikers, storyStalkers, photoStalkers, usersStalkers, usersStalking, userAction;
-    List<InstagramUserSummary> mediaLikers, myFollowers, myFollowing, myStalkers, myStalking;
+    InstagramService service = InstagramService.getInstance();
+    CustomView mutedStory, latestPhotoLikers, storyStalkers, usersStalkers, usersStalking, userAction;
+    List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
     ImageView profilPic, latestPhoto;
+    LinearLayout followingLayout, followersLayout;
     TextView takipTv, takipciTv;
 
-    RelativeLayout theLayout;
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
     InstagramUser user;
-    InstagramService service = InstagramService.getInstance();
 
     ArrayList<Uri> storyUrlList;
     ArrayList<String> storyIds;
@@ -74,11 +74,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         new setLoggedUserBasicInfoTask().execute();
 
-        takipciTv.setOnClickListener(new View.OnClickListener() {
+        followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) myFollowers);
+                i.putExtra("userList", (Serializable) followersList);
+                startActivity(i);
+            }
+        });
+
+        followingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+                i.putExtra("userList", (Serializable) followingList);
                 startActivity(i);
             }
         });
@@ -87,16 +96,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) mediaLikers);
-                startActivity(i);
-            }
-        });
-
-        takipTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) myFollowing);
+                i.putExtra("userList", (Serializable) mediaLikersList);
                 startActivity(i);
             }
         });
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) myStalkers);
+                i.putExtra("userList", (Serializable) stalkersList);
                 startActivity(i);
             }
         });
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) myStalking);
+                i.putExtra("userList", (Serializable) stalkingList);
                 startActivity(i);
             }
         });
@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View v) {
                 new storyTask().execute();
-
             }
         });
 
@@ -163,9 +162,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
             takipTv.setText(String.valueOf(user.following_count));
             takipciTv.setText(String.valueOf(user.follower_count));
-
             latestPhoto.setAlpha(0.3f);
-
 
             if (service.getLoggedUser().getMedia_count() != 0) {
                 Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
@@ -193,11 +190,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-            myFollowers = service.getMyFollowers();
-            myFollowing = service.getMyFollowing();
+            followersList = service.getMyFollowers();
+            followingList = service.getMyFollowing();
 
-            myStalking = compare(myFollowers, myFollowing);
-            myStalkers = compare(myFollowing, myFollowers);
+            stalkingList = compare(followersList, followingList);
+            stalkersList = compare(followingList, followersList);
 
             return null;
         }
@@ -207,14 +204,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             super.onPostExecute(s);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
-                mediaLikers = compare(myFollowers, service.getMediaLikers(service.getLoggedUserMedias(null).get(0).pk));
+                mediaLikersList = compare(followersList, service.getMediaLikers(service.getLoggedUserMedias(null).get(0).pk));
             }
-            if (mediaLikers != null) {
-                latestPhotoLikers.setNumberText(String.valueOf(mediaLikers.size()));
+            if (mediaLikersList != null) {
+                latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
             } else latestPhotoLikers.setNumberText(String.valueOf(0));
 
-            usersStalkers.setNumberText(String.valueOf(myStalkers.size()));
-            usersStalking.setNumberText(String.valueOf(myStalking.size()));
+            usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
+            usersStalking.setNumberText(String.valueOf(stalkingList.size()));
 
         }
     }
@@ -227,9 +224,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
         takipTv = (TextView) findViewById(R.id.takipTv);
         takipciTv = (TextView) findViewById(R.id.takipciTv);
-        latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
 
-        theLayout = (RelativeLayout) findViewById(R.id.layoutLastestPhoto);
+        followingLayout=(LinearLayout)findViewById(R.id.followingLayout);
+        followersLayout=(LinearLayout)findViewById(R.id.followersLayout);
+
+        latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
 
         mutedStory = (CustomView) findViewById(R.id.mutedStory);
         storyStalkers = (CustomView) findViewById(R.id.storyStalkers);
