@@ -69,14 +69,6 @@ public class LoginPage extends AppCompatActivity {
         loginDialog.setCancelable(false);
         loginDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loginDialog.show();
-        loginDialog.setOnKeyListener(new Dialog.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface arg0, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                }
-                return true;
-            }
-        });
     }
 
     private class loginWithLastUser extends AsyncTask<String, String, String> {
@@ -97,6 +89,7 @@ public class LoginPage extends AppCompatActivity {
                 //giriş fonksiyonunu çağır
                 new login(lastLoggedUser).execute();
             } else {
+                loginDialog.dismiss();
                 this.cancel(true);
             }
         }
