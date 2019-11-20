@@ -23,8 +23,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.example.appinsta.MediaLog.MediaLogs;
-import com.example.appinsta.UserPage.ImageAdapter;
+import com.example.appinsta.medialog.MediaLogs;
+import com.example.appinsta.userpage.ImageAdapter;
 import com.example.appinsta.service.InstagramService;
 
 import java.util.ArrayList;

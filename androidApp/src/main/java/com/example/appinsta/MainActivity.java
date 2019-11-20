@@ -1,4 +1,5 @@
 package com.example.appinsta;
+
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -14,10 +15,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +32,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.appinsta.MediaLog.MediaLogs;
+import com.example.appinsta.database.InstaDatabase;
+import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -51,11 +57,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
-    TextView takipTv, takipciTv;
+    TextView takipTv, takipciTv, logoutOption;
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
     InstagramUser user;
+    InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
     ArrayList<Uri> storyUrlList;
     ArrayList<String> storyIds;
@@ -63,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     BottomNavigationView bottomNavigationView;
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
+    Button collapsedMenuButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +131,66 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 new storyTask().execute();
             }
         });
+        collapsedMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUpsideOptionMenu(view);
+            }
+        });
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_BACK:
+                if (isTaskRoot()) {
+                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(homeIntent);
+                    return true;
+                } else {
+                    super.onKeyDown(keyCode, event);
+                    return false;
+                }
+
+            default:
+                super.onKeyDown(keyCode, event);
+                return false;
+        }
+
+    }
+
+    public void showUpsideOptionMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.main_options_menu, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.logout_option) {
+                    new logout().execute();
+                }
+                return false;
+            }
+        });
+    }
+
+    private class logout extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            instaDatabase.loggedUserDao().deleteLogged();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Intent backToLogin = new Intent(getApplicationContext(), LoginPage.class);
+            service.logout();
+            finish();
+            startActivity(backToLogin);
+        }
     }
 
     private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
@@ -215,6 +282,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         }
     }
+
     private void initComponent() {
 
         mProgress = findViewById(R.id.progress_bar);
@@ -243,8 +311,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
+        collapsedMenuButton = findViewById(R.id.collapsedMenu);
+        logoutOption = findViewById(R.id.logout);
 
     }
+
     private class storyTask extends AsyncTask<String, String, String> {
         long userid;
 
@@ -292,6 +363,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             storyProgress.setIndeterminate(false);
         }
     }
+
     private class getMainViewPagerComponents extends AsyncTask<String, String, String> {
 
         @Override
@@ -300,15 +372,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected void onPostExecute(String s){
+        protected void onPostExecute(String s) {
             super.onPostExecute(s);
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     if (item.getItemId() == R.id.action_home) {
                         mainViewPager.setCurrentItem(0);
-                    }
-                    else if (item.getItemId() == R.id.action_media) {
+                    } else if (item.getItemId() == R.id.action_media) {
                         mainViewPager.setCurrentItem(1);
                     }
                     return false;
