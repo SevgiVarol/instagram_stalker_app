@@ -53,7 +53,6 @@ public class UserMediaFragment extends Fragment {
         tvInfoText = view.findViewById(R.id.nullMediaInfo);
 
         getUserMedia= new getUserMediaTask().execute();
-
         return view;
     }
 
@@ -73,37 +72,40 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            try {
+            if (mediaList == null){
+                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
+                tvInfoText.setVisibility(View.VISIBLE);
+            }else{
                 if (mediaList.size() != 0){
                     imageListAdapter = new ImageAdapter(getActivity(), mediaList);
                     mediasGridView.setAdapter(imageListAdapter);
+
+                    mediasGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                        @Override
+                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                            if (totalItemCount - 1 == view.getLastVisiblePosition()) {
+
+                                if (totalItemCount < user.getMedia_count() && !isLoadingNextMedias) {
+                                    footerLoadingView.setVisibility(View.VISIBLE);
+                                    isLoadingNextMedias = true;
+                                    new getUserMediasNextPage().execute();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                        }
+                    });
+
                 }else{
                     tvInfoText.setVisibility(View.VISIBLE);
                 }
-            }catch (Exception e){
-                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
-                tvInfoText.setVisibility(View.VISIBLE);
             }
 
-            mediasGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-                    if (totalItemCount - 1 == view.getLastVisiblePosition()) {
-
-                        if (totalItemCount < user.getMedia_count() && !isLoadingNextMedias) {
-                            footerLoadingView.setVisibility(View.VISIBLE);
-                            isLoadingNextMedias = true;
-                            new getUserMediasNextPage().execute();
-                        }
-                    }
-                }
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-            });
         }
     }
 

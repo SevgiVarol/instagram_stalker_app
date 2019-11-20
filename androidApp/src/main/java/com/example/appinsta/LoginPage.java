@@ -90,7 +90,6 @@ public class LoginPage extends AppCompatActivity {
                 new login(lastLoggedUser).execute();
             } else {
                 loginDialog.dismiss();
-                this.cancel(true);
             }
         }
     }
@@ -137,23 +136,26 @@ public class LoginPage extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 InstagramLoginResult loginResult = service.login(user.username, user.password);
-                if (loginResult.getStatus().equals("fail")) {
-                    throw new Exception();
-                } else {
-                    Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(mainActivityIntent);
-                    finish();
-                }
+                return loginResult.getStatus();
+
             } catch (Exception exc) {
-                loginDialog.dismiss();
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
+                exc.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String loginResult) {
+            super.onPostExecute(loginResult);
+            loginDialog.dismiss();
+            if (loginResult.equals("fail")) {
+                final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainActivityIntent);
+                finish();
+            }
         }
     }
 }
