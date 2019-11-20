@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;

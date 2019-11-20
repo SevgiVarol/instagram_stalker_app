@@ -71,6 +71,16 @@ public class InstagramService {
         instagram.setup();
         return instagram.login();
     }
+    public void logout(){
+        loggedUser = null;
+        myFollowing = new ArrayList<>();
+        storyViewers = null;
+        story = null;
+        userFeedResult = null;
+        myUserFeedResult = null;
+        myFollowers = new ArrayList<>();
+
+    }
 
     public InstagramService(Instagram4Android instagram) {
         this.instagram = instagram;
