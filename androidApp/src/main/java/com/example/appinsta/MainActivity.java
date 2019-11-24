@@ -21,8 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -30,6 +28,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.MediaLog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +38,7 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
-
 import static com.example.appinsta.Compare.compare;
-
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -142,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-          /*  try {
+           /* try {
                 service.login("simge.keser", "Sim15290107.");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
             FragmentManager manager = getFragmentManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                manager.beginTransaction().replace(R.id.media, myAllMediaFragment).commitNow();
+                manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
             takipTv.setText(String.valueOf(user.following_count));
