@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".userpage.UserProfileActivity"
+            android:name=".UserPage.UserProfileActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
     <activity android:name=".SearchActivity" android:windowSoftInputMode="stateHidden" android:theme="@style/Theme.AppCompat.NoActionBar"/>
     <activity
@@ -32,14 +32,14 @@
            </intent-filter>
        </activity>
         <activity
-            android:name=".userpage.StoryViewer"
+            android:name=".UserPage.StoryViewer"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".medialog.MediaLogs"
+            android:name=".MediaLog.MediaLogs"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>

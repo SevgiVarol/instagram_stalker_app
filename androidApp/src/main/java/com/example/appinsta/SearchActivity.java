@@ -10,7 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.appinsta.userpage.UserProfileActivity;
+import com.example.appinsta.UserPage.UserProfileActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.appinsta.medialog;
+package com.example.appinsta.MediaLog;
 
 import android.app.Activity;
 import android.net.Uri;

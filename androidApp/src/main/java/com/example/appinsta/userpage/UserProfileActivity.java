@@ -1,4 +1,4 @@
-package com.example.appinsta.userpage;
+package com.example.appinsta.UserPage;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,9 +17,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
+import com.example.appinsta.UserPage.StoryViewer;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
-import com.example.appinsta.uiComponent.StoryViewer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
