@@ -27,8 +27,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.MediaLog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.uiComponent.CustomView;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

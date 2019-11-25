@@ -170,7 +170,7 @@
                             android:orientation="vertical">
 
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/mutedStory"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -180,9 +180,9 @@
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
                                 app:Condition="Hikayelerimi sessize alanlar"
-                                app:Number="0"></com.example.appinsta.CustomView>
+                                app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/latestPhotoLikers"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -191,9 +191,9 @@
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
                                 app:Condition="Son fotoğrafımı beğenmeyen takipçiler"
-                                app:Number="0"></com.example.appinsta.CustomView>
+                                app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/storyStalkers"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
                                 app:Condition="Hikayelerimi izleyip beni takip etmeyenler"
-                                app:Number="0"></com.example.appinsta.CustomView>
+                                app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
                         </LinearLayout>
 
@@ -212,7 +212,7 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/userStalking"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -221,10 +221,10 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Geri takip etmediklerim"></com.example.appinsta.CustomView>
+                                app:Condition="Geri takip etmediklerim"></com.example.appinsta.uiComponent.CustomView>
 
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/userStalkers"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -232,10 +232,10 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Beni geri takip etmeyenler"></com.example.appinsta.CustomView>
+                                app:Condition="Beni geri takip etmeyenler"></com.example.appinsta.uiComponent.CustomView>
 
 
-                            <com.example.appinsta.CustomView
+                            <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/userAction"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -243,7 +243,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Kişi hareketleri"></com.example.appinsta.CustomView>
+                                app:Condition="Kişi hareketleri"></com.example.appinsta.uiComponent.CustomView>
 
                         </LinearLayout>
 

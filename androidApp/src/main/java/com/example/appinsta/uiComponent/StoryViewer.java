@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.uiComponent;
 
 import android.content.Intent;
 import android.media.MediaPlayer;

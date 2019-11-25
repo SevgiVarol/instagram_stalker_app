@@ -1,4 +1,4 @@
-package com.example.appinsta;
+package com.example.appinsta.uiComponent;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.appinsta.R;
 
 
 /**

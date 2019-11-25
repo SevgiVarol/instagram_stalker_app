@@ -1,4 +1,4 @@
-package com.example.appinsta;
+package com.example.appinsta.uiComponent;
 
 import android.content.Context;
 import android.util.AttributeSet;

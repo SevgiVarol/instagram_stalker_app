@@ -179,7 +179,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1">
 
-                    <com.example.appinsta.CustomView
+                    <com.example.appinsta.uiComponent.CustomView
                         android:id="@+id/customViewUsersStalkers"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -190,7 +190,7 @@
                         app:Condition="Geri takip etmedikleri">
 
 
-                    </com.example.appinsta.CustomView>
+                    </com.example.appinsta.uiComponent.CustomView>
                 </LinearLayout>
 
 
@@ -199,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.example.appinsta.CustomView
+                    <com.example.appinsta.uiComponent.CustomView
                         android:id="@+id/customViewUsersStalkings"
                         android:layout_width="match_parent"
                         android:layout_height="62dp"
@@ -210,7 +210,7 @@
                         app:Condition="Geri takip etmeyenler">
 
 
-                    </com.example.appinsta.CustomView>
+                    </com.example.appinsta.uiComponent.CustomView>
                 </LinearLayout>
 
 
