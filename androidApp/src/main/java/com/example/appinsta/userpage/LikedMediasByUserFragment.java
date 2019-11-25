@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 
 import android.os.AsyncTask;
@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-
-
 
 import com.example.appinsta.R;
 import com.example.appinsta.service.InstagramService;

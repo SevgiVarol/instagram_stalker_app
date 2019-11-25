@@ -8,8 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,10 +22,9 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
-import com.example.appinsta.MediaLog.MediaLogs;
-import com.example.appinsta.UserPage.ImageAdapter;
-import com.example.appinsta.UserPage.UserMediaFragment;
+import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.userpage.ImageAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

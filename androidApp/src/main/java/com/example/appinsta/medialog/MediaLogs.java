@@ -1,4 +1,4 @@
-package com.example.appinsta.MediaLog;
+package com.example.appinsta.medialog;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -15,14 +15,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.ArrowKeyMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.appinsta.Compare;
 import com.example.appinsta.R;

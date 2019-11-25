@@ -1,9 +1,10 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,6 @@ public class UserMediaFragment extends Fragment {
         tvInfoText = view.findViewById(R.id.nullMediaInfo);
 
         getUserMedia= new getUserMediaTask().execute();
-
         return view;
     }
 
@@ -72,37 +72,40 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            try {
+            if (mediaList == null) {
+                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
+                tvInfoText.setVisibility(View.VISIBLE);
+            } else {
                 if (mediaList.size() != 0){
                     imageListAdapter = new ImageAdapter(getActivity(), mediaList);
                     mediasGridView.setAdapter(imageListAdapter);
-                }else{
+
+                    mediasGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                        @Override
+                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                            if (totalItemCount - 1 == view.getLastVisiblePosition()) {
+
+                                if (totalItemCount < user.getMedia_count() && !isLoadingNextMedias) {
+                                    footerLoadingView.setVisibility(View.VISIBLE);
+                                    isLoadingNextMedias = true;
+                                    new getUserMediasNextPage().execute();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                        }
+                    });
+
+                } else {
                     tvInfoText.setVisibility(View.VISIBLE);
                 }
-            }catch (Exception e){
-                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
-                tvInfoText.setVisibility(View.VISIBLE);
             }
 
-            mediasGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-                    if (totalItemCount - 1 == view.getLastVisiblePosition()) {
-
-                        if (totalItemCount < user.getMedia_count() && !isLoadingNextMedias) {
-                            footerLoadingView.setVisibility(View.VISIBLE);
-                            isLoadingNextMedias = true;
-                            new getUserMediasNextPage().execute();
-                        }
-                    }
-                }
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-            });
         }
     }
 
@@ -121,7 +124,12 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             //imageListAdapter.setData(mediaList);
-            imageListAdapter.notifyDataSetChanged();
+            try {
+                imageListAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                Log.e("null object reference", e.getMessage().toString());
+            }
+
             footerLoadingView.setVisibility(View.GONE);
             isLoadingNextMedias = false;
         }

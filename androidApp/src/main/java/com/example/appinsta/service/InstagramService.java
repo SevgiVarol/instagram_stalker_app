@@ -1,7 +1,6 @@
 package com.example.appinsta.service;
 
 import android.net.Uri;
-import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,6 +69,17 @@ public class InstagramService {
 
         instagram.setup();
         return instagram.login();
+    }
+
+    public void logout() {
+        loggedUser = null;
+        myFollowing = new ArrayList<>();
+        storyViewers = null;
+        story = null;
+        userFeedResult = null;
+        myUserFeedResult = null;
+        myFollowers = new ArrayList<>();
+
     }
 
     public InstagramService(Instagram4Android instagram) {
