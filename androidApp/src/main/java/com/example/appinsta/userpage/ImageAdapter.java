@@ -20,7 +20,7 @@ public class ImageAdapter extends ArrayAdapter {
     private LayoutInflater inflater;
 
     private List<InstagramFeedItem> mediaList;
-    ImageView imageView;
+    ImageView gridImageView;
 
     public ImageAdapter(Context context, List<InstagramFeedItem> mediaList) {
         super(context, R.layout.user_image, mediaList);
@@ -46,10 +46,10 @@ public class ImageAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.user_image, parent, false);
         }
 
-        imageView=convertView.findViewById(R.id.user_image_view);
+        gridImageView =convertView.findViewById(R.id.user_image_view);
 
         Glide.with(context).load(getImageUrl(position)).centerCrop()
-                .into((imageView));
+                .into((gridImageView));
 
         return convertView;
     }
