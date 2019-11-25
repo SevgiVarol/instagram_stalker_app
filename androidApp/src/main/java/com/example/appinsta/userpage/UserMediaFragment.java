@@ -72,10 +72,10 @@ public class UserMediaFragment extends Fragment {
             super.onPostExecute(s);
 
             footerLoadingView.setVisibility(View.GONE);
-            if (mediaList == null){
+            if (mediaList == null) {
                 tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
                 tvInfoText.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 if (mediaList.size() != 0){
                     imageListAdapter = new ImageAdapter(getActivity(), mediaList);
                     mediasGridView.setAdapter(imageListAdapter);
@@ -100,7 +100,7 @@ public class UserMediaFragment extends Fragment {
                         }
                     });
 
-                }else{
+                } else {
                     tvInfoText.setVisibility(View.VISIBLE);
                 }
             }
@@ -126,8 +126,8 @@ public class UserMediaFragment extends Fragment {
             //imageListAdapter.setData(mediaList);
             try {
                 imageListAdapter.notifyDataSetChanged();
-            }catch (Exception e){
-                Log.e("null object reference",e.getMessage().toString());
+            } catch (Exception e) {
+                Log.e("null object reference", e.getMessage().toString());
             }
 
             footerLoadingView.setVisibility(View.GONE);

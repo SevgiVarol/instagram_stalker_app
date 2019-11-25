@@ -8,13 +8,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -24,8 +23,8 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.medialog.MediaLogs;
-import com.example.appinsta.userpage.ImageAdapter;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.userpage.ImageAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,8 @@ public class MyAllMediaFragment extends Fragment {
     ArrayList<Uri> mediaUrlList;
     ArrayList<String> mediaIdList;
     Long userid;
-
+    ImageAdapter imageListAdapter;
+    Boolean isLoadingNextMedias = false;
     public MyAllMediaFragment() {
         // Required empty public constructor
     }
@@ -106,7 +106,10 @@ public class MyAllMediaFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             footerLoadingView.setVisibility(View.GONE);
-            gridView.setAdapter(new ImageAdapter(getActivity(), myMediaList));
+
+            imageListAdapter = new ImageAdapter(getActivity(), myMediaList);
+            gridView.setAdapter(imageListAdapter);
+
             gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,6 +117,27 @@ public class MyAllMediaFragment extends Fragment {
                     return true;
                 }
             });
+
+            gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                    if (totalItemCount - 1 == view.getLastVisiblePosition()) {
+
+                        if (totalItemCount < service.getLoggedUser().getMedia_count() && !isLoadingNextMedias) {
+                            footerLoadingView.setVisibility(View.VISIBLE);
+                            isLoadingNextMedias = true;
+                            new getNextMedias().execute();
+                        }
+                    }
+                }
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+            });
+
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -133,7 +157,51 @@ public class MyAllMediaFragment extends Fragment {
             });
         }
     }
+    private class getNextMedias extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
 
+            List<InstagramFeedItem> nextMedias = service.getLoggedUserMedias(InstagramService.myMediasNextMaxId);
+            if (mediaUrlList.size() != 0) {
+                try {
+                    for (int counter = 0; counter < nextMedias.size(); counter++) {
+                        if (nextMedias.get(counter).getVideo_versions() != null) {
+                            try {
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getVideo_versions().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
+                            }
+                        } else {
+                            try {
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+
+                        }
+                        mediaIdList.add(String.valueOf(nextMedias.get(counter).pk));
+                    }
+                } catch (Exception e) {
+                    Log.e("null object reference", e.getMessage());
+                }
+            }
+            if (nextMedias != null){myMediaList.addAll(nextMedias);}
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            //imageListAdapter.setData(mediaList);
+            imageListAdapter.notifyDataSetChanged();
+            footerLoadingView.setVisibility(View.GONE);
+            isLoadingNextMedias = false;
+        }
+    }
     public void itemLongClickPopup(int position) {
         ConstraintLayout layout = new ConstraintLayout(getActivity());
         ConstraintLayout.LayoutParams clp = new ConstraintLayout.LayoutParams(
