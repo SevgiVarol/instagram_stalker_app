@@ -32,7 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
-import com.example.appinsta.MediaLog.MediaLogs;
+import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
 
@@ -225,11 +225,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-           /* try {
-                service.login("simge.keser", "Sim15290107.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             user = service.getLoggedUser();
             return null;
         }

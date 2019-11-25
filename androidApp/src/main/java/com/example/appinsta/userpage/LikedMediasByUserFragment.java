@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 
 import android.os.AsyncTask;

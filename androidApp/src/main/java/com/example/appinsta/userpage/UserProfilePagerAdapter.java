@@ -1,4 +1,4 @@
-package com.example.appinsta.UserPage;
+package com.example.appinsta.userpage;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
