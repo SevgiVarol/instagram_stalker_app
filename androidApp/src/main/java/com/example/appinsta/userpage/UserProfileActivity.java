@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class UserProfileActivity extends AppCompatActivity {
     ImageView profilPic;
     TextView tvFollowingCount, tvFollowersCount, tvMediaCount, tvFullname;
     public InstagramUserSummary user;
-    CustomView customViewUserStalkers, customViewUserStalking;
+    Button btnStalking,btnStalkers;
     ViewPager viewPager;
     List<InstagramUserSummary> userStalkingList = new ArrayList<>();
     List<InstagramUserSummary> userStalkersList = new ArrayList<>();
@@ -104,8 +105,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount = (TextView) findViewById(R.id.tvFollowersNum);
         tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
-        customViewUserStalkers = (CustomView) findViewById(R.id.customViewUsersStalkers);
-        customViewUserStalking = (CustomView) findViewById(R.id.customViewUsersStalkings);
+        btnStalkers=findViewById(R.id.btnStalkers);
+        btnStalking=findViewById(R.id.btnStalking);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -116,14 +117,14 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void showUserStalkersAndStalking() {
 
-        customViewUserStalkers.setOnClickListener(new View.OnClickListener() {
+        btnStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new userStalkersTask().execute();
             }
         });
 
-        customViewUserStalking.setOnClickListener(new View.OnClickListener() {
+        btnStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new userStalkingTask().execute();
