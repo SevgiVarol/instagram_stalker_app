@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="10"
+    >
 
     <android.support.v4.view.ViewPager
         android:background="@color/cardview_dark_background"
         android:id="@+id/pager"
         android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        />
 
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/pager"
         app:tabIndicatorColor="@color/browser_actions_title_color"
         app:tabSelectedTextColor="#FFFFFF"
         app:tabTextColor="#CCCCCC">
@@ -40,31 +40,24 @@
 
     </android.support.design.widget.TabLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/text_input_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout">
-
         <EditText
             android:id="@+id/editTextSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
             android:hint="Ara"
-            android:inputType="text"
             android:maxLines="1" />
-
-    </android.support.design.widget.TextInputLayout>
 
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_input_layout">
+        android:layout_weight="6">
 
         <LinearLayout
             android:id="@+id/layout_all"
@@ -76,8 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+               />
         </LinearLayout>
 
         <LinearLayout
@@ -89,9 +81,7 @@
                 android:id="@+id/recycler_view2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:padding="4dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -104,10 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+              />
         </LinearLayout>
     </android.support.v4.view.ViewPager>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

@@ -1,7 +1,6 @@
 package com.example.appinsta.service;
 
 import android.net.Uri;
-import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,7 +70,8 @@ public class InstagramService {
         instagram.setup();
         return instagram.login();
     }
-    public void logout(){
+
+    public void logout() {
         loggedUser = null;
         myFollowing = new ArrayList<>();
         storyViewers = null;
@@ -422,34 +422,29 @@ public class InstagramService {
     }
 
     public ArrayList<Uri> getStories(String username) {
-        ArrayList<Uri> userStoriesUri = new ArrayList<Uri>();
-        Uri uri = null;
+        ArrayList<Uri> userStoriesUri = new ArrayList<>();
         try {
             InstagramReelsTrayFeedResult result = instagram.sendRequest(new InstagramReelsTrayRequest());
             List<InstagramStoryTray> trays = result.getTray();
-            List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
+            InstagramUserStoryFeedResult userTray = null;
             for (InstagramStoryTray tray : trays) {
                 if (tray != null & tray.getUser().username.equals(username)) {
-                    userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk())));
+                    userTray = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk()));
+                    break;
                 }
             }
-            for (InstagramUserStoryFeedResult story : userStories) {
-                if (story.getReel() == null) {
-                    System.out.println("Null check for safety, hardly ever null");
-                } else {
-                    if (username.equals(story.getReel().getUser().username)) {
-                        userStoriesUri.clear();
-                        int length = story.getReel().getItems().size();
-                        System.out.println(story.getReel().getUser().username + " adlı kullanıcının " + length + " sayıda hikayesi var");
-                        for (int i = 0; i < length; i++) {
-                            if (story.getReel().getItems().get(i).getVideo_versions() != null) {
-                                uri = Uri.parse(story.getReel().getItems().get(i).getVideo_versions().get(0).getUrl());
-                            } else {
-                                uri = Uri.parse(story.getReel().getItems().get(i).getImage_versions2().getCandidates().get(0).getUrl());
-                            }
-                            userStoriesUri.add(uri);
+            if (userTray.getReel() != null) {
+                if (username.equals(userTray.getReel().getUser().username)) {
+                    userStoriesUri.clear();
+                    List<InstagramFeedItem> stories = userTray.getReel().getItems();
+                    for (InstagramFeedItem story : stories) {
+                        Uri uri;
+                        if (story.getVideo_versions() != null) {
+                            uri = Uri.parse(story.getVideo_versions().get(0).getUrl());
+                        } else {
+                            uri = Uri.parse(story.getImage_versions2().getCandidates().get(0).getUrl());
                         }
-                        break;
+                        userStoriesUri.add(uri);
                     }
                 }
             }

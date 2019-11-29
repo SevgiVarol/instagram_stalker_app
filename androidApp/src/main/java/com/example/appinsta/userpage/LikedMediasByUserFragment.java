@@ -11,8 +11,6 @@ import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
-
-
 import com.example.appinsta.R;
 import com.example.appinsta.service.InstagramService;
 
