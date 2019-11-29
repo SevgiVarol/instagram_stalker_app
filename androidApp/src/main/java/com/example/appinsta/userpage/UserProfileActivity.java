@@ -139,7 +139,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private class userStalkingTask extends AsyncTask<String, String, String> {
+    private class userStalkersTask extends AsyncTask<String, String, String> {
 
         private ProgressDialog pd;
 
@@ -174,7 +174,7 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    private class userStalkersTask extends AsyncTask<String, String, String> {
+    private class userStalkingTask extends AsyncTask<String, String, String> {
 
         private ProgressDialog pd;
 
