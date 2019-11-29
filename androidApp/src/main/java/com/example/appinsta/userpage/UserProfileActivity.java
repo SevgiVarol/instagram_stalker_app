@@ -63,7 +63,14 @@ public class UserProfileActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()) //1
                 .load(user.getProfile_pic_url()).into(profilPic);
 
-        tvFullname.setText(userSum.getFull_name());
+
+
+        if(userSum.getFull_name().isEmpty()){
+            tvFullname.setText(userSum.getUsername());
+        }else {
+            tvFullname.setText(userSum.getFull_name());
+        }
+
         tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
         tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
         tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
