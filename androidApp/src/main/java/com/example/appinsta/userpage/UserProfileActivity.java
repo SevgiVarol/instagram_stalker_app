@@ -156,8 +156,8 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            if (userStalkingList.isEmpty()) {
-                userStalkingList = compare(service.getFollowers(user.getPk()), service.getFollowing(user.getPk()));
+            if (userStalkersList.isEmpty()) {
+                userStalkersList = compare(service.getFollowers(user.getPk()),service.getFollowing(user.getPk()));
             }
             return null;
 
@@ -168,7 +168,7 @@ public class UserProfileActivity extends AppCompatActivity {
             super.onPostExecute(s);
             pd.dismiss();
             Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userStalkingList);
+            i.putExtra("userList", (Serializable) userStalkersList);
             startActivity(i);
 
         }
@@ -190,8 +190,8 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            if (userStalkersList.isEmpty()) {
-                userStalkersList = compare(service.getFollowing(user.getPk()), service.getFollowers(user.getPk()));
+            if (userStalkingList.isEmpty()) {
+                userStalkingList = compare(service.getFollowing(user.getPk()),service.getFollowers(user.getPk()));
             }
             return null;
 
@@ -202,7 +202,7 @@ public class UserProfileActivity extends AppCompatActivity {
             super.onPostExecute(s);
             pd.dismiss();
             Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userStalkersList);
+            i.putExtra("userList", (Serializable) userStalkingList);
             startActivity(i);
         }
     }
