@@ -60,7 +60,7 @@
 
                     <LinearLayout
 
-                        android:id="@+id/followersLayout"
+                        android:id="@+id/followingLayout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -99,12 +99,8 @@
                             android:id="@+id/userProfilPic"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-
+                            android:layout_centerInParent="true"
                             android:layout_gravity="center"
-                            android:layout_marginStart="4dp"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="4dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -113,15 +109,16 @@
                             android:id="@+id/progress_bar"
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:backgroundTintMode="add" />
+                            android:layout_centerInParent="true"
+                            android:backgroundTintMode="add"
+                            android:indeterminateTint="@android:color/background_light" />
 
                         <ProgressBar
                             android:id="@+id/progressBar"
                             style="?android:attr/progressBarStyle"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
                             android:layout_gravity="center"
-
                             android:background="@drawable/progress_circle"
                             android:indeterminate="false"
                             android:indeterminateBehavior="repeat"
@@ -129,7 +126,7 @@
                             android:indeterminateDuration="1000"
                             android:indeterminateOnly="false"
                             android:visibility="invisible"
-
+                            android:layout_centerInParent="true"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -137,7 +134,7 @@
                     </RelativeLayout>
 
                     <LinearLayout
-                        android:id="@+id/followingLayout"
+                        android:id="@+id/followersLayout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

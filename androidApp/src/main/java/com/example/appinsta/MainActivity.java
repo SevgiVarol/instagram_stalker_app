@@ -238,8 +238,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
-            takipTv.setText(String.valueOf(user.following_count));
-            takipciTv.setText(String.valueOf(user.follower_count));
+            takipTv.setText(String.valueOf(withSuffix(user.follower_count)));
+            takipciTv.setText(String.valueOf(user.following_count));
+
             latestPhoto.setAlpha(0.3f);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
@@ -396,5 +397,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
             });
         }
+    }
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp-1));
     }
 }

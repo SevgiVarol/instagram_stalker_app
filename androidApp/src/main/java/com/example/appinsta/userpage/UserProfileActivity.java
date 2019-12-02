@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,7 +37,7 @@ public class UserProfileActivity extends AppCompatActivity {
     ImageView profilPic;
     TextView tvFollowingCount, tvFollowersCount, tvMediaCount, tvFullname;
     public InstagramUserSummary user;
-    CustomView customViewUserStalkers, customViewUserStalking;
+    Button btnStalking,btnStalkers;
     ViewPager viewPager;
     List<InstagramUserSummary> userStalkingList = new ArrayList<>();
     List<InstagramUserSummary> userStalkersList = new ArrayList<>();
@@ -62,10 +63,17 @@ public class UserProfileActivity extends AppCompatActivity {
         Glide.with(getApplicationContext()) //1
                 .load(user.getProfile_pic_url()).into(profilPic);
 
-        tvFullname.setText(userSum.getFull_name());
-        tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
-        tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
-        tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
+
+
+        if(userSum.getFull_name().isEmpty()){
+            tvFullname.setText(userSum.getUsername());
+        }else {
+            tvFullname.setText(userSum.getFull_name());
+        }
+
+        tvMediaCount.setText(String.valueOf(withSuffix(userSum.media_count)));
+        tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
+        tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
 
         tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
         tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
@@ -104,8 +112,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount = (TextView) findViewById(R.id.tvFollowersNum);
         tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
-        customViewUserStalkers = (CustomView) findViewById(R.id.customViewUsersStalkers);
-        customViewUserStalking = (CustomView) findViewById(R.id.customViewUsersStalkings);
+        btnStalkers=findViewById(R.id.btnStalkers);
+        btnStalking=findViewById(R.id.btnStalking);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
@@ -116,14 +124,14 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void showUserStalkersAndStalking() {
 
-        customViewUserStalkers.setOnClickListener(new View.OnClickListener() {
+        btnStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new userStalkersTask().execute();
             }
         });
 
-        customViewUserStalking.setOnClickListener(new View.OnClickListener() {
+        btnStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new userStalkingTask().execute();
@@ -147,7 +155,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmedikleri yükleniyor...");
+            pd.setMessage("Geri takip etmedikleri yükleniyor...");
             pd.show();
 
         }
@@ -182,7 +190,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmeyenler yükleniyor...");
+            pd.setMessage("Geri takip etmeyenler yükleniyor...");
             pd.show();
 
         }
@@ -233,6 +241,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp-1));
     }
 
 }
