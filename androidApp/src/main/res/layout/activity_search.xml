@@ -26,7 +26,7 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingLeft="5dp"
-            android:theme="@style/editTextThema" />
+            android:theme="@style/editTextTheme" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
