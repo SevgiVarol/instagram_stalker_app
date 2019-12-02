@@ -22,7 +22,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" >
 
             <LinearLayout
                 android:id="@+id/cardViewLayout"
@@ -39,19 +39,19 @@
                     android:layout_height="match_parent"
                     android:layout_alignTop="@+id/cardViewLayout"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:paddingLeft="2dp" >
 
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/userProfilPic"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_centerInParent="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="8dp"
+                        android:paddingTop="8dp" />
+
                     <ProgressBar
                         android:id="@+id/progressBar"
                         style="?android:attr/progressBarStyle"
@@ -62,11 +62,7 @@
                         android:indeterminateBehavior="repeat"
                         android:indeterminateDrawable="@drawable/progress_circle_indeterminate"
                         android:indeterminateDuration="1000"
-                        android:indeterminateOnly="false"
-                        android:layout_centerInParent="true"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:indeterminateOnly="false" />
 
 
                 </RelativeLayout>
@@ -77,7 +73,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
                     android:gravity="center"
-
                     android:orientation="vertical">
 
                     <TextView
@@ -159,11 +154,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingTop="10dp"
+                android:weightSum="4"
                 android:paddingBottom="10dp"
                 android:paddingLeft="10dp">
 
                 <TextView
                     android:id="@+id/tvFullname"
+                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#FFF"
