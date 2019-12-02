@@ -38,7 +38,7 @@ public class InstagramService {
     private static InstagramService myService;
     InstagramUser loggedUser;
     private List<InstagramUserSummary> myFollowing = new ArrayList<>();
-    private List<InstagramUser> storyViewers = null;
+    private List<InstagramUser> storyViewers = new ArrayList<>();
 
     private List<InstagramFeedItem> story = null;
     String loggedUserLatestMediaUrl;
@@ -244,28 +244,31 @@ public class InstagramService {
     }
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
-
+        if (!storyViewers.isEmpty()){
+            storyViewers.clear();
+        }
         InstagramUserStoryFeedResult storyFeedResult = null;
         InstagramGetStoryViewersResult userStoryViewers = null;
+        String nextMaxId = null;
 
-        try {
-            storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        do {
+            try {
+                storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+                if (storyFeedResult.getReel() != null) {
+
+                    userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
+                    for (InstagramUser user : userStoryViewers.getUsers()) {
+                        storyViewers.add(user);
+                    }
 
 
-        try {
-            if (storyFeedResult.getReel() != null) {
-
-                userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
-
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            nextMaxId = userStoryViewers.getNext_max_id();
+        }while (nextMaxId != null);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        storyViewers = userStoryViewers.getUsers();
         return storyViewers;
 
     }
