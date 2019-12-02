@@ -46,7 +46,7 @@ public class UserProfileActivity extends AppCompatActivity {
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
     LinearLayout lyFollowingNum,lyFollowersNum;
-    ProgressDialog pd;
+    ProgressDialog dialog;
     ArrayList<Uri> storyUrlList;
     List<InstagramFeedItem> stories;
     ProgressBar cycleProgressBar;
@@ -96,13 +96,13 @@ public class UserProfileActivity extends AppCompatActivity {
         lyFollowingNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new userFollowingTask().execute();
+                new getUserFollowingsTask().execute();
             }
         });
         lyFollowersNum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new userFollowersTask().execute();
+                new getUserFollowersTask().execute();
             }
         });
 
@@ -116,8 +116,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         tvFullname = (TextView) findViewById(R.id.tvFullname);
         profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
-        tvFollowingCount = (TextView) findViewById(R.id.tvFollowingNum);
-        tvFollowersCount = (TextView) findViewById(R.id.tvFollowersNum);
+        tvFollowingCount = (TextView) findViewById(R.id.tvFollowingCount);
+        tvFollowersCount = (TextView) findViewById(R.id.tvFollowersCount);
         tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
         customViewUserStalkers = (CustomView) findViewById(R.id.customViewUsersStalkers);
@@ -128,8 +128,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         cycleProgressBar = findViewById(R.id.progressBar);
 
-        lyFollowersNum=findViewById(R.id.lyFollowersNum);
-        lyFollowingNum=findViewById(R.id.lyFollowingNum);
+        lyFollowersNum=findViewById(R.id.lyFollowersCount);
+        lyFollowingNum=findViewById(R.id.lyFollowingCount);
 
     }
 
@@ -158,14 +158,14 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private class userFollowingTask extends AsyncTask<String,String,String>{
+    private class getUserFollowingsTask extends AsyncTask<String,String,String>{
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd=new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("Takip edilenler yükleniyor..");
-            pd.show();
+            dialog =new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("Takip edilenler yükleniyor..");
+            dialog.show();
         }
 
 
@@ -180,23 +180,20 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pd.dismiss();
-
-            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userFollowingList);
-            startActivity(i);
+            dialog.dismiss();
+            showList(userFollowingList);
 
         }
     }
 
-    private class userFollowersTask extends AsyncTask<String,String,String>{
+    private class getUserFollowersTask extends AsyncTask<String,String,String>{
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd=new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("Takipçiler yükleniyor..");
-            pd.show();
+            dialog =new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("Takipçiler yükleniyor..");
+            dialog.show();
         }
 
         @Override
@@ -210,10 +207,8 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pd.dismiss();
-            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userFollowersList);
-            startActivity(i);
+            dialog.dismiss();
+            showList(userFollowersList);
         }
     }
 
@@ -222,9 +217,9 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmedikleri yükleniyor...");
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("geri takip etmedikleri yükleniyor...");
+            dialog.show();
 
         }
 
@@ -233,8 +228,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             if(userFollowingList.isEmpty()){
-                userFollowingList=service.getFollowing(user.getPk());
-                userFollowersList=service.getFollowers(user.getPk());
+                getUserFollowingsAndFollowers();
             }
             if (userStalkersList.isEmpty()) {
                 userStalkersList = compare(userFollowersList,userFollowingList);
@@ -246,10 +240,8 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pd.dismiss();
-            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userStalkersList);
-            startActivity(i);
+            dialog.dismiss();
+            showList(userStalkersList);
 
         }
     }
@@ -259,9 +251,9 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmeyenler yükleniyor...");
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("geri takip etmeyenler yükleniyor...");
+            dialog.show();
 
         }
 
@@ -269,8 +261,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
 
             if(userFollowingList.isEmpty()){
-                userFollowingList=service.getFollowing(user.getPk());
-                userFollowersList=service.getFollowers(user.getPk());
+                getUserFollowingsAndFollowers();
             }
 
             if (userStalkingList.isEmpty()) {
@@ -283,10 +274,8 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            pd.dismiss();
-            Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-            i.putExtra("userList", (Serializable) userStalkingList);
-            startActivity(i);
+            dialog.dismiss();
+            showList(userStalkingList);
         }
     }
 
@@ -318,4 +307,14 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
+    public void getUserFollowingsAndFollowers() {
+        userFollowingList = service.getFollowing(user.getPk());
+        userFollowersList = service.getFollowers(user.getPk());
+    }
+
+    public void showList(List<InstagramUserSummary> userList){
+        Intent i = new Intent(getApplicationContext(), SearchActivity.class);
+        i.putExtra("userList", (Serializable) userList);
+        startActivity(i);
+    }
 }

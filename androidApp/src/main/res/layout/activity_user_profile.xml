@@ -99,7 +99,7 @@
 
                 <LinearLayout
 
-                    android:id="@+id/lyFollowingNum"
+                    android:id="@+id/lyFollowingCount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -114,7 +114,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/tvFollowingNum"
+                        android:id="@+id/tvFollowingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
@@ -126,7 +126,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/lyFollowersNum"
+                    android:id="@+id/lyFollowersCount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -141,7 +141,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/tvFollowersNum"
+                        android:id="@+id/tvFollowersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingTop="10dp"
