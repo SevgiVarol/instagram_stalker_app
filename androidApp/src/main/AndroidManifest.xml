@@ -14,25 +14,39 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".userpage.UserProfileActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
-    <activity android:name=".SearchActivity" android:windowSoftInputMode="stateHidden" android:theme="@style/Theme.AppCompat.NoActionBar"/>
-    <activity
-           android:name=".LoginPage" android:theme="@style/Theme.AppCompat.NoActionBar">
-              <intent-filter>
-                  <action android:name="android.intent.action.MAIN" />
-                  <category android:name="android.intent.category.LAUNCHER" />
-              </intent-filter>
-          </activity>
-       <activity
-           android:name=".MainActivity"
-           android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".SearchActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".LoginPage"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
-              <action android:name="com.example.appinsta.Login.LoginPage"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="com.example.appinsta.Login.LoginPage" />
                 <category android:name="android.intent.category.DEFAULT" />
-           </intent-filter>
-       </activity>
+            </intent-filter>
+        </activity>
         <activity
             android:name=".userpage.StoryViewer"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
@@ -40,8 +54,10 @@
         </activity>
         <activity
             android:name=".medialog.MediaLogs"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
