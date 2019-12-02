@@ -71,9 +71,9 @@ public class UserProfileActivity extends AppCompatActivity {
             tvFullname.setText(userSum.getFull_name());
         }
 
-        tvMediaCount.setText(String.valueOf(userSum.getMedia_count()));
-        tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
-        tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
+        tvMediaCount.setText(String.valueOf(withSuffix(userSum.media_count)));
+        tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
+        tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
 
         tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
         tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
@@ -155,7 +155,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmedikleri yükleniyor...");
+            pd.setMessage("Geri takip etmedikleri yükleniyor...");
             pd.show();
 
         }
@@ -190,7 +190,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmeyenler yükleniyor...");
+            pd.setMessage("Geri takip etmeyenler yükleniyor...");
             pd.show();
 
         }
@@ -241,6 +241,13 @@ public class UserProfileActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp-1));
     }
 
 }

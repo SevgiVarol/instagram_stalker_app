@@ -19,7 +19,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="editTextThema" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="editTextTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlActivated">@color/gray_scale</item>
     </style>
     
