@@ -67,8 +67,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount.setText(String.valueOf(userSum.getFollower_count()));
         tvFollowingCount.setText(String.valueOf(userSum.getFollowing_count()));
 
-        tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
-        tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.user_media));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.user_liked_my_posts));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
@@ -147,7 +147,8 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmedikleri yükleniyor...");
+            String s = String.valueOf(R.string.user_stalkers_loading_message);
+            pd.setMessage(s);
             pd.show();
 
         }
@@ -182,7 +183,8 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("geri takip etmeyenler yükleniyor...");
+            String s = String.valueOf(R.string.user_stalkings_loading_message);
+            pd.setMessage(s);
             pd.show();
 
         }
@@ -230,7 +232,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }else {
-                Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),R.string.no_stories_toast,Toast.LENGTH_SHORT).show();
             }
         }
     }

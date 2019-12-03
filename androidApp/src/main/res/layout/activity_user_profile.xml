@@ -81,7 +81,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gönderi"
+                        android:text="@string/posts"
                         android:textColor="#FFFF"
                         android:textSize="20sp" />
 
@@ -108,7 +108,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Takip"
+                        android:text="@string/follow"
                         android:textColor="#FFFF"
                         android:textSize="20sp" />
 
@@ -134,7 +134,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Takipçi"
+                        android:text="@string/follower"
                         android:textColor="#FFFF"
                         android:textSize="20sp" />
 
@@ -187,7 +187,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmedikleri">
+                        app:Condition="@string/user_stalkers">
 
 
                     </com.example.appinsta.uiComponent.CustomView>
@@ -207,7 +207,7 @@
                         android:paddingTop="3dp"
                         android:paddingRight="3dp"
                         android:paddingBottom="3dp"
-                        app:Condition="Geri takip etmeyenler">
+                        app:Condition="@string/user_stalkings">
 
 
                     </com.example.appinsta.uiComponent.CustomView>

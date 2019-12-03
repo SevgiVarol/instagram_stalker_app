@@ -73,7 +73,7 @@ public class UserMediaFragment extends Fragment {
 
             footerLoadingView.setVisibility(View.GONE);
             if (mediaList == null) {
-                tvInfoText.setText("Fotoğraf ve videolarını görmek için bu hesabı takip et.");
+                tvInfoText.setText(R.string.info_for_private_account);
                 tvInfoText.setVisibility(View.VISIBLE);
             } else {
                 if (mediaList.size() != 0){

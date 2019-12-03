@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextSearch"
-                android:hint="Ara"
+                android:hint="@string/search_hint"
                 android:inputType="text"
                 android:maxLines="1"
                 />
