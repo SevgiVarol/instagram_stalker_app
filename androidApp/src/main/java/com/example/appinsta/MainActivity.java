@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
-    TextView takipTv, takipciTv, logoutOption;
+    TextView tvFollowing, tvFollowers, logoutOption;
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
@@ -183,8 +183,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         drawable = res.getDrawable(R.drawable.circle_shape);
 
         profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
-        takipTv = (TextView) findViewById(R.id.takipTv);
-        takipciTv = (TextView) findViewById(R.id.takipciTv);
+        tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+        tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 
         followingLayout = (LinearLayout) findViewById(R.id.followingLayout);
         followersLayout = (LinearLayout) findViewById(R.id.followersLayout);
@@ -238,8 +238,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
-            takipTv.setText(String.valueOf(withSuffix(user.follower_count)));
-            takipciTv.setText(String.valueOf(user.following_count));
+            tvFollowing.setText(String.valueOf(withSuffix(user.following_count)));
+            tvFollowers.setText(String.valueOf(withSuffix(user.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
