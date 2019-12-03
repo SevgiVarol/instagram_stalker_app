@@ -146,7 +146,7 @@ public class LoginPage extends AppCompatActivity {
         protected void onPostExecute(String loginResult) {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
-            if (loginResult.equals("fail")) {
+            if (loginResult == null || loginResult.equals("fail")) {
                 final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
