@@ -33,4 +33,6 @@
     <string name="who_i_am_not_follow_back">Geri takip etmediklerim</string>
     <string name="who_not_follow_me_back">Beni geri takip etmeyenler</string>
     <string name="logout">Çıkış</string>
+    <string name="follow_user">Takip Et</string>
+    <string name="unfollow_user">Takibi Bırak</string>
 </resources>

@@ -205,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
         collapsedMenuButton = findViewById(R.id.collapsedMenu);
-        logoutOption = findViewById(R.id.logout);
 
     }
 

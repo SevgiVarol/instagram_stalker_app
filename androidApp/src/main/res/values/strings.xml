@@ -32,6 +32,8 @@
 
     <!--search activity page-->
     <string name="search_hint">Search</string>
+    <string name="follow_user">Follow</string>
+    <string name="unfollow_user">Unfollow</string>
 
     <!--user media fragment-->
     <string name="info_for_private_account">Follow this account to see photos and videos</string>
