@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
 import com.example.appinsta.service.InstagramService;
-import com.example.appinsta.uiComponent.CustomView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class UserProfileActivity extends AppCompatActivity {
     List<InstagramUserSummary> userFollowersList = new ArrayList<>();
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
-    LinearLayout lyFollowingNum,lyFollowersNum;
+    LinearLayout lyFollowingCount, lyFollowersCount;
     ProgressDialog dialog;
     ArrayList<Uri> storyUrlList;
     List<InstagramFeedItem> stories;
@@ -101,13 +100,13 @@ public class UserProfileActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        lyFollowingNum.setOnClickListener(new View.OnClickListener() {
+        lyFollowingCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new getUserFollowingsTask().execute();
             }
         });
-        lyFollowersNum.setOnClickListener(new View.OnClickListener() {
+        lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new getUserFollowersTask().execute();
@@ -136,8 +135,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         cycleProgressBar = findViewById(R.id.progressBar);
 
-        lyFollowersNum=findViewById(R.id.lyFollowersCount);
-        lyFollowingNum=findViewById(R.id.lyFollowingCount);
+        lyFollowersCount =findViewById(R.id.lyFollowersCount);
+        lyFollowingCount =findViewById(R.id.lyFollowingCount);
 
     }
 
@@ -225,9 +224,9 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("Geri takip etmedikleri yükleniyor...");
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("Geri takip etmedikleri yükleniyor...");
+            dialog.show();
 
         }
 
@@ -259,16 +258,16 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage("Geri takip etmeyenler yükleniyor...");
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage("Geri takip etmeyenler yükleniyor...");
+            dialog.show();
 
         }
 
         @Override
         protected String doInBackground(String... strings) {
 
-            if(userFollowingList.isEmpty()){
+            if(userFollowingList.isEmpty() || userFollowersList.isEmpty()){
                 getUserFollowingsAndFollowers();
             }
 
