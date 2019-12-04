@@ -142,6 +142,7 @@ public class UserProfileActivity extends AppCompatActivity {
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                profilPic.setClickable(false);
                 new storyTask().execute();
             }
         });
@@ -232,7 +233,6 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String s){
-            cycleProgressBar.setIndeterminate(false);
             Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
             storyIntent.putExtra("storyUrlList", storyUrlList);
             if (storyUrlList !=null & storyUrlList.size()!=0) {
@@ -240,6 +240,9 @@ public class UserProfileActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
             }
+            cycleProgressBar.setIndeterminate(false);
+            profilPic.setClickable(true);
+
         }
     }
     public static String withSuffix(long count) {

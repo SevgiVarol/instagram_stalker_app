@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                profilPic.setClickable(false);
                 new storyTask().execute();
             }
         });
@@ -317,7 +318,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected void onPreExecute() {
             storyProgress.setIndeterminate(true);
-
         }
 
         @Override
@@ -356,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 Toast.makeText(getApplicationContext(), "Hiçbir hikaye bulunamadı", Toast.LENGTH_SHORT).show();
             }
             storyProgress.setIndeterminate(false);
+            profilPic.setClickable(true);
         }
     }
 
