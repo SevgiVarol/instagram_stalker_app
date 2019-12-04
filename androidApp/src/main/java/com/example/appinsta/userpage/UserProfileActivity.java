@@ -39,10 +39,10 @@ public class UserProfileActivity extends AppCompatActivity {
     public InstagramUserSummary user;
     Button btnStalking,btnStalkers;
     ViewPager viewPager;
-    List<InstagramUserSummary> userStalkingList ;
-    List<InstagramUserSummary> userStalkersList;
-    List<InstagramUserSummary> userFollowingList;
-    List<InstagramUserSummary> userFollowersList;
+    List<InstagramUserSummary> userStalkingList = null;
+    List<InstagramUserSummary> userStalkersList = null;
+    List<InstagramUserSummary> userFollowingList = null;
+    List<InstagramUserSummary> userFollowersList = null;
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
     LinearLayout lyFollowingCount, lyFollowersCount;
