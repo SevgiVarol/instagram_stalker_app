@@ -308,9 +308,9 @@ public class MediaLogs<T> extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            tabLayout.getTabAt(0).setText("Tüm \nBeğenmeler");
-            tabLayout.getTabAt(1).setText("Takip \nEtmeyenler");
-            tabLayout.getTabAt(2).setText("Beğenmeyen \nTakipçilerim");
+            tabLayout.getTabAt(0).setText(R.string.tab_all_likes);
+            tabLayout.getTabAt(1).setText(R.string.tab_not_followers);
+            tabLayout.getTabAt(2).setText(R.string.tab_not_liked_followers);
             for (int i = 0; i < positionMedia; i++) {
                 observerList.add(null);
             }
@@ -344,9 +344,9 @@ public class MediaLogs<T> extends AppCompatActivity {
     private class setObserversForStory extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
-            tabLayout.getTabAt(0).setText("Tüm \nGörüntülemeler");
-            tabLayout.getTabAt(1).setText("Takip \nEtmeyenler");
-            tabLayout.getTabAt(2).setText("Bakmayan \nTakipçilerim");
+            tabLayout.getTabAt(0).setText(R.string.tab_all_viewers);
+            tabLayout.getTabAt(1).setText(R.string.tab_not_followers);
+            tabLayout.getTabAt(2).setText(R.string.tab_non_viewing_my_followers);
             for (int i = 0; i < 2; i++) {
                 try {
                     observers = (List<T>) service.getStoryViewers(userId, getIntentIdList.get(i));

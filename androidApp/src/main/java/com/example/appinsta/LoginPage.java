@@ -56,7 +56,7 @@ public class LoginPage extends AppCompatActivity {
             super.onBackPressed();
             finishAffinity();
         } else {
-            Toast.makeText(this, "Çıkmak için tekrar geri tuşuna basın", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
         }
         backPressedTime = System.currentTimeMillis();
     }
@@ -146,7 +146,7 @@ public class LoginPage extends AppCompatActivity {
         protected void onPostExecute(String loginResult) {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
-            if (loginResult.equals("fail")) {
+            if (loginResult == null || loginResult.equals("fail")) {
                 final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
                 toast.show();
             } else {
