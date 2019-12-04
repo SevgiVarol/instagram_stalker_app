@@ -151,7 +151,7 @@ public class MyAllMediaFragment extends Fragment {
                         mediaLogIntent.putExtra("position", position);
                         startActivity(mediaLogIntent);
                     } else {
-                        Toast.makeText(getActivity(), R.string.no_media_toast, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.media_not_found, Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -247,7 +247,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="@string/activities"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/user_activities"></com.example.appinsta.uiComponent.CustomView>
 
                         </LinearLayout>
 

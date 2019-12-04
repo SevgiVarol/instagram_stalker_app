@@ -73,7 +73,7 @@ public class UserMediaFragment extends Fragment {
 
             footerLoadingView.setVisibility(View.GONE);
             if (mediaList == null) {
-                tvInfoText.setText(R.string.info_for_private_account);
+                tvInfoText.setText(R.string.follow_if_want_to_show_profile);
                 tvInfoText.setVisibility(View.VISIBLE);
             } else {
                 if (mediaList.size() != 0){

@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 startActivity(mediaLogIntent);
             } else {
-                Toast.makeText(getApplicationContext(), R.string.no_stories_toast, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             storyProgress.setIndeterminate(false);
             profilPic.setClickable(true);

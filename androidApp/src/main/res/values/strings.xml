@@ -1,20 +1,14 @@
 <resources>
-    <string name="app_name">appinsta</string>
 
-    <string name="login_success" translatable="false">ok</string>
-    <string name="title_activity_inst_log" translatable="false">InstLog</string>
-    <string name="facebook_app_id" translatable="false">432792410915519</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb432792410915519</string>
-
-    <!--login page-->
+        <!--login page-->
     <string name="edit_text_name">Email / User Name</string>
     <string name="edit_text_pass">Password</string>
     <string name="login_button_text">Log In</string>
-    <string name="press_back_toast">Press back again to exit</string>
-    <string name="login_fail_toast">Your information is missing or incorrect</string>
+    <string name="press_back_again">Press back again to exit</string>
+    <string name="login_failed">Your information is missing or incorrect</string>
 
     <!--main page-->
-    <string name="no_stories_toast">No stories found</string>
+    <string name="story_not_found">No stories found</string>
     <string name="follow">Followings</string>
     <string name="follower">Followers</string>
     <string name="analysis">Analysis</string>
@@ -24,11 +18,11 @@
     <string name="who_watches_my_stories_without_follow">Who watches my stories and not following me</string>
     <string name="who_i_am_not_follow_back">Who I am not following back</string>
     <string name="who_not_follow_me_back">Who is not following me back</string>
-    <string name="activities">Activities</string>
+    <string name="user_activities">Activities</string>
     <string name="logout">Log Out</string>
 
     <!--my all media fragment-->
-    <string name="no_media_toast">Media not found</string>
+    <string name="media_not_found">Media not found</string>
 
     <!--search activity page-->
     <string name="search_hint">Search</string>
@@ -36,23 +30,22 @@
     <string name="unfollow_user">Unfollow</string>
 
     <!--user media fragment-->
-    <string name="info_for_private_account">Follow this account to see photos and videos</string>
+    <string name="follow_if_want_to_show_profile">Follow this account to see photos and videos</string>
 
     <!--user profile page , use no_story_toast,follow,follower and post from main page-->
     <string name="user_stalkers">Users she/he has not followed back</string>
     <string name="user_stalkings">Users who did not follow she/he back</string>
-    <string name="user_media">Posts</string>
+    <string name="medias">Posts</string>
     <string name="user_liked_my_posts">My liked posts by this user</string>
     <string name="user_stalkers_loading_message">Loading who she/he has not followed back…</string>
     <string name="user_stalkings_loading_message">Loading who did not follow she/he back…</string>
 
     <!--media log page , use search_hint from search-->
-    <string name="tab_all_for_media">All \nLikes</string>
-    <string name="tab_not_follow_for_media">Not \nFollows Me</string>
-    <string name="tab_not_liked_for_media">Who Didn\'t \nLiked</string>
-    <string name="tab_all_for_story">All \nViewers</string>
-    <string name="tab_not_follow_for_story">Not \nFollows Me</string>
-    <string name="tab_not_watched_for_story">Who Didn\'t \nWatched</string>
+    <string name="tab_all_likes">All \nLikes</string>
+    <string name="tab_not_followers">Not \nFollows Me</string>
+    <string name="tab_not_liked_followers">Who Didn\'t \nLiked</string>
+    <string name="tab_all_viewers">All \nViewers</string>
+    <string name="tab_non_viewing_my_followers">Who Didn\'t \nWatched</string>
 
 
 

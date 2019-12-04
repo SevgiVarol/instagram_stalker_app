@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
 import com.example.appinsta.service.InstagramService;
-import com.example.appinsta.uiComponent.CustomView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
         tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.user_media));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.medias));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.user_liked_my_posts));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -238,7 +237,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }else {
-                Toast.makeText(getApplicationContext(),R.string.no_stories_toast,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),R.string.story_not_found,Toast.LENGTH_SHORT).show();
             }
             cycleProgressBar.setIndeterminate(false);
             profilPic.setClickable(true);
