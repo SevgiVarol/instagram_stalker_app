@@ -225,9 +225,9 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
+            dialog.show();
 
         }
 
@@ -259,9 +259,9 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = new ProgressDialog(UserProfileActivity.this);
-            pd.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
-            pd.show();
+            dialog = new ProgressDialog(UserProfileActivity.this);
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
+            dialog.show();
 
         }
 
