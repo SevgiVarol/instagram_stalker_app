@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
-    TextView tvFollowing, tvFollowers, logoutOption;
+    TextView tvFollowing, tvFollowers;
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
