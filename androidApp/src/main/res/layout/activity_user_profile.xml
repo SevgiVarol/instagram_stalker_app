@@ -86,7 +86,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gönderi"
+                        android:text="@string/posts"
                         android:textColor="#FFFF"
                         android:textSize="15sp" />
 
@@ -114,7 +114,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Takip"
+                        android:text="@string/follow"
                         android:textColor="#FFFF"
                         android:textSize="15sp" />
 
@@ -141,7 +141,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Takipçi"
+                        android:text="@string/follower"
                         android:textColor="#FFFF"
                         android:textSize="15sp" />
 
@@ -193,7 +193,7 @@
                         android:layout_height="35dp"
                         android:background="@drawable/button_shape"
                         android:textAllCaps="false"
-                        android:text="Geri takip etmedikleri"
+                        android:text="@string/user_stalkers"
                         android:textSize="12dp" />
 
 
@@ -215,7 +215,7 @@
                         android:layout_height="35dp"
                         android:background="@drawable/button_shape"
                         android:textAllCaps="false"
-                        android:text="Geri takip etmeyenler"
+                        android:text="@string/user_stalkings"
                         android:textSize="12dp" />
 
                 </LinearLayout>

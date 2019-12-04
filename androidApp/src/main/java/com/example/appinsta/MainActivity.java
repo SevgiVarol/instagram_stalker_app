@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
-    TextView tvFollowing, tvFollowers, logoutOption;
+    TextView tvFollowing, tvFollowers;
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
@@ -206,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
         collapsedMenuButton = findViewById(R.id.collapsedMenu);
-        logoutOption = findViewById(R.id.logout);
 
     }
 
@@ -353,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 startActivity(mediaLogIntent);
             } else {
-                Toast.makeText(getApplicationContext(), "Hiçbir hikaye bulunamadı", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             storyProgress.setIndeterminate(false);
             profilPic.setClickable(true);

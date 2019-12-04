@@ -32,15 +32,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Çıkış"
-                android:visibility="gone"
-                app:layout_constraintEnd_toStartOf="@id/collapsedMenu"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
 
@@ -71,7 +62,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Takip"
+                            android:text="@string/follow"
                             android:textColor="#FFFFFF"
                             android:textSize="20sp" />
 
@@ -145,7 +136,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Takipçi"
+                            android:text="@string/follower"
                             android:textColor="#FFFFFF"
                             android:textSize="20sp" />
 
@@ -192,7 +183,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Hikayelerimi sessize alanlar"
+                                app:Condition="@string/who_muted_my_stories"
                                 app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
                             <com.example.appinsta.uiComponent.CustomView
@@ -203,7 +194,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Son fotoğrafımı beğenmeyen takipçiler"
+                                app:Condition="@string/who_do_not_like_my_last_photo"
                                 app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
                             <com.example.appinsta.uiComponent.CustomView
@@ -214,7 +205,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Hikayelerimi izleyip beni takip etmeyenler"
+                                app:Condition="@string/who_watches_my_stories_without_follow"
                                 app:Number="0"></com.example.appinsta.uiComponent.CustomView>
 
                         </LinearLayout>
@@ -234,7 +225,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Geri takip etmediklerim"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/who_i_am_not_follow_back"></com.example.appinsta.uiComponent.CustomView>
 
 
                             <com.example.appinsta.uiComponent.CustomView
@@ -245,7 +236,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Beni geri takip etmeyenler"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/who_not_follow_me_back"></com.example.appinsta.uiComponent.CustomView>
 
 
                             <com.example.appinsta.uiComponent.CustomView
@@ -256,7 +247,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="Kişi hareketleri"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/user_activities"></com.example.appinsta.uiComponent.CustomView>
 
                         </LinearLayout>
 

@@ -78,8 +78,8 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
         tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
 
-        tabLayout.addTab(tabLayout.newTab().setText("gönderiler"));
-        tabLayout.addTab(tabLayout.newTab().setText("beğendiği gönderilerim"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.medias));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.user_liked_my_posts));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
@@ -226,7 +226,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog = new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Geri takip etmedikleri yükleniyor...");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
             dialog.show();
 
         }
@@ -260,7 +260,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog = new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Geri takip etmeyenler yükleniyor...");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
             dialog.show();
 
         }
@@ -309,7 +309,7 @@ public class UserProfileActivity extends AppCompatActivity {
             if (storyUrlList !=null & storyUrlList.size()!=0) {
                 startActivity(storyIntent);
             }else {
-                Toast.makeText(getApplicationContext(),"Hiçbir hikaye bulunamadı",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),R.string.story_not_found,Toast.LENGTH_SHORT).show();
             }
             cycleProgressBar.setIndeterminate(false);
             profilPic.setClickable(true);
