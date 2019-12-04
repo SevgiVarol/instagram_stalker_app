@@ -39,10 +39,10 @@ public class UserProfileActivity extends AppCompatActivity {
     public InstagramUserSummary user;
     Button btnStalking,btnStalkers;
     ViewPager viewPager;
-    List<InstagramUserSummary> userStalkingList = new ArrayList<>();
-    List<InstagramUserSummary> userStalkersList = new ArrayList<>();
-    List<InstagramUserSummary> userFollowingList = new ArrayList<>();
-    List<InstagramUserSummary> userFollowersList = new ArrayList<>();
+    List<InstagramUserSummary> userStalkingList ;
+    List<InstagramUserSummary> userStalkersList;
+    List<InstagramUserSummary> userFollowingList;
+    List<InstagramUserSummary> userFollowersList;
     InstagramService service = InstagramService.getInstance();
     TabLayout tabLayout;
     LinearLayout lyFollowingCount, lyFollowersCount;
@@ -178,7 +178,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            if(userFollowingList.isEmpty()){
+            if(userFollowingList == null){
+                userFollowersList = new ArrayList<>();
                 userFollowingList=service.getFollowing(user.getPk());
             }
             return null;
@@ -205,7 +206,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            if(userFollowersList.isEmpty()){
+            if(userFollowersList == null){
+                userFollowersList = new ArrayList<>();
                 userFollowersList=service.getFollowers(user.getPk());
             }
             return null;
@@ -234,10 +236,11 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            if(userFollowingList.isEmpty()){
+            if(userFollowingList == null || userFollowersList == null){
                 getUserFollowingsAndFollowers();
             }
-            if (userStalkersList.isEmpty()) {
+            if (userStalkersList == null) {
+                userStalkersList = new ArrayList<>();
                 userStalkersList = compare(userFollowersList,userFollowingList);
             }
             return null;
@@ -267,11 +270,12 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
 
-            if(userFollowingList.isEmpty() || userFollowersList.isEmpty()){
+            if(userFollowingList == null || userFollowersList == null){
                 getUserFollowingsAndFollowers();
             }
 
-            if (userStalkingList.isEmpty()) {
+            if (userStalkingList == null) {
+                userStalkingList = new ArrayList<>();
                 userStalkingList = compare(userFollowingList,userFollowersList);
             }
             return null;
