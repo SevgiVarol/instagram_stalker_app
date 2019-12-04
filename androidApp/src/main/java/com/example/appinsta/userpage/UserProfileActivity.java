@@ -179,7 +179,6 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             if(userFollowingList == null){
-                userFollowersList = new ArrayList<>();
                 userFollowingList=service.getFollowing(user.getPk());
             }
             return null;
@@ -207,7 +206,6 @@ public class UserProfileActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             if(userFollowersList == null){
-                userFollowersList = new ArrayList<>();
                 userFollowersList=service.getFollowers(user.getPk());
             }
             return null;
@@ -240,7 +238,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 getUserFollowingsAndFollowers();
             }
             if (userStalkersList == null) {
-                userStalkersList = new ArrayList<>();
                 userStalkersList = compare(userFollowersList,userFollowingList);
             }
             return null;
@@ -275,7 +272,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
 
             if (userStalkingList == null) {
-                userStalkingList = new ArrayList<>();
                 userStalkingList = compare(userFollowingList,userFollowersList);
             }
             return null;
