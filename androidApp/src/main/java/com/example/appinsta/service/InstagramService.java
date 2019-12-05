@@ -318,7 +318,6 @@ public class InstagramService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //mediasNextMaxId = userFeedResult.getNext_max_id();
         mediaModel.setNextMaxId(userFeedResult.getNext_max_id());
         mediaModel.setFeedItems(userFeedResult.getItems());
         return mediaModel;
@@ -332,7 +331,6 @@ public class InstagramService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //mediasNextMaxId = userFeedResult.getNext_max_id();
         mediaModel.setNextMaxId(userFeedResult.getNext_max_id());
         mediaModel.setFeedItems(userFeedResult.getItems());
         return mediaModel;
@@ -346,7 +344,6 @@ public class InstagramService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //myMediasNextMaxId = myUserFeedResult.getNext_max_id();
         mediaModel.setFeedItems(myUserFeedResult.getItems());
         mediaModel.setNextMaxId(myUserFeedResult.getNext_max_id());
         return mediaModel;
@@ -361,7 +358,6 @@ public class InstagramService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //myMediasNextMaxId = myUserFeedResult.getNext_max_id();
         mediaModel.setFeedItems(myUserFeedResult.getItems());
         mediaModel.setNextMaxId(myUserFeedResult.getNext_max_id());
         return mediaModel;
