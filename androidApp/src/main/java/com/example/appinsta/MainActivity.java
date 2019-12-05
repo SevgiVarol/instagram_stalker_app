@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.medialog.MediaLogs;
+import com.example.appinsta.models.MediaModel;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
 
@@ -283,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             super.onPostExecute(s);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
-                mediaLikersList = compare(followersList, service.getMediaLikers(service.getLoggedUserMedias(null).get(0).pk));
+                mediaLikersList = compare(followersList, service.getMediaLikers(service.getLoggedUserMedias(null).feedItems.get(0).pk));
             }
             if (mediaLikersList != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));

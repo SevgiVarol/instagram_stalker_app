@@ -23,6 +23,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.medialog.MediaLogs;
+import com.example.appinsta.models.MediaModel;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.ImageAdapter;
 
@@ -42,6 +43,8 @@ public class MyAllMediaFragment extends Fragment {
     Long userid;
     ImageAdapter imageListAdapter;
     Boolean isLoadingNextMedias = false;
+    MediaModel mediaModel = new MediaModel();
+    String nextMaxId;
     public MyAllMediaFragment() {
         // Required empty public constructor
     }
@@ -72,7 +75,9 @@ public class MyAllMediaFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            myMediaList = service.getLoggedUserMedias();
+            mediaModel = service.getLoggedUserMedias();
+            myMediaList = mediaModel.feedItems;
+            nextMaxId = mediaModel.nextMaxId;
             if (mediaUrlList.size() == 0) {
                 try {
                     for (int counter = 0; counter < myMediaList.size(); counter++) {
@@ -161,7 +166,9 @@ public class MyAllMediaFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
-            List<InstagramFeedItem> nextMedias = service.getLoggedUserMedias(InstagramService.myMediasNextMaxId);
+            mediaModel = service.getLoggedUserMedias(nextMaxId);
+            List<InstagramFeedItem> nextMedias = mediaModel.feedItems;
+            nextMaxId = mediaModel.nextMaxId;
             if (mediaUrlList.size() != 0) {
                 try {
                     for (int counter = 0; counter < nextMedias.size(); counter++) {

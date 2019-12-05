@@ -2,6 +2,8 @@ package com.example.appinsta.service;
 
 import android.net.Uri;
 
+import com.example.appinsta.models.MediaModel;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +35,6 @@ public class InstagramService {
 
 
     public static Instagram4Android instagram;
-    public static String mediasNextMaxId;
-    public static String myMediasNextMaxId;
     private static InstagramService myService;
     InstagramUser loggedUser;
     private List<InstagramUserSummary> myFollowing = new ArrayList<>();
@@ -46,6 +46,7 @@ public class InstagramService {
     InstagramFeedResult myUserFeedResult = null;
 
     List<InstagramUserSummary> myFollowers = new ArrayList<>();
+    MediaModel mediaModel = new MediaModel();
 
 
     private InstagramService() {
@@ -237,7 +238,7 @@ public class InstagramService {
 
 
         if (loggedUserLatestMediaUrl == null) {
-            loggedUserLatestMediaUrl = getLoggedUserMedias(null).get(0).image_versions2.candidates.get(1).url;
+            loggedUserLatestMediaUrl = getLoggedUserMedias(null).feedItems.get(0).image_versions2.candidates.get(1).url;
             return loggedUserLatestMediaUrl;
         } else
             return loggedUserLatestMediaUrl;
@@ -310,55 +311,60 @@ public class InstagramService {
     }
 
 
-    public List<InstagramFeedItem> getUserMedias(long userId) {
+    public MediaModel getUserMedias(long userId) {
 
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, null, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mediasNextMaxId = userFeedResult.getNext_max_id();
-
-        return userFeedResult.getItems();
+        //mediasNextMaxId = userFeedResult.getNext_max_id();
+        mediaModel.setNextMaxId(userFeedResult.getNext_max_id());
+        mediaModel.setFeedItems(userFeedResult.getItems());
+        return mediaModel;
 
     }
 
-    public List<InstagramFeedItem> getUserMedias(long userId, String nextMaxId) {
+    public MediaModel getUserMedias(long userId, String nextMaxId) {
 
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mediasNextMaxId = userFeedResult.getNext_max_id();
-        return userFeedResult.getItems();
+        //mediasNextMaxId = userFeedResult.getNext_max_id();
+        mediaModel.setNextMaxId(userFeedResult.getNext_max_id());
+        mediaModel.setFeedItems(userFeedResult.getItems());
+        return mediaModel;
 
     }
 
 
-    public List<InstagramFeedItem> getLoggedUserMedias() {
-
-
+    public MediaModel getLoggedUserMedias() {
         try {
             myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), null, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myMediasNextMaxId = myUserFeedResult.getNext_max_id();
-        return myUserFeedResult.getItems();
+        //myMediasNextMaxId = myUserFeedResult.getNext_max_id();
+        mediaModel.setFeedItems(myUserFeedResult.getItems());
+        mediaModel.setNextMaxId(myUserFeedResult.getNext_max_id());
+        return mediaModel;
 
 
     }
 
-    public List<InstagramFeedItem> getLoggedUserMedias(String nextMaxId) {
+    public MediaModel getLoggedUserMedias(String nextMaxId) {
 
         try {
             myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), nextMaxId, 0));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        myMediasNextMaxId = myUserFeedResult.getNext_max_id();
-        return myUserFeedResult.getItems();
+        //myMediasNextMaxId = myUserFeedResult.getNext_max_id();
+        mediaModel.setFeedItems(myUserFeedResult.getItems());
+        mediaModel.setNextMaxId(myUserFeedResult.getNext_max_id());
+        return mediaModel;
     }
 
 
@@ -376,12 +382,13 @@ public class InstagramService {
 
     }
 
-    public List<InstagramFeedItem> getMyLikedMediaByUser(String username) {
+    public MediaModel getMyLikedMediaByUser(String username) {
 
 
         List<InstagramFeedItem> likedMediaList = new ArrayList<>();
         List<InstagramUserSummary> medialikers = new ArrayList<>();
-        List<InstagramFeedItem> myMedia = getLoggedUserMedias();
+        mediaModel = getLoggedUserMedias();
+        List<InstagramFeedItem> myMedia = mediaModel.feedItems;
 
         for (int i = 0; i < myMedia.size(); i++) {
 
@@ -396,16 +403,17 @@ public class InstagramService {
                 }
             }
         }
-        return likedMediaList;
+        mediaModel.setFeedItems(likedMediaList);
+        return mediaModel;
     }
 
-    public List<InstagramFeedItem> getMyLikedNextMediaByUser(String username, String nextMaxId) {
+    public MediaModel getMyLikedNextMediaByUser(String username, String nextMaxId) {
 
         List<InstagramFeedItem> likedNextMediaList = new ArrayList<>();
         List<InstagramFeedItem> mediaList = new ArrayList<>();
         List<InstagramUserSummary> photoLikers = new ArrayList<>();
-
-        mediaList = getLoggedUserMedias(nextMaxId);
+        mediaModel = getLoggedUserMedias(nextMaxId);
+        mediaList = mediaModel.feedItems;
 
 
         for (int i = 0; i < mediaList.size(); i++) {
@@ -421,7 +429,8 @@ public class InstagramService {
                 }
             }
         }
-        return likedNextMediaList;
+        mediaModel.setFeedItems(likedNextMediaList);
+        return mediaModel;
     }
 
     public ArrayList<Uri> getStories(String username) {
