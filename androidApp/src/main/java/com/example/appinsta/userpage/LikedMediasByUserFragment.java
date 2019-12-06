@@ -1,6 +1,5 @@
 package com.example.appinsta.userpage;
 
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import com.example.appinsta.R;
+import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
 import java.util.ArrayList;
@@ -29,6 +29,7 @@ public class LikedMediasByUserFragment extends Fragment {
     ProgressBar footerLoadingView;
     Boolean isLoadingNextMedias = false;
     AsyncTask getLoggedUserLikedMediaTask;
+    DataWithOffsetIdModel dataWithOffsetIdModel;
 
     public LikedMediasByUserFragment(String username) {
         this.username=username;
@@ -53,7 +54,8 @@ public class LikedMediasByUserFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if(myLikedMediaList.isEmpty()) {
-                myLikedMediaList = service.getMyLikedMediaByUser(username);
+                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username);
+                myLikedMediaList = dataWithOffsetIdModel.items;
             }
             return null;
         }
@@ -73,7 +75,7 @@ public class LikedMediasByUserFragment extends Fragment {
 
                     if (totalItemCount - 1 == view.getLastVisiblePosition()) {
 
-                        if (!isLoadingNextMedias && InstagramService.myMediasNextMaxId!=null)
+                        if (!isLoadingNextMedias && dataWithOffsetIdModel.nextMaxId!=null)
                         {
                             footerLoadingView.setVisibility(View.VISIBLE);
                             isLoadingNextMedias = true;
@@ -94,8 +96,8 @@ public class LikedMediasByUserFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-
-            List<InstagramFeedItem> nextMedias = service.getMyLikedNextMediaByUser(username,InstagramService.myMediasNextMaxId);
+            dataWithOffsetIdModel = service.getMyLikedMediaByUser(username, dataWithOffsetIdModel.nextMaxId);
+            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
             myLikedMediaList.addAll(nextMedias);
             return null;
         }
