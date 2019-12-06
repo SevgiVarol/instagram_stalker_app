@@ -310,17 +310,6 @@ public class InstagramService {
 
     }
 
-
-    public DataWithOffsetIdModel getUserMedias(long userId) {
-        try {
-            userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, null, 0));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new DataWithOffsetIdModel(userFeedResult.getItems(), userFeedResult.getNext_max_id());
-
-    }
-
     public DataWithOffsetIdModel getUserMedias(long userId, String nextMaxId) {
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
@@ -328,18 +317,6 @@ public class InstagramService {
             e.printStackTrace();
         }
         return new DataWithOffsetIdModel(userFeedResult.getItems(), userFeedResult.getNext_max_id());
-
-    }
-
-
-    public DataWithOffsetIdModel getLoggedUserMedias() {
-        try {
-            myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), null, 0));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new DataWithOffsetIdModel(myUserFeedResult.getItems(), myUserFeedResult.getNext_max_id());
-
 
     }
 
@@ -368,31 +345,7 @@ public class InstagramService {
 
     }
 
-    public DataWithOffsetIdModel getMyLikedMediaByUser(String username) {
-
-
-        List<InstagramFeedItem> likedMediaList = new ArrayList<>();
-        List<InstagramUserSummary> medialikers = new ArrayList<>();
-        DataWithOffsetIdModel dataWithOffsetIdModel = getLoggedUserMedias();
-        List<InstagramFeedItem> myMedia = dataWithOffsetIdModel.items;
-
-        for (int i = 0; i < myMedia.size(); i++) {
-
-            medialikers = getMediaLikers(myMedia.get(i).getPk());
-
-            for (int j = 0; j < medialikers.size(); j++) {
-
-                if (username.equals(medialikers.get(j).username)) {
-
-                    likedMediaList.add(myMedia.get(i));
-                    break;
-                }
-            }
-        }
-        return new DataWithOffsetIdModel(likedMediaList, dataWithOffsetIdModel.nextMaxId);
-    }
-
-    public DataWithOffsetIdModel getMyLikedNextMediaByUser(String username, String nextMaxId) {
+    public DataWithOffsetIdModel getMyLikedMediaByUser(String username, String nextMaxId) {
 
         List<InstagramFeedItem> likedNextMediaList = new ArrayList<>();
         List<InstagramFeedItem> mediaList = new ArrayList<>();

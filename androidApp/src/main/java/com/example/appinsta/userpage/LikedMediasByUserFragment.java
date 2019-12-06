@@ -54,7 +54,7 @@ public class LikedMediasByUserFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if(myLikedMediaList.isEmpty()) {
-                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username);
+                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username,null);
                 myLikedMediaList = dataWithOffsetIdModel.items;
             }
             return null;
@@ -96,7 +96,7 @@ public class LikedMediasByUserFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getMyLikedNextMediaByUser(username, dataWithOffsetIdModel.nextMaxId);
+            dataWithOffsetIdModel = service.getMyLikedMediaByUser(username, dataWithOffsetIdModel.nextMaxId);
             List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
             myLikedMediaList.addAll(nextMedias);
             return null;
