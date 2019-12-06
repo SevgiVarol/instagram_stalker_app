@@ -75,8 +75,7 @@ public class MyAllMediaFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dataWithOffsetIdModel = service.getLoggedUserMedias();
-            myMediaList = dataWithOffsetIdModel.Items;
-            //nextMaxId = dataWithOffsetIdModel.nextMaxId;
+            myMediaList = dataWithOffsetIdModel.items;
             if (mediaUrlList.size() == 0) {
                 try {
                     for (int counter = 0; counter < myMediaList.size(); counter++) {
@@ -166,7 +165,7 @@ public class MyAllMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             dataWithOffsetIdModel = service.getLoggedUserMedias(dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.Items;
+            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
             if (mediaUrlList.size() != 0) {
                 try {
                     for (int counter = 0; counter < nextMedias.size(); counter++) {

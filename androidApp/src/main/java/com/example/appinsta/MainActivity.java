@@ -283,8 +283,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             super.onPostExecute(s);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
-                InstagramFeedItem item = (InstagramFeedItem) service.getLoggedUserMedias(null).Items.get(0);
-                mediaLikersList = compare(followersList, service.getMediaLikers(item.pk));
+                InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
+                mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
             }
             if (mediaLikersList != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));

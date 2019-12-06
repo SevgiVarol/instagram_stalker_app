@@ -64,7 +64,7 @@ public class UserMediaFragment extends Fragment {
 
             if (mediaList.isEmpty()) {
                 dataWithOffsetIdModel = service.getUserMedias(user.getPk());
-                mediaList = dataWithOffsetIdModel.Items;
+                mediaList = dataWithOffsetIdModel.items;
             }
 
             return null;
@@ -116,7 +116,7 @@ public class UserMediaFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.Items;
+            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
             if (nextMedias != null){mediaList.addAll(nextMedias);}
 
             return null;

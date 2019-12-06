@@ -237,8 +237,8 @@ public class InstagramService {
 
 
         if (loggedUserLatestMediaUrl == null) {
-            InstagramFeedItem item = (InstagramFeedItem) getLoggedUserMedias(null).Items.get(0);
-            loggedUserLatestMediaUrl = item.image_versions2.candidates.get(1).url;
+            InstagramFeedItem firstItem = (InstagramFeedItem) getLoggedUserMedias(null).items.get(0);
+            loggedUserLatestMediaUrl = firstItem.image_versions2.candidates.get(1).url;
             return loggedUserLatestMediaUrl;
         } else
             return loggedUserLatestMediaUrl;
@@ -374,7 +374,7 @@ public class InstagramService {
         List<InstagramFeedItem> likedMediaList = new ArrayList<>();
         List<InstagramUserSummary> medialikers = new ArrayList<>();
         DataWithOffsetIdModel dataWithOffsetIdModel = getLoggedUserMedias();
-        List<InstagramFeedItem> myMedia = dataWithOffsetIdModel.Items;
+        List<InstagramFeedItem> myMedia = dataWithOffsetIdModel.items;
 
         for (int i = 0; i < myMedia.size(); i++) {
 
@@ -398,7 +398,7 @@ public class InstagramService {
         List<InstagramFeedItem> mediaList = new ArrayList<>();
         List<InstagramUserSummary> photoLikers = new ArrayList<>();
         DataWithOffsetIdModel dataWithOffsetIdModel = getLoggedUserMedias(nextMaxId);
-        mediaList = dataWithOffsetIdModel.Items;
+        mediaList = dataWithOffsetIdModel.items;
 
 
         for (int i = 0; i < mediaList.size(); i++) {
