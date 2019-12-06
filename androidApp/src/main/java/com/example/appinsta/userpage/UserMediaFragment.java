@@ -14,7 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.appinsta.R;
-import com.example.appinsta.models.MediaModel;
+import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
 import java.util.ArrayList;
@@ -35,8 +35,7 @@ public class UserMediaFragment extends Fragment {
     ImageAdapter imageListAdapter;
     ProgressBar footerLoadingView;
     AsyncTask getUserMedia;
-    MediaModel mediaModel = new MediaModel();
-    String nextMaxId;
+    DataWithOffsetIdModel dataWithOffsetIdModel;
 
     public UserMediaFragment() {
         // Required empty public constructor
@@ -64,9 +63,8 @@ public class UserMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if (mediaList.isEmpty()) {
-                mediaModel = service.getUserMedias(user.getPk());
-                mediaList = mediaModel.feedItems;
-                nextMaxId = mediaModel.nextMaxId;
+                dataWithOffsetIdModel = service.getUserMedias(user.getPk());
+                mediaList = dataWithOffsetIdModel.Items;
             }
 
             return null;
@@ -117,9 +115,8 @@ public class UserMediaFragment extends Fragment {
     private class getUserMediasNextPage extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
-            mediaModel = service.getUserMedias(user.getPk(), nextMaxId);
-            List<InstagramFeedItem> nextMedias = mediaModel.feedItems;
-            nextMaxId = mediaModel.nextMaxId;
+            dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
+            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.Items;
             if (nextMedias != null){mediaList.addAll(nextMedias);}
 
             return null;
@@ -129,7 +126,6 @@ public class UserMediaFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            //imageListAdapter.setData(mediaList);
             try {
                 imageListAdapter.notifyDataSetChanged();
             } catch (Exception e) {
