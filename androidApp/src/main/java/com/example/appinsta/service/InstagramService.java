@@ -245,7 +245,7 @@ public class InstagramService {
     }
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
-        if (!storyViewers.isEmpty()){
+        if (!storyViewers.isEmpty()) {
             storyViewers.clear();
         }
         InstagramUserStoryFeedResult storyFeedResult = null;
@@ -268,7 +268,7 @@ public class InstagramService {
                 e.printStackTrace();
             }
             nextMaxId = userStoryViewers.getNext_max_id();
-        }while (nextMaxId != null);
+        } while (nextMaxId != null);
 
         return storyViewers;
 
@@ -310,6 +310,10 @@ public class InstagramService {
 
     }
 
+    public DataWithOffsetIdModel getUserMedias(long userId) {
+        return getUserMedias(userId, null);
+    }
+
     public DataWithOffsetIdModel getUserMedias(long userId, String nextMaxId) {
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
@@ -318,6 +322,10 @@ public class InstagramService {
         }
         return new DataWithOffsetIdModel(userFeedResult.getItems(), userFeedResult.getNext_max_id());
 
+    }
+
+    public DataWithOffsetIdModel getLoggedUserMedias() {
+        return getLoggedUserMedias(null);
     }
 
     public DataWithOffsetIdModel getLoggedUserMedias(String nextMaxId) {
@@ -343,6 +351,10 @@ public class InstagramService {
 
         return mediaLikersResult.getUsers();
 
+    }
+
+    public DataWithOffsetIdModel getMyLikedMediaByUser(String username) {
+        return getMyLikedMediaByUser(username, null);
     }
 
     public DataWithOffsetIdModel getMyLikedMediaByUser(String username, String nextMaxId) {

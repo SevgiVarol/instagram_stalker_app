@@ -54,7 +54,7 @@ public class LikedMediasByUserFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if(myLikedMediaList.isEmpty()) {
-                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username,null);
+                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username);
                 myLikedMediaList = dataWithOffsetIdModel.items;
             }
             return null;

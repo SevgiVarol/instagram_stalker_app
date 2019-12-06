@@ -63,7 +63,7 @@ public class UserMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if (mediaList.isEmpty()) {
-                dataWithOffsetIdModel = service.getUserMedias(user.getPk(),null);
+                dataWithOffsetIdModel = service.getUserMedias(user.getPk());
                 mediaList = dataWithOffsetIdModel.items;
             }
 

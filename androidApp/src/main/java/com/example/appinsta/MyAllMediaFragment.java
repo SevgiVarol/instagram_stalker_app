@@ -74,7 +74,7 @@ public class MyAllMediaFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getLoggedUserMedias(null);
+            dataWithOffsetIdModel = service.getLoggedUserMedias();
             myMediaList = dataWithOffsetIdModel.items;
             if (mediaUrlList.size() == 0) {
                 try {
