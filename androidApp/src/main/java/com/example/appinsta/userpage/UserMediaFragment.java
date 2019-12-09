@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.appinsta.R;
+import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class UserMediaFragment extends Fragment {
     ImageAdapter imageListAdapter;
     ProgressBar footerLoadingView;
     AsyncTask getUserMedia;
+    DataWithOffsetIdModel dataWithOffsetIdModel;
 
     public UserMediaFragment() {
         // Required empty public constructor
@@ -61,7 +63,8 @@ public class UserMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if (mediaList.isEmpty()) {
-                mediaList = service.getUserMedias(user.getPk());
+                dataWithOffsetIdModel = service.getUserMedias(user.getPk());
+                mediaList = dataWithOffsetIdModel.items;
             }
 
             return null;
@@ -112,8 +115,8 @@ public class UserMediaFragment extends Fragment {
     private class getUserMediasNextPage extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
-
-            List<InstagramFeedItem> nextMedias = service.getUserMedias(user.getPk(), InstagramService.mediasNextMaxId);
+            dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
+            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
             if (nextMedias != null){mediaList.addAll(nextMedias);}
 
             return null;
@@ -123,7 +126,6 @@ public class UserMediaFragment extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            //imageListAdapter.setData(mediaList);
             try {
                 imageListAdapter.notifyDataSetChanged();
             } catch (Exception e) {
