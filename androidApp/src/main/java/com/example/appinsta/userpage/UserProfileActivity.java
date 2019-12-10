@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
+import com.example.appinsta.enums.SearchActivityEnum;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -103,13 +104,15 @@ public class UserProfileActivity extends AppCompatActivity {
         lyFollowingCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new getUserFollowingsTask().execute();
+                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_FOLLOWINGS;
+                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_following_loading_message);
             }
         });
         lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new getUserFollowersTask().execute();
+                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_FOLLOWERS;
+                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_follower_loading_message);
             }
         });
 
@@ -145,17 +148,37 @@ public class UserProfileActivity extends AppCompatActivity {
         btnStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new userStalkersTask().execute();
+                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_STALKERS;
+                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_stalkers_loading_message);
             }
         });
 
         btnStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new userStalkingTask().execute();
+                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_STALKINGS;
+                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_stalkings_loading_message);
             }
         });
     }
+    public void startSearchActivityWithEnum(Enum e, long pk, int text){
+        dialog =new ProgressDialog(UserProfileActivity.this);
+        dialog.setMessage(getApplicationContext().getResources().getString(text));
+        dialog.show();
+        Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+        searchActivity.putExtra("enum",e);
+        searchActivity.putExtra("userId",pk);
+        startActivityForResult(searchActivity,0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0){
+            dialog.dismiss();
+        }
+    }
+
     private void showStories(){
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +195,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Takip edilenler yükleniyor..");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
             dialog.show();
         }
 
@@ -200,7 +223,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Takipçiler yükleniyor..");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
             dialog.show();
         }
 

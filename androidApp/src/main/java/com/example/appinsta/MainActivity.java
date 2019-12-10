@@ -32,6 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
+import com.example.appinsta.enums.SearchActivityEnum;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
@@ -84,44 +85,49 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) followersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_FOLLOWERS);
+                searchActivity.putExtra("userId",user.pk);
+                startActivity(searchActivity);
             }
         });
 
         followingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) followingList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_FOLLOWINGS);
+                searchActivity.putExtra("userId",user.pk);
+                startActivity(searchActivity);
             }
         });
 
         latestPhotoLikers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) mediaLikersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_LAST_PHOTO_LIKERS);
+                searchActivity.putExtra("userId",user.pk);
+                startActivity(searchActivity);
             }
         });
 
         usersStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) stalkersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_STALKERS);
+                searchActivity.putExtra("userId",user.pk);
+                startActivity(searchActivity);
             }
         });
         usersStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) stalkingList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_STALKINGS);
+                searchActivity.putExtra("userId",user.pk);
+                startActivity(searchActivity);
             }
         });
         profilPic.setOnClickListener(new View.OnClickListener() {
