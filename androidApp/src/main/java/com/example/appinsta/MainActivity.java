@@ -32,7 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
-import com.example.appinsta.enums.SearchActivityEnum;
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
@@ -86,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_FOLLOWERS);
-                searchActivity.putExtra("userId",user.pk);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWERS.getValue());
                 startActivity(searchActivity);
             }
         });
@@ -96,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_FOLLOWINGS);
-                searchActivity.putExtra("userId",user.pk);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWINGS.getValue());
                 startActivity(searchActivity);
             }
         });
@@ -106,8 +104,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_LAST_PHOTO_LIKERS);
-                searchActivity.putExtra("userId",user.pk);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS.getValue());
                 startActivity(searchActivity);
             }
         });
@@ -116,8 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_STALKERS);
-                searchActivity.putExtra("userId",user.pk);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS.getValue());
                 startActivity(searchActivity);
             }
         });
@@ -125,8 +121,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("enum", SearchActivityEnum.FOR_MY_STALKINGS);
-                searchActivity.putExtra("userId",user.pk);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS.getValue());
                 startActivity(searchActivity);
             }
         });

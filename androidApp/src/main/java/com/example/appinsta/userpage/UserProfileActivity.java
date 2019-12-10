@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
-import com.example.appinsta.enums.SearchActivityEnum;
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -104,15 +104,15 @@ public class UserProfileActivity extends AppCompatActivity {
         lyFollowingCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_FOLLOWINGS;
-                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_following_loading_message);
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWINGS;
+                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_following_loading_message);
             }
         });
         lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_FOLLOWERS;
-                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_follower_loading_message);
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWERS;
+                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_follower_loading_message);
             }
         });
 
@@ -148,25 +148,25 @@ public class UserProfileActivity extends AppCompatActivity {
         btnStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_STALKERS;
-                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_stalkers_loading_message);
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKERS;
+                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_stalkers_loading_message);
             }
         });
 
         btnStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchActivityEnum searchActivityEnum = SearchActivityEnum.FOR_USERS_STALKINGS;
-                startSearchActivityWithEnum(searchActivityEnum,user.getPk(),R.string.user_stalkings_loading_message);
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKINGS;
+                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_stalkings_loading_message);
             }
         });
     }
-    public void startSearchActivityWithEnum(Enum e, long pk, int text){
+    public void startSearchActivityWithEnum(UserListTypes listType, long pk, int text){
         dialog =new ProgressDialog(UserProfileActivity.this);
         dialog.setMessage(getApplicationContext().getResources().getString(text));
         dialog.show();
         Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-        searchActivity.putExtra("enum",e);
+        searchActivity.putExtra("listType",listType.getValue());
         searchActivity.putExtra("userId",pk);
         startActivityForResult(searchActivity,0);
     }

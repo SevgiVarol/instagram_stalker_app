@@ -11,8 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.appinsta.enums.SearchActivityEnum;
-import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.UserProfileActivity;
 
@@ -28,9 +26,8 @@ import static com.example.appinsta.Compare.compare;
 public class SearchActivity<T> extends AppCompatActivity implements Serializable {
 
     private UserListAdapter adapter;
-    private List<T> userList=null;
     EditText searchEditText;
-    SearchActivityEnum intentOption;
+    int intentOption;
     long pk;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -42,9 +39,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        List<T> userList = new ArrayList<>();
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
-        intentOption = (SearchActivityEnum) getIntent().getSerializableExtra("enum");
+        intentOption = getIntent().getIntExtra("listType",0);
         pk = getIntent().getLongExtra("userId",0);
         TextWatcher watcher = new TextWatcher() {
 
@@ -75,44 +72,40 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
 
         switch (intentOption){
-            case FOR_MY_FOLLOWERS:
-                if (userList != null){userList = null;}
-                userList = new ArrayList<>();
+            case 0:
                 userList = (List<T>) service.getMyFollowers();
                 setRecyclerView(userList);
                 break;
 
-            case FOR_MY_FOLLOWINGS:
-                if (userList != null){userList = null;}
-                userList = new ArrayList<>();
+            case 1:
                 userList = (List<T>) service.getMyFollowing();
                 setRecyclerView(userList);
                 break;
 
-            case FOR_MY_STALKERS:
-                if (userList != null){userList = null;}
-                userList = new ArrayList<>();
-                if (myFollowing == null || myFollowers == null) {
-                    myFollowers = service.getMyFollowers();
+            case 2:
+                if (myFollowing == null){
                     myFollowing = service.getMyFollowing();
+                }
+                if (myFollowers == null) {
+                    myFollowers = service.getMyFollowers();
                 }
                 userList = (List<T>) compare(myFollowing, myFollowers);
                 setRecyclerView(userList);
                 break;
 
-            case FOR_MY_STALKINGS:
-                if (userList != null){userList = null;}
-                if (myFollowing == null || myFollowers == null) {
-                    myFollowers = service.getMyFollowers();
+            case 3:
+                if (myFollowing == null){
                     myFollowing = service.getMyFollowing();
+                }
+                if (myFollowers == null) {
+                    myFollowers = service.getMyFollowers();
                 }
                 userList = (List<T>) compare(myFollowers, myFollowing);
                 setRecyclerView(userList);
                 break;
 
-            case FOR_MY_LAST_PHOTO_LIKERS:
-                if (service.getLoggedUser().getMedia_count() != 0) {
-                    userList = new ArrayList<>();
+            case 4:
+                if (service.getLoggedUser().getMedia_count() > 0) {
                     if (myFollowers == null) {
                         myFollowers = service.getMyFollowers();
                     }
@@ -122,28 +115,24 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 }
                 break;
 
-            case FOR_USERS_FOLLOWERS:
-                if (userList != null){userList = null;}
-                userList = new ArrayList<>();
+            case 5:
                 userList = (List<T>) service.getFollowers(pk);
                 setRecyclerView(userList);
                 break;
 
-            case FOR_USERS_FOLLOWINGS:
-                if (userList != null){userList = null;}
+            case 6:
                 userList = (List<T>) service.getFollowing(pk);
                 setRecyclerView(userList);
                 break;
 
-            case FOR_USERS_STALKERS:
-                if (userList != null){userList = null;}
+            case 7:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
                 userList = (List<T>) compare(usersFollowings,usersFollowers);
                 setRecyclerView(userList);
                 break;
 
-            case FOR_USERS_STALKINGS:
+            case 8:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
                 userList = (List<T>) compare(usersFollowers,usersFollowings);
