@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.appinsta.enums.SearchActivityEnum;
 import com.example.appinsta.models.DataWithOffsetIdModel;
@@ -79,8 +80,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 userList = new ArrayList<>();
                 userList = (List<T>) service.getMyFollowers();
                 setRecyclerView(userList);
-
-
                 break;
 
             case FOR_MY_FOLLOWINGS:
@@ -154,6 +153,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     }
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
+            if (userList.isEmpty()){
+                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
+            }
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);

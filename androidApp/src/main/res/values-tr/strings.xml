@@ -36,4 +36,5 @@
     <string name="unfollow_user">Takibi Bırak</string>
     <string name="user_follower_loading_message">Takipçiler yükleniyor…</string>
     <string name="user_following_loading_message">Takip edilenler yükleniyor…</string>
+    <string name="wait_a_few_minute">Tekrar denemeden önce lütfen birkaç dakika bekle</string>
 </resources>

@@ -28,6 +28,7 @@
     <string name="search_hint">Search</string>
     <string name="follow_user">Follow</string>
     <string name="unfollow_user">Unfollow</string>
+    <string name="wait_a_few_minute">Please wait a few minutes before you try again</string>
 
     <!--user media fragment-->
     <string name="follow_if_want_to_show_profile">Follow this account to see photos and videos</string>
