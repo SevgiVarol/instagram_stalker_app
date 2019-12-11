@@ -166,7 +166,7 @@ public class UserProfileActivity extends AppCompatActivity {
         dialog.setMessage(getApplicationContext().getResources().getString(text));
         dialog.show();
         Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-        searchActivity.putExtra("listType",listType.getValue());
+        searchActivity.putExtra("listType",listType);
         searchActivity.putExtra("userId",pk);
         startActivityForResult(searchActivity,0);
     }

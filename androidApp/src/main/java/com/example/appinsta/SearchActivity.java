@@ -1,6 +1,7 @@
 package com.example.appinsta;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.UserProfileActivity;
 
@@ -22,12 +24,13 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 import static com.example.appinsta.Compare.compare;
+import static com.example.appinsta.enums.UserListTypes.FOR_MY_FOLLOWERS;
 
 public class SearchActivity<T> extends AppCompatActivity implements Serializable {
 
     private UserListAdapter adapter;
     EditText searchEditText;
-    int intentOption;
+    UserListTypes listType;
     long pk;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -41,7 +44,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         setContentView(R.layout.activity_search);
         List<T> userList = new ArrayList<>();
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
-        intentOption = getIntent().getIntExtra("listType",0);
+        listType = (UserListTypes) getIntent().getSerializableExtra("listType");
         pk = getIntent().getLongExtra("userId",0);
         TextWatcher watcher = new TextWatcher() {
 
@@ -70,19 +73,18 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         layoutManager = new LinearLayoutManager(getApplicationContext());
 
+        new getListTask().execute();
 
-        switch (intentOption){
-            case 0:
+        switch (listType){
+            case FOR_MY_FOLLOWERS:
                 userList = (List<T>) service.getMyFollowers();
-                setRecyclerView(userList);
                 break;
 
-            case 1:
+            case FOR_MY_FOLLOWINGS:
                 userList = (List<T>) service.getMyFollowing();
-                setRecyclerView(userList);
                 break;
 
-            case 2:
+            case FOR_MY_STALKERS:
                 if (myFollowing == null){
                     myFollowing = service.getMyFollowing();
                 }
@@ -90,10 +92,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     myFollowers = service.getMyFollowers();
                 }
                 userList = (List<T>) compare(myFollowing, myFollowers);
-                setRecyclerView(userList);
                 break;
 
-            case 3:
+            case FOR_MY_STALKINGS:
                 if (myFollowing == null){
                     myFollowing = service.getMyFollowing();
                 }
@@ -101,44 +102,39 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     myFollowers = service.getMyFollowers();
                 }
                 userList = (List<T>) compare(myFollowers, myFollowing);
-                setRecyclerView(userList);
                 break;
 
-            case 4:
+            case FOR_MY_LAST_PHOTO_LIKERS:
                 if (service.getLoggedUser().getMedia_count() > 0) {
                     if (myFollowers == null) {
                         myFollowers = service.getMyFollowers();
                     }
                     InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
                     userList = (List<T>) Compare.compare(myFollowers, service.getMediaLikers(firstItem.pk));
-                    setRecyclerView(userList);
                 }
                 break;
 
-            case 5:
+            case FOR_USERS_FOLLOWERS:
                 userList = (List<T>) service.getFollowers(pk);
-                setRecyclerView(userList);
                 break;
 
-            case 6:
+            case FOR_USERS_FOLLOWINGS:
                 userList = (List<T>) service.getFollowing(pk);
-                setRecyclerView(userList);
                 break;
 
-            case 7:
+            case FOR_USERS_STALKERS:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
                 userList = (List<T>) compare(usersFollowers,usersFollowings);
-                setRecyclerView(userList);
                 break;
 
-            case 8:
+            case FOR_USERS_STALKINGS:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
                 userList = (List<T>) compare(usersFollowings,usersFollowers);
-                setRecyclerView(userList);
                 break;
         }
+        setRecyclerView(userList);
     }
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
@@ -157,6 +153,12 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     startActivity(i);
                 }
             });
+        }
+    }
+    private class getListTask extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
         }
     }
 

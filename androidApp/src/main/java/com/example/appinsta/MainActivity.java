@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWERS.getValue());
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWERS);
                 startActivity(searchActivity);
             }
         });
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWINGS.getValue());
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWINGS);
                 startActivity(searchActivity);
             }
         });
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS.getValue());
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS);
                 startActivity(searchActivity);
             }
         });
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS.getValue());
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS);
                 startActivity(searchActivity);
             }
         });
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS.getValue());
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS);
                 startActivity(searchActivity);
             }
         });
