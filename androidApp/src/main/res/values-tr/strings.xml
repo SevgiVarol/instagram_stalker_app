@@ -34,4 +34,7 @@
     <string name="logout">Çıkış</string>
     <string name="follow_user">Takip Et</string>
     <string name="unfollow_user">Takibi Bırak</string>
+    <string name="login_or_line">YA DA</string>
+    <string name="dont_you_have_account">Hesabın yok mu?</string>
+    <string name="register">Kaydol</string>
 </resources>

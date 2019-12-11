@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="YA DA" />
+            android:text="@string/login_or_line" />
 
         <View
             android:layout_width="wrap_content"
@@ -129,25 +129,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/or_line">
 
-        <ImageView
-            android:id="@+id/facebook_img"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/facebook_logo80x80" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/dont_you_have_account" />
 
         <Button
-            android:id="@+id/buttonLoginFacebook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:gravity="fill_vertical"
             android:layout_marginStart="5dp"
+            android:autoLink="web"
             android:background="@android:color/transparent"
-            android:text="Facebook ile Giriş Yap"
-            android:textAllCaps="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/facebook_img"
-            app:layout_constraintTop_toBottomOf="@+id/or_line" />
+            android:text="@string/register"
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
