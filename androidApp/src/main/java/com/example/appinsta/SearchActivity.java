@@ -128,14 +128,14 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             case 7:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
-                userList = (List<T>) compare(usersFollowings,usersFollowers);
+                userList = (List<T>) compare(usersFollowers,usersFollowings);
                 setRecyclerView(userList);
                 break;
 
             case 8:
                 usersFollowers = service.getFollowers(pk);
                 usersFollowings = service.getFollowing(pk);
-                userList = (List<T>) compare(usersFollowers,usersFollowings);
+                userList = (List<T>) compare(usersFollowings,usersFollowers);
                 setRecyclerView(userList);
                 break;
         }
