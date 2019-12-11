@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -35,6 +34,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.uiComponent.CustomView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +48,6 @@ import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
 import static com.example.appinsta.Compare.compare;
 
-
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
-    TextView takipTv, takipciTv, logoutOption;
+    TextView tvFollowing, tvFollowers;
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
@@ -128,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                profilPic.setClickable(false);
                 new storyTask().execute();
             }
         });
@@ -177,20 +177,36 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         });
     }
 
-    private class logout extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            instaDatabase.loggedUserDao().deleteLogged();
-            return null;
-        }
+    private void initComponent() {
 
-        @Override
-        protected void onPostExecute(String s) {
-            Intent backToLogin = new Intent(getApplicationContext(), LoginPage.class);
-            service.logout();
-            finish();
-            startActivity(backToLogin);
-        }
+        mProgress = findViewById(R.id.progress_bar);
+        Resources res = getResources();
+        drawable = res.getDrawable(R.drawable.circle_shape);
+
+        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
+        tvFollowing = (TextView) findViewById(R.id.tvFollowing);
+        tvFollowers = (TextView) findViewById(R.id.tvFollowers);
+
+        followingLayout = (LinearLayout) findViewById(R.id.followingLayout);
+        followersLayout = (LinearLayout) findViewById(R.id.followersLayout);
+
+        latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
+
+        mutedStory = (CustomView) findViewById(R.id.mutedStory);
+        storyStalkers = (CustomView) findViewById(R.id.storyStalkers);
+        latestPhotoLikers = (CustomView) findViewById(R.id.latestPhotoLikers);
+        userAction = (CustomView) findViewById(R.id.userAction);
+        usersStalkers = (CustomView) findViewById(R.id.userStalkers);
+        usersStalking = (CustomView) findViewById(R.id.userStalking);
+
+        storyProgress = findViewById(R.id.progressBar);
+
+        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        mainViewPager = findViewById(R.id.main_pager);
+        mainPagerAdapter = new MainPageViewPagerAdapter();
+        collapsedMenuButton = findViewById(R.id.collapsedMenu);
+
     }
 
     private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
@@ -209,11 +225,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-          /*  try {
-                service.login("simge.keser", "Sim15290107.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
             user = service.getLoggedUser();
             return null;
         }
@@ -224,11 +235,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
             FragmentManager manager = getFragmentManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                manager.beginTransaction().replace(R.id.media, myAllMediaFragment).commitNow();
+                manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
-            takipTv.setText(String.valueOf(user.following_count));
-            takipciTv.setText(String.valueOf(user.follower_count));
+            tvFollowing.setText(String.valueOf(withSuffix(user.following_count)));
+            tvFollowers.setText(String.valueOf(withSuffix(user.follower_count)));
+
             latestPhoto.setAlpha(0.3f);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
@@ -271,7 +283,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             super.onPostExecute(s);
 
             if (service.getLoggedUser().getMedia_count() != 0) {
-                mediaLikersList = compare(followersList, service.getMediaLikers(service.getLoggedUserMedias(null).get(0).pk));
+                InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
+                mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
             }
             if (mediaLikersList != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
@@ -283,37 +296,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    private void initComponent() {
+    private class logout extends AsyncTask<String, String, String> {
+        @Override
+        protected String doInBackground(String... strings) {
+            instaDatabase.loggedUserDao().deleteLogged();
+            return null;
+        }
 
-        mProgress = findViewById(R.id.progress_bar);
-        Resources res = getResources();
-        drawable = res.getDrawable(R.drawable.circle_shape);
-
-        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
-        takipTv = (TextView) findViewById(R.id.takipTv);
-        takipciTv = (TextView) findViewById(R.id.takipciTv);
-
-        followingLayout=(LinearLayout)findViewById(R.id.followingLayout);
-        followersLayout=(LinearLayout)findViewById(R.id.followersLayout);
-
-        latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
-
-        mutedStory = (CustomView) findViewById(R.id.mutedStory);
-        storyStalkers = (CustomView) findViewById(R.id.storyStalkers);
-        latestPhotoLikers = (CustomView) findViewById(R.id.latestPhotoLikers);
-        userAction = (CustomView) findViewById(R.id.userAction);
-        usersStalkers = (CustomView) findViewById(R.id.userStalkers);
-        usersStalking = (CustomView) findViewById(R.id.userStalking);
-
-        storyProgress = findViewById(R.id.progressBar);
-
-        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        mainViewPager = findViewById(R.id.main_pager);
-        mainPagerAdapter = new MainPageViewPagerAdapter();
-        collapsedMenuButton = findViewById(R.id.collapsedMenu);
-        logoutOption = findViewById(R.id.logout);
-
+        @Override
+        protected void onPostExecute(String s) {
+            Intent backToLogin = new Intent(getApplicationContext(), LoginPage.class);
+            service.logout();
+            finish();
+            startActivity(backToLogin);
+        }
     }
 
     private class storyTask extends AsyncTask<String, String, String> {
@@ -322,7 +318,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected void onPreExecute() {
             storyProgress.setIndeterminate(true);
-
         }
 
         @Override
@@ -358,9 +353,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 startActivity(mediaLogIntent);
             } else {
-                Toast.makeText(getApplicationContext(), "Hiçbir hikaye bulunamadı", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             storyProgress.setIndeterminate(false);
+            profilPic.setClickable(true);
         }
     }
 
@@ -402,5 +398,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
             });
         }
+    }
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp-1));
     }
 }

@@ -45,13 +45,12 @@
                 android:adjustViewBounds="true"
                 android:alpha="0.5"
                 android:background="@color/cardview_dark_background"
-                android:hint="Telefon numarası, e-posta adresi veya kullanıcı adı"
+                android:hint="@string/edit_text_name"
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="10dp"
                 android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="14sp" />
+                android:textColorHint="#fff"/>
         </LinearLayout>
 
         <LinearLayout
@@ -70,12 +69,11 @@
                 android:adjustViewBounds="true"
                 android:alpha="0.5"
                 android:background="@color/cardview_dark_background"
-                android:hint="Şifre"
+                android:hint="@string/edit_text_pass"
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="#fff"
-                android:textColorHint="#fff"
-                android:textSize="14sp" />
+                android:textColorHint="#fff"/>
         </LinearLayout>
 
         <Button
@@ -86,7 +84,7 @@
             android:background="#ffffff"
             android:onClick="loginOnClick"
             android:shadowColor="#432B2929"
-            android:text="Giriş Yap"
+            android:text="@string/login_button_text"
             android:textAllCaps="false"
             android:textColor="#000" />
 

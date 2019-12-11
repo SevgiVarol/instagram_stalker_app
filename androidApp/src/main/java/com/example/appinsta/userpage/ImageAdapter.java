@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
+import com.example.appinsta.uiComponent.GridImageView;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ImageAdapter extends ArrayAdapter {
     private LayoutInflater inflater;
 
     private List<InstagramFeedItem> mediaList;
+    GridImageView gridImageView;
 
     public ImageAdapter(Context context, List<InstagramFeedItem> mediaList) {
         super(context, R.layout.user_image, mediaList);
@@ -45,8 +47,10 @@ public class ImageAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.user_image, parent, false);
         }
 
+        gridImageView =convertView.findViewById(R.id.user_image_view);
+
         Glide.with(context).load(getImageUrl(position)).centerCrop()
-                .into((ImageView) convertView);
+                .into((gridImageView));
 
         return convertView;
     }

@@ -9,7 +9,7 @@ import com.example.appinsta.database.dao.LoggedUserDao;
 import com.example.appinsta.database.model.LoggedUserItem;
 
 @Database(entities = {LoggedUserItem.class}, version = 1)
-public abstract class InstaDatabase  extends RoomDatabase {
+public abstract class InstaDatabase extends RoomDatabase {
     private static InstaDatabase mInstance;
 
     public static synchronized InstaDatabase getInstance(Context mCtx) {

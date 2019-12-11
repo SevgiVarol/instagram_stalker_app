@@ -4,13 +4,13 @@
         android:id="@+id/action_home"
         android:enabled="true"
         android:icon="@drawable/home_image"
-        android:title="Analizler"/>
+        android:title="@string/analysis"/>
     <item
         android:iconTint="@android:color/transparent"
         android:id="@+id/action_media"
         android:enabled="true"
         android:icon="@drawable/media_image"
-        android:title="Gönderiler">
+        android:title="@string/posts">
     </item>
 
 </menu>

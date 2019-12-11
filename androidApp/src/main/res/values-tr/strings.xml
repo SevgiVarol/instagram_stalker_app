@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">appinsta</string>
+    <string name="analysis">Analizler</string>
+    <string name="user_activities">Kişi Hareketleri</string>
+    <string name="edit_text_name">Email/Kullanıcı Adı</string>
+    <string name="edit_text_pass">Şifre</string>
+    <string name="follow">Takip</string>
+    <string name="follower">Takipçi</string>
+    <string name="login_button_text">Giriş</string>
+    <string name="posts">Gönderiler</string>
+    <string name="search_hint">Ara</string>
+    <string name="medias">Gönderiler</string>
+    <string name="press_back_again">Çıkmak için tekrar geri tuşuna basın</string>
+    <string name="story_not_found">Hiçbir hikaye bulunamadı</string>
+    <string name="login_failed">Bilgileriniz eksik veya yanlış</string>
+    <string name="media_not_found">Medya bulunamadı</string>
+    <string name="follow_if_want_to_show_profile">Fotoğraf ve videolarını görmek için bu hesabı takip et</string>
+    <string name="tab_all_likes">Tüm \nBeğenmeler</string>
+    <string name="tab_not_followers">Takip \nEtmeyenler</string>
+    <string name="tab_not_liked_followers">Beğenmeyen \nTakipçilerim</string>
+    <string name="tab_all_viewers">Tüm \nGörüntülemeler</string>
+    <string name="tab_non_viewing_my_followers">Bakmayan \nTakipçilerim</string>
+    <string name="user_liked_my_posts">Beğendiği gönderilerim</string>
+    <string name="user_stalkers">Geri Takip Etmedikleri</string>
+    <string name="user_stalkers_loading_message">Geri takip etmedikleri yükleniyor…</string>
+    <string name="user_stalkings">Geri Takip Etmeyenler</string>
+    <string name="user_stalkings_loading_message">Geri takip etmeyenler yükleniyor…</string>
+    <string name="who_muted_my_stories">Hikayelerimi sessize alanlar</string>
+    <string name="who_do_not_like_my_last_photo">Son fotoğrafımı beğenmeyen takipçiler</string>
+    <string name="who_watches_my_stories_without_follow">Hikayelerimi izleyip beni takip etmeyenler</string>
+    <string name="who_i_am_not_follow_back">Geri takip etmediklerim</string>
+    <string name="who_not_follow_me_back">Beni geri takip etmeyenler</string>
+    <string name="logout">Çıkış</string>
+    <string name="follow_user">Takip Et</string>
+    <string name="unfollow_user">Takibi Bırak</string>
+</resources>

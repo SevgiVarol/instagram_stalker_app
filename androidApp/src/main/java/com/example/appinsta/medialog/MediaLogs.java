@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -61,7 +62,6 @@ public class MediaLogs<T> extends AppCompatActivity {
             new setObserversForMedia().execute();
 
         }
-
         pagerImage.setCurrentItem(positionMedia);
         setLayouts(positionMedia);
     }
@@ -90,13 +90,18 @@ public class MediaLogs<T> extends AppCompatActivity {
 
             //ViewPager configrations for image(story)
             pagerImage = findViewById(R.id.pager);
-            pagerImage.setOffscreenPageLimit(getIntentUrlList.size() - 1);
             pagerImage.setClipToPadding(false);
-            pagerImage.setPageMargin(100);
-            pagerImage.setPadding(350, 0, 350, 0);
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int width = displayMetrics.widthPixels;
+            int paddingToSet = width / 5; //set this ratio according to how much of the next and previos screen you want to show.
+            pagerImage.setPadding(paddingToSet, 0, paddingToSet, 0);
+
+
             pagerImage.setPageTransformer(true, new ViewPager.PageTransformer() {
-                public static final float MAX_SCALE = 1.0f;
-                public static final float MIN_SCALE = 0.7f;
+                public static final float MAX_SCALE = 0.7f;
+                public static final float MIN_SCALE = 1.0f;
 
                 @Override
                 public void transformPage(@NonNull View page, float position) {
@@ -104,8 +109,7 @@ public class MediaLogs<T> extends AppCompatActivity {
                     int paddingRight = pagerImage.getPaddingRight();
                     int pageWidth = pagerImage.getMeasuredWidth() - paddingLeft - paddingRight;
 
-                    float transformPos = (float) (page.getLeft() -
-                            (pagerImage.getScrollX() + paddingLeft)) / pageWidth;
+                    float transformPos = (float) (page.getLeft() - (pagerImage.getScrollX() + paddingLeft)) / pageWidth;
 
                     if (transformPos <= 1) {
                         position = position < -1 ? -1 : position;
@@ -122,8 +126,8 @@ public class MediaLogs<T> extends AppCompatActivity {
                         }
                     } else {
 
-                        page.setScaleX(0.8f);
-                        page.setScaleY(0.8f);
+                        page.setScaleX(0.7f);
+                        page.setScaleY(0.7f);
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
                             page.getParent().requestLayout();
                         }
@@ -132,8 +136,6 @@ public class MediaLogs<T> extends AppCompatActivity {
 
                 }
             });
-
-
             //ViewPager configrations for userlist(storyviewers)
             pagerUser = findViewById(R.id.pager2);
             pagerUser.setOffscreenPageLimit(2);
@@ -150,7 +152,6 @@ public class MediaLogs<T> extends AppCompatActivity {
             recyclerNotWatch = findViewById(R.id.recycler_view3);
 
             searchEdit = (EditText) findViewById(R.id.editTextSearch);
-
 
         }
 
@@ -182,7 +183,6 @@ public class MediaLogs<T> extends AppCompatActivity {
                         case 2:
                             adapter = (UserListAdapter) recyclerNotWatch.getAdapter();
                     }
-                    Log.d("aaa", "burada");
                     adapter.getFilter().filter(s);
                 }
             };
@@ -229,6 +229,7 @@ public class MediaLogs<T> extends AppCompatActivity {
                 @Override
                 public void onPageSelected(int position) {
                     //Code Block (Get User Lists)
+                    searchEdit.setText(null);
                     setLayouts(position);
                 }
 
@@ -307,9 +308,9 @@ public class MediaLogs<T> extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            tabLayout.getTabAt(0).setText("Tüm \nBeğenmeler");
-            tabLayout.getTabAt(1).setText("Takip \nEtmeyenler");
-            tabLayout.getTabAt(2).setText("Beğenmeyen \nTakipçilerim");
+            tabLayout.getTabAt(0).setText(R.string.tab_all_likes);
+            tabLayout.getTabAt(1).setText(R.string.tab_not_followers);
+            tabLayout.getTabAt(2).setText(R.string.tab_not_liked_followers);
             for (int i = 0; i < positionMedia; i++) {
                 observerList.add(null);
             }
@@ -343,9 +344,9 @@ public class MediaLogs<T> extends AppCompatActivity {
     private class setObserversForStory extends AsyncTask<String, String, String> {
         @Override
         protected void onPreExecute() {
-            tabLayout.getTabAt(0).setText("Tüm \nGörüntülemeler");
-            tabLayout.getTabAt(1).setText("Takip \nEtmeyenler");
-            tabLayout.getTabAt(2).setText("Bakmayan \nTakipçilerim");
+            tabLayout.getTabAt(0).setText(R.string.tab_all_viewers);
+            tabLayout.getTabAt(1).setText(R.string.tab_not_followers);
+            tabLayout.getTabAt(2).setText(R.string.tab_non_viewing_my_followers);
             for (int i = 0; i < 2; i++) {
                 try {
                     observers = (List<T>) service.getStoryViewers(userId, getIntentIdList.get(i));
