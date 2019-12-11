@@ -73,7 +73,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         layoutManager = new LinearLayoutManager(getApplicationContext());
 
-        new getListTask(listType).execute();
+        new loadUsersListTask(listType).execute();
 
     }
     public void setRecyclerView(List<T> userList){
@@ -96,10 +96,10 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             dialog.cancel();
         }
     }
-    private class getListTask extends AsyncTask<String, String, List<T>> {
+    private class loadUsersListTask extends AsyncTask<String, String, List<T>> {
         UserListTypes listType;
         List<T> userList = new ArrayList<>();
-        public getListTask(UserListTypes listType) {
+        public loadUsersListTask(UserListTypes listType) {
             this.listType = listType;
         }
 
@@ -196,9 +196,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         }
 
         @Override
-        protected void onPostExecute(List<T> ts) {
-            super.onPostExecute(ts);
-            setRecyclerView(ts);
+        protected void onPostExecute(List<T> userList ) {
+            super.onPostExecute(userList );
+            setRecyclerView(userList );
         }
     }
 
