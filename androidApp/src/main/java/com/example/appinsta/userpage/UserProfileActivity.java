@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.appinsta.R;
 import com.example.appinsta.SearchActivity;
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 
 import java.io.Serializable;
@@ -103,13 +104,15 @@ public class UserProfileActivity extends AppCompatActivity {
         lyFollowingCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new getUserFollowingsTask().execute();
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWINGS;
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
         lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new getUserFollowersTask().execute();
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWERS;
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
 
@@ -145,17 +148,26 @@ public class UserProfileActivity extends AppCompatActivity {
         btnStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new userStalkersTask().execute();
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKERS;
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
 
         btnStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new userStalkingTask().execute();
+                UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKINGS;
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
     }
+    public void startSearchActivityWithEnum(UserListTypes listType, long pk){
+        Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+        searchActivity.putExtra("listType",listType);
+        searchActivity.putExtra("userId",pk);
+        startActivity(searchActivity);
+    }
+
     private void showStories(){
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,7 +184,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Takip edilenler yükleniyor..");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
             dialog.show();
         }
 
@@ -200,7 +212,7 @@ public class UserProfileActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage("Takipçiler yükleniyor..");
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
             dialog.show();
         }
 
