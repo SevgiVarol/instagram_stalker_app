@@ -1,5 +1,6 @@
 package com.example.appinsta;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,7 +25,6 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 import static com.example.appinsta.Compare.compare;
-import static com.example.appinsta.enums.UserListTypes.FOR_MY_FOLLOWERS;
 
 public class SearchActivity<T> extends AppCompatActivity implements Serializable {
 
@@ -37,12 +37,12 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     InstagramService service = InstagramService.getInstance();
     public static List<InstagramUserSummary> myFollowers,myFollowing;
     List<InstagramUserSummary> usersFollowers,usersFollowings;
+    ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        List<T> userList = new ArrayList<>();
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
         pk = getIntent().getLongExtra("userId",0);
@@ -73,68 +73,8 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         layoutManager = new LinearLayoutManager(getApplicationContext());
 
-        new getListTask().execute();
+        new getListTask(listType).execute();
 
-        switch (listType){
-            case FOR_MY_FOLLOWERS:
-                userList = (List<T>) service.getMyFollowers();
-                break;
-
-            case FOR_MY_FOLLOWINGS:
-                userList = (List<T>) service.getMyFollowing();
-                break;
-
-            case FOR_MY_STALKERS:
-                if (myFollowing == null){
-                    myFollowing = service.getMyFollowing();
-                }
-                if (myFollowers == null) {
-                    myFollowers = service.getMyFollowers();
-                }
-                userList = (List<T>) compare(myFollowing, myFollowers);
-                break;
-
-            case FOR_MY_STALKINGS:
-                if (myFollowing == null){
-                    myFollowing = service.getMyFollowing();
-                }
-                if (myFollowers == null) {
-                    myFollowers = service.getMyFollowers();
-                }
-                userList = (List<T>) compare(myFollowers, myFollowing);
-                break;
-
-            case FOR_MY_LAST_PHOTO_LIKERS:
-                if (service.getLoggedUser().getMedia_count() > 0) {
-                    if (myFollowers == null) {
-                        myFollowers = service.getMyFollowers();
-                    }
-                    InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
-                    userList = (List<T>) Compare.compare(myFollowers, service.getMediaLikers(firstItem.pk));
-                }
-                break;
-
-            case FOR_USERS_FOLLOWERS:
-                userList = (List<T>) service.getFollowers(pk);
-                break;
-
-            case FOR_USERS_FOLLOWINGS:
-                userList = (List<T>) service.getFollowing(pk);
-                break;
-
-            case FOR_USERS_STALKERS:
-                usersFollowers = service.getFollowers(pk);
-                usersFollowings = service.getFollowing(pk);
-                userList = (List<T>) compare(usersFollowers,usersFollowings);
-                break;
-
-            case FOR_USERS_STALKINGS:
-                usersFollowers = service.getFollowers(pk);
-                usersFollowings = service.getFollowing(pk);
-                userList = (List<T>) compare(usersFollowings,usersFollowers);
-                break;
-        }
-        setRecyclerView(userList);
     }
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
@@ -153,12 +93,112 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     startActivity(i);
                 }
             });
+            dialog.cancel();
         }
     }
-    private class getListTask extends AsyncTask<String, String, String> {
+    private class getListTask extends AsyncTask<String, String, List<T>> {
+        UserListTypes listType;
+        List<T> userList = new ArrayList<>();
+        public getListTask(UserListTypes listType) {
+            this.listType = listType;
+        }
+
         @Override
-        protected String doInBackground(String... strings) {
-            return null;
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog =new ProgressDialog(SearchActivity.this);
+            switch (listType){
+                case FOR_USERS_FOLLOWERS:
+                    dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
+                    dialog.show();
+                    break;
+
+                case FOR_USERS_FOLLOWINGS:
+                    dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
+                    dialog.show();
+                    break;
+
+                case FOR_USERS_STALKERS:
+                    dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
+                    dialog.show();
+                    break;
+
+                case FOR_USERS_STALKINGS:
+                    dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
+                    dialog.show();
+                    break;
+            }
+        }
+
+        @Override
+        protected List<T> doInBackground(String... strings) {
+
+            switch (listType){
+                case FOR_MY_FOLLOWERS:
+                    userList = (List<T>) service.getMyFollowers();
+                    break;
+
+                case FOR_MY_FOLLOWINGS:
+                    userList = (List<T>) service.getMyFollowing();
+                    break;
+
+                case FOR_MY_STALKERS:
+                    if (myFollowing == null){
+                        myFollowing = service.getMyFollowing();
+                    }
+                    if (myFollowers == null) {
+                        myFollowers = service.getMyFollowers();
+                    }
+                    userList = (List<T>) compare(myFollowing, myFollowers);
+                    break;
+
+                case FOR_MY_STALKINGS:
+                    if (myFollowing == null){
+                        myFollowing = service.getMyFollowing();
+                    }
+                    if (myFollowers == null) {
+                        myFollowers = service.getMyFollowers();
+                    }
+                    userList = (List<T>) compare(myFollowers, myFollowing);
+                    break;
+
+                case FOR_MY_LAST_PHOTO_LIKERS:
+                    if (service.getLoggedUser().getMedia_count() > 0) {
+                        if (myFollowers == null) {
+                            myFollowers = service.getMyFollowers();
+                        }
+                        InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
+                        userList = (List<T>) Compare.compare(myFollowers, service.getMediaLikers(firstItem.pk));
+                    }
+                    break;
+
+                case FOR_USERS_FOLLOWERS:
+                    userList = (List<T>) service.getFollowers(pk);
+                    break;
+
+                case FOR_USERS_FOLLOWINGS:
+                    userList = (List<T>) service.getFollowing(pk);
+                    break;
+
+                case FOR_USERS_STALKERS:
+                    usersFollowers = service.getFollowers(pk);
+                    usersFollowings = service.getFollowing(pk);
+                    userList = (List<T>) compare(usersFollowers,usersFollowings);
+                    break;
+
+                case FOR_USERS_STALKINGS:
+                    usersFollowers = service.getFollowers(pk);
+                    usersFollowings = service.getFollowing(pk);
+                    userList = (List<T>) compare(usersFollowings,usersFollowers);
+                    break;
+            }
+            return userList;
+        }
+
+        @Override
+        protected void onPostExecute(List<T> ts) {
+            super.onPostExecute(ts);
+            setRecyclerView(ts);
         }
     }
 

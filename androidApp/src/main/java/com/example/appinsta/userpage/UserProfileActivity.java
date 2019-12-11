@@ -105,14 +105,14 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWINGS;
-                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_following_loading_message);
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
         lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWERS;
-                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_follower_loading_message);
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
 
@@ -149,7 +149,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKERS;
-                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_stalkers_loading_message);
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
 
@@ -157,26 +157,15 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKINGS;
-                startSearchActivityWithEnum(userListTypes,user.getPk(),R.string.user_stalkings_loading_message);
+                startSearchActivityWithEnum(userListTypes,user.getPk());
             }
         });
     }
-    public void startSearchActivityWithEnum(UserListTypes listType, long pk, int text){
-        dialog =new ProgressDialog(UserProfileActivity.this);
-        dialog.setMessage(getApplicationContext().getResources().getString(text));
-        dialog.show();
+    public void startSearchActivityWithEnum(UserListTypes listType, long pk){
         Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
         searchActivity.putExtra("listType",listType);
         searchActivity.putExtra("userId",pk);
-        startActivityForResult(searchActivity,0);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0){
-            dialog.dismiss();
-        }
+        startActivity(searchActivity);
     }
 
     private void showStories(){
