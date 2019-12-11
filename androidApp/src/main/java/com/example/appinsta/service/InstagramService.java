@@ -117,6 +117,9 @@ public class InstagramService {
                 nextMaxId = followersResult.getNext_max_id();
             } while (nextMaxId != null);
 
+            if (followersResult.getStatus().equals("fail") && followersResult.getMessage() != null){
+                usersFollowers = null;
+            }
         }
         return usersFollowers;
 
@@ -147,7 +150,9 @@ public class InstagramService {
 
                 nextMaxId = followersResult.getNext_max_id();
             } while (nextMaxId != null);
-
+            if (followersResult.getStatus().equals("fail") && followersResult.getMessage() != null){
+                return null;
+            }
 
             return myFollowers;
         }
@@ -176,6 +181,9 @@ public class InstagramService {
                 }
                 nextMaxId = followingResult.getNext_max_id();
             } while (nextMaxId != null);
+            if (followingResult.getStatus().equals("fail") && followingResult.getMessage() != null){
+                usersFollowings = null;
+            }
         }
         return usersFollowings;
 
@@ -207,6 +215,9 @@ public class InstagramService {
                 nextMaxId = followingResult.getNext_max_id();
             } while (nextMaxId != null);
 
+            if (followingResult.getStatus().equals("fail") && followingResult.getMessage() != null){
+                return null;
+            }
             return myFollowing;
         }
     }

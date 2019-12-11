@@ -78,9 +78,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     }
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
-            if (userList.isEmpty()){
-                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
-            }
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -93,8 +90,10 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     startActivity(i);
                 }
             });
-            dialog.cancel();
+        }else {
+            Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
         }
+        dialog.cancel();
     }
     private class loadUsersListTask extends AsyncTask<String, String, List<T>> {
         UserListTypes listType;
@@ -149,7 +148,12 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     if (myFollowers == null) {
                         myFollowers = service.getMyFollowers();
                     }
-                    userList = (List<T>) compare(myFollowing, myFollowers);
+                    try {
+                        userList = (List<T>) compare(myFollowing, myFollowers);
+                    }catch (Exception e){
+                        userList = null;
+                    }
+
                     break;
 
                 case FOR_MY_STALKINGS:
@@ -159,7 +163,11 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     if (myFollowers == null) {
                         myFollowers = service.getMyFollowers();
                     }
-                    userList = (List<T>) compare(myFollowers, myFollowing);
+                    try{
+                        userList = (List<T>) compare(myFollowers, myFollowing);
+                    }catch (Exception e){
+                        userList = null;
+                    }
                     break;
 
                 case FOR_MY_LAST_PHOTO_LIKERS:
@@ -168,7 +176,12 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             myFollowers = service.getMyFollowers();
                         }
                         InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
-                        userList = (List<T>) Compare.compare(myFollowers, service.getMediaLikers(firstItem.pk));
+                        try {
+                            userList = (List<T>) Compare.compare(myFollowers, service.getMediaLikers(firstItem.pk));
+                        }catch (Exception e){
+                            userList = null;
+                        }
+
                     }
                     break;
 
@@ -183,13 +196,21 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 case FOR_USERS_STALKERS:
                     usersFollowers = service.getFollowers(pk);
                     usersFollowings = service.getFollowing(pk);
-                    userList = (List<T>) compare(usersFollowers,usersFollowings);
+                    if (usersFollowers == null || usersFollowings == null){
+                        userList = null;
+                    } else {
+                        userList = (List<T>) compare(usersFollowers,usersFollowings);
+                    }
                     break;
 
                 case FOR_USERS_STALKINGS:
                     usersFollowers = service.getFollowers(pk);
                     usersFollowings = service.getFollowing(pk);
-                    userList = (List<T>) compare(usersFollowings,usersFollowers);
+                    if (usersFollowers == null || usersFollowings == null){
+                        userList = null;
+                    }else {
+                        userList = (List<T>) compare(usersFollowings,usersFollowers);
+                    }
                     break;
             }
             return userList;

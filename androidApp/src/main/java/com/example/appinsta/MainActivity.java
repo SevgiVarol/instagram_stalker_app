@@ -273,8 +273,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             followersList = service.getMyFollowers();
             followingList = service.getMyFollowing();
 
+            if (followersList != null && followingList != null){
             stalkingList = compare(followersList, followingList);
-            stalkersList = compare(followingList, followersList);
+            stalkersList = compare(followingList, followersList);}
 
             return null;
         }
@@ -285,15 +286,20 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
             if (service.getLoggedUser().getMedia_count() != 0) {
                 InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
-                mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
+                if (followersList != null){
+                    mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
+                }else latestPhotoLikers.setClickable(false);
             }
             if (mediaLikersList != null) {
                 latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
             } else latestPhotoLikers.setNumberText(String.valueOf(0));
-
-            usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
-            usersStalking.setNumberText(String.valueOf(stalkingList.size()));
-
+            if (followingList == null || followersList == null) {
+                usersStalkers.setClickable(false);
+                usersStalking.setClickable(false);
+            } else {
+                usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
+                usersStalking.setNumberText(String.valueOf(stalkingList.size()));
+            }
         }
     }
 
