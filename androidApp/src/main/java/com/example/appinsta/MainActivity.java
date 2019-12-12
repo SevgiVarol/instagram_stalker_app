@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
     CustomView mutedStory, latestPhotoLikers, storyStalkers, usersStalkers, usersStalking, userAction;
-    List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
@@ -260,47 +259,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             mProgress.setVisibility(View.GONE);
             storyProgress.setVisibility(View.VISIBLE);
 
-            new getFollowingAndFollowersTask().execute();
             new getMainViewPagerComponents().execute();
         }
 
-    }
-
-    private class getFollowingAndFollowersTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-
-            followersList = service.getMyFollowers();
-            followingList = service.getMyFollowing();
-
-            if (followersList != null && followingList != null){
-            stalkingList = compare(followersList, followingList);
-            stalkersList = compare(followingList, followersList);}
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (service.getLoggedUser().getMedia_count() != 0) {
-                InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
-                if (followersList != null){
-                    mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
-                }else latestPhotoLikers.setClickable(false);
-            }
-            if (mediaLikersList != null) {
-                latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
-            } else latestPhotoLikers.setNumberText(String.valueOf(0));
-            if (followingList == null || followersList == null) {
-                usersStalkers.setClickable(false);
-                usersStalking.setClickable(false);
-            } else {
-                usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
-                usersStalking.setNumberText(String.valueOf(stalkingList.size()));
-            }
-        }
     }
 
     private class logout extends AsyncTask<String, String, String> {
@@ -406,11 +367,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             });
         }
     }
+
     public static String withSuffix(long count) {
         if (count < 1000) return "" + count;
         int exp = (int) (Math.log(count) / Math.log(1000));
         return String.format("%.1f %c",
                 count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
+                "kMGTPE".charAt(exp - 1));
     }
 }
