@@ -1,6 +1,7 @@
 package com.example.appinsta;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -35,6 +37,7 @@ import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
+import com.example.appinsta.userpage.StoryViewer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
     ImageView profilPic, latestPhoto;
+    ImageView userProfilPic[];
     LinearLayout followingLayout, followersLayout;
     TextView tvFollowing, tvFollowers;
 
@@ -66,10 +71,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     ArrayList<Uri> storyUrlList;
     ArrayList<String> storyIds;
     List<InstagramFeedItem> stories;
+    List<InstagramFeedItem> userStories=new ArrayList<>();
     BottomNavigationView bottomNavigationView;
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
     Button collapsedMenuButton;
+    LinearLayout lyHorizontalScroll;
+    List<InstagramUserStoryFeedResult> userStoriesList = new ArrayList<>();
+    Button button[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +86,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lyHorizontalScroll = findViewById(R.id.layoutHorizontalScroll);
+
         initComponent();
 
         new setLoggedUserBasicInfoTask().execute();
+
+        userProfilPic = new CircleImageView[10];
 
         followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,10 +205,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
 
-        mutedStory = (CustomView) findViewById(R.id.mutedStory);
-        storyStalkers = (CustomView) findViewById(R.id.storyStalkers);
         latestPhotoLikers = (CustomView) findViewById(R.id.latestPhotoLikers);
-        userAction = (CustomView) findViewById(R.id.userAction);
+
         usersStalkers = (CustomView) findViewById(R.id.userStalkers);
         usersStalking = (CustomView) findViewById(R.id.userStalking);
 
@@ -225,7 +236,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
+
             user = service.getLoggedUser();
+            userStoriesList = service.getStoriesMainPage();
             return null;
         }
 
@@ -286,12 +299,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
                 mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
             }
-            if (mediaLikersList != null) {
-                latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
-            } else latestPhotoLikers.setNumberText(String.valueOf(0));
-
-            usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
-            usersStalking.setNumberText(String.valueOf(stalkingList.size()));
 
         }
     }
@@ -359,7 +366,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             profilPic.setClickable(true);
         }
     }
-
+    public String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format("%.1f %c", count / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+    }
     private class getMainViewPagerComponents extends AsyncTask<String, String, String> {
 
         @Override
@@ -397,13 +408,53 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 }
             });
+
+
+            for (int i = 0; i < 9; i++) {
+
+                userProfilPic[i] = new CircleImageView(getApplicationContext());
+                userProfilPic[i].setMinimumHeight(150);
+                userProfilPic[i].setMinimumWidth(150);
+                userProfilPic[i].setPadding(5, 20, 5, 20);
+
+                Glide.with(getApplication()) //1
+                        .load(userStoriesList.get(i).getReel().getUser().getProfile_pic_url()).into(userProfilPic[i]);
+
+                lyHorizontalScroll.addView(userProfilPic[i]);
+
+                userStories.addAll(userStoriesList.get(i).reel.items);
+
+                userProfilPic[i].setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
+                        ArrayList<Uri> userStoriesUri = new ArrayList<>();
+                        for (InstagramFeedItem story : userStories) {
+                            Uri uri;
+                            if (story.getVideo_versions() != null) {
+                                uri = Uri.parse(story.getVideo_versions().get(0).getUrl());
+                            } else {
+                                uri = Uri.parse(story.getImage_versions2().getCandidates().get(0).getUrl());
+                            }
+                            userStoriesUri.add(uri);
+                        }
+                        storyIntent.putExtra("storyUrlList", userStoriesUri);
+                        if (userStories != null & userStories.size() != 0) {
+                            startActivity(storyIntent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+            }
         }
+
+
+
     }
-    public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format("%.1f %c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
-    }
+
 }
+

@@ -119,8 +119,7 @@ public class InstagramService {
 
     public List<InstagramUserSummary> getMyFollowers() {
 
-        if (!myFollowers.isEmpty())
-            return myFollowers;
+        if (!myFollowers.isEmpty()) return myFollowers;
         else {
             InstagramGetUserFollowersResult followersResult = null;
             String nextMaxId = null;
@@ -177,8 +176,7 @@ public class InstagramService {
     public List<InstagramUserSummary> getMyFollowing() {
 
 
-        if (!myFollowing.isEmpty())
-            return myFollowing;
+        if (!myFollowing.isEmpty()) return myFollowing;
         else {
             InstagramGetUserFollowersResult followingResult = null;
             String nextMaxId = null;
@@ -240,8 +238,7 @@ public class InstagramService {
             InstagramFeedItem firstItem = (InstagramFeedItem) getLoggedUserMedias(null).items.get(0);
             loggedUserLatestMediaUrl = firstItem.image_versions2.candidates.get(1).url;
             return loggedUserLatestMediaUrl;
-        } else
-            return loggedUserLatestMediaUrl;
+        } else return loggedUserLatestMediaUrl;
     }
 
     public List<InstagramUser> getStoryViewers(long userId, String storyId) {
@@ -413,5 +410,39 @@ public class InstagramService {
             e.printStackTrace();
         }
         return userStoriesUri;
+    }
+
+    public List<InstagramUserStoryFeedResult> getStoriesMainPage() {
+        InstagramReelsTrayFeedResult result= null;
+        try {
+            result = instagram.sendRequest(new InstagramReelsTrayRequest());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<InstagramStoryTray> trays = result.getTray();
+
+        List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
+
+        for (int i=0;i<9;i++) {
+            try {
+                userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + trays.get(i).getUser().getPk())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        // To print the url's of the first items in everyones story do this
+
+        for (InstagramUserStoryFeedResult story : userStories) {
+            if (story.getReel() == null) {
+                System.out.println("Null check for safety, hardly ever null");
+            } else {
+                System.out.println(story.getReel().getItems().get(0).getImage_versions2().getCandidates().get(0).getUrl());
+            }
+        }
+        return userStories;
     }
 }
