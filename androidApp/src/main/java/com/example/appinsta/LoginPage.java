@@ -1,9 +1,12 @@
 package com.example.appinsta;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -32,13 +35,21 @@ public class LoginPage extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
-
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-
-        new loginWithLastUser().execute();
+        if (isNetworkAvailable()){
+            new loginWithLastUser().execute();
+        } else {
+            Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
+        }
         etName = findViewById(R.id.edtEmail);
         etPassword = findViewById(R.id.edtPassword);
 
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     //Login button onClick
@@ -147,8 +158,12 @@ public class LoginPage extends AppCompatActivity {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
             if (loginResult == null || loginResult.equals("fail")) {
-                final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
-                toast.show();
+                if (isNetworkAvailable()){
+                    final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);

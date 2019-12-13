@@ -5,6 +5,7 @@ import android.net.Uri;
 import com.example.appinsta.models.DataWithOffsetIdModel;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,14 +45,12 @@ public class InstagramService {
     List<InstagramUserSummary> usersFollowers;
     List<InstagramUserSummary> usersFollowings;
 
-    long lastPkFollower,lastPkFollowing;
+    long lastPkFollower, lastPkFollowing;
 
     private List<InstagramFeedItem> story = null;
     String loggedUserLatestMediaUrl;
     InstagramFeedResult userFeedResult = null;
     InstagramFeedResult myUserFeedResult = null;
-
-
 
 
     private InstagramService() {
@@ -93,32 +92,33 @@ public class InstagramService {
     }
 
 
-    public List<InstagramUserSummary> getFollowers(long pk) {
+    public List<InstagramUserSummary> getFollowers(long pk) throws IOException {
         if (usersFollowers == null || lastPkFollower != pk) {
             lastPkFollower = pk;
             usersFollowers = new ArrayList<>();
             InstagramGetUserFollowersResult followersResult = null;
             String nextMaxId = null;
-
-            do {
-
-                try {
+            try {
+                do {
                     followersResult = instagram.sendRequest(new InstagramGetUserFollowersRequest(pk, nextMaxId));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
-                    for (InstagramUserSummary userSummary : followersResult.getUsers()) {
-                        usersFollowers.add(userSummary);
 
+                    if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
+                        for (InstagramUserSummary userSummary : followersResult.getUsers()) {
+                            usersFollowers.add(userSummary);
+
+                        }
                     }
+
+                    nextMaxId = followersResult.getNext_max_id();
+                } while (nextMaxId != null);
+
+                if (followersResult.getStatus().equals("fail")) {
+                    usersFollowers = null;
                 }
-
-                nextMaxId = followersResult.getNext_max_id();
-            } while (nextMaxId != null);
-
-            if (followersResult.getStatus().equals("fail")){
-                usersFollowers = null;
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return usersFollowers;
@@ -126,63 +126,62 @@ public class InstagramService {
 
     }
 
-    public List<InstagramUserSummary> getMyFollowers() {
+    public List<InstagramUserSummary> getMyFollowers() throws IOException {
 
         if (!myFollowers.isEmpty())
             return myFollowers;
         else {
             InstagramGetUserFollowersResult followersResult = null;
             String nextMaxId = null;
-
-            do {
-
-                try {
+            try {
+                do {
                     followersResult = instagram.sendRequest(new InstagramGetUserFollowersRequest(instagram.getUserId(), nextMaxId));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
-                    for (InstagramUserSummary userSummary : followersResult.getUsers()) {
-                        myFollowers.add(userSummary);
+                    if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
+                        for (InstagramUserSummary userSummary : followersResult.getUsers()) {
+                            myFollowers.add(userSummary);
 
+                        }
                     }
+
+                    nextMaxId = followersResult.getNext_max_id();
+                } while (nextMaxId != null);
+                if (followersResult.getStatus().equals("fail")) {
+                    return null;
                 }
-
-                nextMaxId = followersResult.getNext_max_id();
-            } while (nextMaxId != null);
-            if (followersResult.getStatus().equals("fail")){
-                return null;
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
             return myFollowers;
         }
     }
 
-    public List<InstagramUserSummary> getFollowing(long pk) {
+    public List<InstagramUserSummary> getFollowing(long pk) throws IOException {
 
         if (usersFollowings == null || lastPkFollowing != pk) {
             lastPkFollowing = pk;
             usersFollowings = new ArrayList<>();
             InstagramGetUserFollowersResult followingResult = null;
             String nextMaxId = null;
-            do {
-
-
-                try {
+            try {
+                do {
                     followingResult = instagram.sendRequest(new InstagramGetUserFollowingRequest(pk, nextMaxId));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
-                    for (InstagramUserSummary userSummary : followingResult.getUsers()) {
-                        usersFollowings.add(userSummary);
+                    if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
+                        for (InstagramUserSummary userSummary : followingResult.getUsers()) {
+                            usersFollowings.add(userSummary);
 
+                        }
                     }
+                    nextMaxId = followingResult.getNext_max_id();
+                } while (nextMaxId != null);
+                if (followingResult.getStatus().equals("fail")) {
+                    usersFollowings = null;
                 }
-                nextMaxId = followingResult.getNext_max_id();
-            } while (nextMaxId != null);
-            if (followingResult.getStatus().equals("fail")){
-                usersFollowings = null;
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return usersFollowings;
@@ -190,7 +189,7 @@ public class InstagramService {
 
     }
 
-    public List<InstagramUserSummary> getMyFollowing() {
+    public List<InstagramUserSummary> getMyFollowing() throws IOException {
 
 
         if (!myFollowing.isEmpty())
@@ -198,46 +197,47 @@ public class InstagramService {
         else {
             InstagramGetUserFollowersResult followingResult = null;
             String nextMaxId = null;
-            do {
+            try {
 
-
-                try {
+                do {
                     followingResult = instagram.sendRequest(new InstagramGetUserFollowingRequest(instagram.getUserId(), nextMaxId));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
-                    for (InstagramUserSummary userSummary : followingResult.getUsers()) {
-                        myFollowing.add(userSummary);
+                    if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
+                        for (InstagramUserSummary userSummary : followingResult.getUsers()) {
+                            myFollowing.add(userSummary);
 
+                        }
                     }
-                }
-                nextMaxId = followingResult.getNext_max_id();
-            } while (nextMaxId != null);
+                    nextMaxId = followingResult.getNext_max_id();
+                } while (nextMaxId != null);
 
-            if (followingResult.getStatus().equals("fail")){
-                return null;
+                if (followingResult.getStatus().equals("fail")) {
+                    return null;
+                }
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
             return myFollowing;
         }
     }
 
-
-    public InstagramUser getUser(String username) {
+    public InstagramUser getUser(String username) throws IOException {
 
         InstagramSearchUsernameResult result = null;
         try {
             result = instagram.sendRequest(new InstagramSearchUsernameRequest(username));
+            return result.getUser();
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-        return result.getUser();
-
+        return null;
     }
 
-    public InstagramUser getLoggedUser() {
+    public InstagramUser getLoggedUser() throws IOException {
 
         if (loggedUser != null) return loggedUser;
         else {
@@ -245,6 +245,8 @@ public class InstagramService {
             try {
                 result = instagram.sendRequest(new InstagramSearchUsernameRequest(instagram.getUsername()));
                 loggedUser = result.getUser();
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -252,27 +254,25 @@ public class InstagramService {
         }
     }
 
-    public String getLoggedUserLastMediaUrl() {
+    public String getLoggedUserLastMediaUrl() throws IOException {
 
 
         if (loggedUserLatestMediaUrl == null) {
             InstagramFeedItem firstItem = (InstagramFeedItem) getLoggedUserMedias(null).items.get(0);
             loggedUserLatestMediaUrl = firstItem.image_versions2.candidates.get(1).url;
-            return loggedUserLatestMediaUrl;
-        } else
-            return loggedUserLatestMediaUrl;
+        }
+        return loggedUserLatestMediaUrl;
     }
 
-    public List<InstagramUser> getStoryViewers(long userId, String storyId) {
+    public List<InstagramUser> getStoryViewers(long userId, String storyId) throws IOException {
         if (!storyViewers.isEmpty()) {
             storyViewers.clear();
         }
         InstagramUserStoryFeedResult storyFeedResult = null;
         InstagramGetStoryViewersResult userStoryViewers = null;
         String nextMaxId = null;
-
-        do {
-            try {
+        try {
+            do {
                 storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
                 if (storyFeedResult.getReel() != null) {
 
@@ -280,20 +280,19 @@ public class InstagramService {
                     for (InstagramUser user : userStoryViewers.getUsers()) {
                         storyViewers.add(user);
                     }
-
-
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            nextMaxId = userStoryViewers.getNext_max_id();
-        } while (nextMaxId != null);
-
+                nextMaxId = userStoryViewers.getNext_max_id();
+            } while (nextMaxId != null);
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return storyViewers;
 
     }
 
-    public List<InstagramFeedItem> getStories(long userId) {
+    public List<InstagramFeedItem> getStories(long userId) throws IOException {
 
         if (story != null) {
             return story;
@@ -303,80 +302,92 @@ public class InstagramService {
 
             try {
                 storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+                if (storyFeedResult.getReel() != null) {
+                    if (storyFeedResult.getReel().getItems() != null && !storyFeedResult.getReel().getItems().isEmpty()) {
+                        for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
+                            story.add(item);
+
+                        }
+                    }
+                }
+                //story = storyFeedResult.getReel().getItems();
+                if (storyFeedResult.getReel() != null) {
+                    return story;
+                }
+            } catch (UnknownHostException exp) {
+                throw new UnknownHostException();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (storyFeedResult.getReel() != null) {
-                if (storyFeedResult.getReel().getItems() != null && !storyFeedResult.getReel().getItems().isEmpty()) {
-                    for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
-                        story.add(item);
-
-                    }
-                }
-            }
-            //story = storyFeedResult.getReel().getItems();
-            if (storyFeedResult.getReel() != null) {
-                return story;
-            } else return null;
+            return null;
         }
 
 
     }
 
-    public InstagramFeedItem getStory(long userId, int storyIndex) {
+    public InstagramFeedItem getStory(long userId, int storyIndex) throws IOException {
 
         return getStories(userId).get(storyIndex);
 
     }
 
-    public DataWithOffsetIdModel getUserMedias(long userId) {
+    public DataWithOffsetIdModel getUserMedias(long userId) throws IOException {
         return getUserMedias(userId, null);
     }
 
-    public DataWithOffsetIdModel getUserMedias(long userId, String nextMaxId) {
+    public DataWithOffsetIdModel getUserMedias(long userId, String nextMaxId) throws IOException {
         try {
             userFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(userId, nextMaxId, 0));
+            return new DataWithOffsetIdModel(userFeedResult.getItems(), userFeedResult.getNext_max_id());
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new DataWithOffsetIdModel(userFeedResult.getItems(), userFeedResult.getNext_max_id());
+        return null;
 
     }
 
-    public DataWithOffsetIdModel getLoggedUserMedias() {
+    public DataWithOffsetIdModel getLoggedUserMedias() throws IOException {
         return getLoggedUserMedias(null);
     }
 
-    public DataWithOffsetIdModel getLoggedUserMedias(String nextMaxId) {
+    public DataWithOffsetIdModel getLoggedUserMedias(String nextMaxId) throws IOException {
 
         try {
             myUserFeedResult = instagram.sendRequest(new InstagramUserFeedRequest(instagram.getUserId(), nextMaxId, 0));
+            return new DataWithOffsetIdModel(myUserFeedResult.getItems(), myUserFeedResult.getNext_max_id());
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new DataWithOffsetIdModel(myUserFeedResult.getItems(), myUserFeedResult.getNext_max_id());
+        return null;
     }
 
 
-    public List<InstagramUserSummary> getMediaLikers(long mediaId) {
+    public List<InstagramUserSummary> getMediaLikers(long mediaId) throws IOException {
 
         InstagramGetMediaLikersResult mediaLikersResult = null;
 
         try {
             mediaLikersResult = instagram.sendRequest(new InstagramGetMediaLikersRequest(mediaId, null));
+            return mediaLikersResult.getUsers();
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return mediaLikersResult.getUsers();
+        return null;
 
     }
 
-    public DataWithOffsetIdModel getMyLikedMediaByUser(String username) {
+    public DataWithOffsetIdModel getMyLikedMediaByUser(String username) throws IOException {
         return getMyLikedMediaByUser(username, null);
     }
 
-    public DataWithOffsetIdModel getMyLikedMediaByUser(String username, String nextMaxId) {
+    public DataWithOffsetIdModel getMyLikedMediaByUser(String username, String nextMaxId) throws IOException {
 
         List<InstagramFeedItem> likedNextMediaList = new ArrayList<>();
         List<InstagramFeedItem> mediaList = new ArrayList<>();
@@ -401,7 +412,7 @@ public class InstagramService {
         return new DataWithOffsetIdModel(likedNextMediaList, dataWithOffsetIdModel.nextMaxId);
     }
 
-    public ArrayList<Uri> getStories(String username) {
+    public ArrayList<Uri> getStories(String username) throws UnknownHostException {
         ArrayList<Uri> userStoriesUri = new ArrayList<>();
         try {
             InstagramReelsTrayFeedResult result = instagram.sendRequest(new InstagramReelsTrayRequest());
@@ -428,6 +439,8 @@ public class InstagramService {
                     }
                 }
             }
+        } catch (UnknownHostException exp) {
+            throw new UnknownHostException();
         } catch (Exception e) {
             e.printStackTrace();
         }

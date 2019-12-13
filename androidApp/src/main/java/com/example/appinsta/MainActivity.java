@@ -37,6 +37,7 @@ import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,7 +226,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-            user = service.getLoggedUser();
+            try {
+                user = service.getLoggedUser();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -243,15 +248,19 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
             latestPhoto.setAlpha(0.3f);
 
-            if (service.getLoggedUser().getMedia_count() != 0) {
-                Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            latestPhoto.setBackground(resource);
+            try {
+                if (service.getLoggedUser().getMedia_count() != 0) {
+                    Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                latestPhoto.setBackground(resource);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             Glide.with(getApplication()) //1
@@ -290,22 +299,26 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         @Override
         protected String doInBackground(String... strings) {
-            stories = service.getStories(service.getLoggedUser().pk);
-            if (storyUrlList.size() == 0) {
-                try {
-                    for (int counter = 0; counter < stories.size(); counter++) {
-                        if (stories.get(counter).getVideo_versions() != null) {
-                            storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
-                        } else {
-                            storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+            try {
+                stories = service.getStories(service.getLoggedUser().pk);
+                if (storyUrlList.size() == 0) {
+                    try {
+                        for (int counter = 0; counter < stories.size(); counter++) {
+                            if (stories.get(counter).getVideo_versions() != null) {
+                                storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
+                            } else {
+                                storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+                            storyIds.add(String.valueOf(stories.get(counter).pk));
                         }
-                        storyIds.add(String.valueOf(stories.get(counter).pk));
+                    } catch (Exception e) {
+                        Log.e("null object reference", e.getMessage());
                     }
-                } catch (Exception e) {
-                    Log.e("null object reference", e.getMessage());
                 }
+                userid = service.getLoggedUser().pk;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            userid = service.getLoggedUser().pk;
 
             return null;
         }

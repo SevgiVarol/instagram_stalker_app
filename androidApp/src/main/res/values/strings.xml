@@ -6,6 +6,7 @@
     <string name="login_button_text">Log In</string>
     <string name="press_back_again">Press back again to exit</string>
     <string name="login_failed">Your information is missing or incorrect</string>
+    <string name="check_network_connection">Check your internet connection</string>
 
     <!--main page-->
     <string name="story_not_found">No stories found</string>

@@ -17,6 +17,7 @@ import com.example.appinsta.R;
 import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class UserMediaFragment extends Fragment {
         footerLoadingView = view.findViewById(R.id.footerLoadingView);
         tvInfoText = view.findViewById(R.id.nullMediaInfo);
 
-        getUserMedia= new getUserMediaTask().execute();
+        getUserMedia = new getUserMediaTask().execute();
         return view;
     }
 
@@ -63,8 +64,12 @@ public class UserMediaFragment extends Fragment {
         protected String doInBackground(String... strings) {
 
             if (mediaList.isEmpty()) {
-                dataWithOffsetIdModel = service.getUserMedias(user.getPk());
-                mediaList = dataWithOffsetIdModel.items;
+                try {
+                    dataWithOffsetIdModel = service.getUserMedias(user.getPk());
+                    mediaList = dataWithOffsetIdModel.items;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             return null;
@@ -79,7 +84,7 @@ public class UserMediaFragment extends Fragment {
                 tvInfoText.setText(R.string.follow_if_want_to_show_profile);
                 tvInfoText.setVisibility(View.VISIBLE);
             } else {
-                if (mediaList.size() != 0){
+                if (mediaList.size() != 0) {
                     imageListAdapter = new ImageAdapter(getActivity(), mediaList);
                     mediasGridView.setAdapter(imageListAdapter);
 
@@ -115,9 +120,15 @@ public class UserMediaFragment extends Fragment {
     private class getUserMediasNextPage extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
-            if (nextMedias != null){mediaList.addAll(nextMedias);}
+            try {
+                dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
+                List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
+                if (nextMedias != null) {
+                    mediaList.addAll(nextMedias);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }

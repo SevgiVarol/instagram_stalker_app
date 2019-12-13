@@ -17,7 +17,9 @@ import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.UserProfileActivity;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     EditText searchEditText;
     UserListTypes listType;
     long pk;
+    Exception exception;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     InstagramService service = InstagramService.getInstance();
@@ -77,7 +80,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
     }
     public void setRecyclerView(List<T> userList){
-        if (userList != null) {
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -90,14 +92,11 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     startActivity(i);
                 }
             });
-        }else {
-            Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
-            finish();
-        }
-        dialog.cancel();
+            dialog.cancel();
     }
     private class loadUsersListTask extends AsyncTask<String, String, List<T>> {
         UserListTypes listType;
+        String exception = null;
         List<T> userList = new ArrayList<>();
         public loadUsersListTask(UserListTypes listType) {
             this.listType = listType;
@@ -193,17 +192,30 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                         userList = (List<T>) compare(usersFollowings,usersFollowers);
                         break;
                 }
-            }catch (Exception e){
-                userList = null;
+            }catch (UnknownHostException e){
+                exception = "UnknownHostException";
+            }catch (IOException e){
+                exception = "IOException";
             }
-
             return userList;
         }
 
         @Override
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
-            setRecyclerView(userList );
+            if (exception == null){
+                setRecyclerView(userList);
+            }
+            else if (exception.equals("IOException")){
+                exception = null;
+                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
+                finish();
+            }
+            else if (exception.equals("UnknownHostException")){
+                exception = null;
+                Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 

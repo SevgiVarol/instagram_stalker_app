@@ -2,6 +2,7 @@ package com.example.appinsta;
 
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class Compare {
 
     }
 
-    public List<InstagramUserSummary> peopleIdontFollow(long userId) {
+    public List<InstagramUserSummary> peopleIdontFollow(long userId) throws IOException {
         service = new InstagramService(instagram);
 
         //benim takip etmediklerim
@@ -93,7 +94,7 @@ public class Compare {
 
     }
 
-    public List<InstagramUserSummary> peopledontFollowme(long userId) {
+    public List<InstagramUserSummary> peopledontFollowme(long userId) throws IOException {
 
         service = new InstagramService(instagram);
         //beni takip etmeyenler

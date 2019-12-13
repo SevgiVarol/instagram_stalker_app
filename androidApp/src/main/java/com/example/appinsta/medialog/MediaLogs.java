@@ -1,6 +1,9 @@
 package com.example.appinsta.medialog;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,12 +24,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.appinsta.Compare;
 import com.example.appinsta.R;
 import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +58,10 @@ public class MediaLogs<T> extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_media_logs);
+        if (!isNetworkAvailable()){
+            Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         new init().execute();
 
@@ -64,6 +73,13 @@ public class MediaLogs<T> extends AppCompatActivity {
         }
         pagerImage.setCurrentItem(positionMedia);
         setLayouts(positionMedia);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private class init extends AsyncTask<String, String, String> {
@@ -158,7 +174,11 @@ public class MediaLogs<T> extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-            followers = service.getMyFollowers();
+            try {
+                followers = service.getMyFollowers();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             textListener = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
