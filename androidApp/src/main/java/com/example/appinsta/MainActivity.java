@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS);
-                startActivity(searchActivity);
+                startActivityForResult(searchActivity,0);
             }
         });
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS);
-                startActivity(searchActivity);
+                startActivityForResult(searchActivity,1);
             }
         });
         usersStalking.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS);
-                startActivity(searchActivity);
+                startActivityForResult(searchActivity,2);
             }
         });
         profilPic.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +137,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 showUpsideOptionMenu(view);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) latestPhotoLikers.setNumberText(String.valueOf(SearchActivity.latestPhotoLikersCount));
+        else if (requestCode == 1) usersStalkers.setNumberText(String.valueOf(SearchActivity.myStalkerCount));
+        else if (requestCode == 2) usersStalking.setNumberText(String.valueOf(SearchActivity.myStalkingCount));
     }
 
     @Override

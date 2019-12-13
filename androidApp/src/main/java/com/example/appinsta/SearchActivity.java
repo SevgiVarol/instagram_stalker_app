@@ -38,6 +38,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     public static List<InstagramUserSummary> myFollowers,myFollowing;
     List<InstagramUserSummary> usersFollowers,usersFollowings;
     ProgressDialog dialog;
+    static int myStalkerCount, myStalkingCount, latestPhotoLikersCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +152,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             myFollowers = service.getMyFollowers();
                         }
                         userList = (List<T>) compare(myFollowing, myFollowers);
+                        myStalkerCount = userList.size();
                         break;
 
                     case FOR_MY_STALKINGS:
@@ -161,6 +163,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             myFollowers = service.getMyFollowers();
                         }
                         userList = (List<T>) compare(myFollowers, myFollowing);
+                        myStalkingCount = userList.size();
                         break;
 
                     case FOR_MY_LAST_PHOTO_LIKERS:
@@ -171,6 +174,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
                             userList = (List<T>) compare(myFollowers, service.getMediaLikers(firstItem.pk));
                         }
+                        latestPhotoLikersCount = userList.size();
                         break;
 
                     case FOR_USERS_FOLLOWERS:
