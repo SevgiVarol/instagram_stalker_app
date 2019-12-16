@@ -22,7 +22,6 @@ public class CustomView extends LinearLayout {
 
     TextView number;
     TextView condition;
-    ProgressBar progressBar;
 
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,8 +41,6 @@ public class CustomView extends LinearLayout {
 
 
         initComponents();
-
-        //setNumberText(number);
         setConditionText(condition);
 
     }
@@ -54,7 +51,6 @@ public class CustomView extends LinearLayout {
 
         condition = (TextView) findViewById(R.id.condition);
 
-        progressBar = findViewById(R.id.progressBarNumber);
 
     }
 
@@ -63,8 +59,6 @@ public class CustomView extends LinearLayout {
     }
 
     public void setNumberText(String value) {
-        progressBar.setVisibility(GONE);
-        number.setVisibility(VISIBLE);
         number.setText(value);
     }
 

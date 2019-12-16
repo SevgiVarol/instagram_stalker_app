@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -22,11 +22,25 @@
     <style name="editTextTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlActivated">@color/gray_scale</item>
     </style>
-    
-    
-    
+
     <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:popupBackground">@color/cardview_dark_background</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Widget.ActionBar.Title"
+        parent="@style/TextAppearance.AppCompat.Medium">
+    </style>
+
+    <style name="TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+        parent="@style/TextAppearance.Small">
+    </style>
+
+    <style name="TextAppearance.AppCompat.Medium" parent="Theme.AppCompat">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.Small" parent="Theme.AppCompat">
+        <item name="android:textSize">12sp</item>
     </style>
 
 </resources>

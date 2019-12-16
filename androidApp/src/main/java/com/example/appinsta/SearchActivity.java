@@ -2,14 +2,20 @@ package com.example.appinsta;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.style.TextAppearanceSpan;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,11 +44,14 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     public static List<InstagramUserSummary> myFollowers,myFollowing;
     List<InstagramUserSummary> usersFollowers,usersFollowings;
     ProgressDialog dialog;
-    static int myStalkerCount, myStalkingCount, latestPhotoLikersCount;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
@@ -77,6 +86,13 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         new loadUsersListTask(listType).execute();
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
             adapter = new UserListAdapter(userList,getApplicationContext());
@@ -109,22 +125,46 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
             switch (listType){
+                case FOR_MY_FOLLOWERS:
+                    actionBar.setSubtitle(R.string.follower);
+                    break;
+
+                case FOR_MY_FOLLOWINGS:
+                    actionBar.setSubtitle(R.string.follow);
+                    break;
+
+                case FOR_MY_STALKERS:
+                    actionBar.setSubtitle(R.string.who_not_follow_me_back);
+                    break;
+
+                case FOR_MY_STALKINGS:
+                    actionBar.setSubtitle(R.string.who_i_am_not_follow_back);
+                    break;
+
+                case FOR_MY_LAST_PHOTO_LIKERS:
+                    actionBar.setSubtitle(R.string.who_do_not_like_my_last_photo);
+                    break;
+
                 case FOR_USERS_FOLLOWERS:
+                    actionBar.setSubtitle(R.string.follower);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_FOLLOWINGS:
+                    actionBar.setSubtitle(R.string.follow);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKERS:
+                    actionBar.setSubtitle(R.string.user_stalkers);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKINGS:
+                    actionBar.setSubtitle(R.string.user_stalkings);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
@@ -152,7 +192,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             myFollowers = service.getMyFollowers();
                         }
                         userList = (List<T>) compare(myFollowing, myFollowers);
-                        myStalkerCount = userList.size();
                         break;
 
                     case FOR_MY_STALKINGS:
@@ -163,7 +202,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             myFollowers = service.getMyFollowers();
                         }
                         userList = (List<T>) compare(myFollowers, myFollowing);
-                        myStalkingCount = userList.size();
                         break;
 
                     case FOR_MY_LAST_PHOTO_LIKERS:
@@ -174,7 +212,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                             InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
                             userList = (List<T>) compare(myFollowers, service.getMediaLikers(firstItem.pk));
                         }
-                        latestPhotoLikersCount = userList.size();
                         break;
 
                     case FOR_USERS_FOLLOWERS:
@@ -200,13 +237,13 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             }catch (Exception e){
                 userList = null;
             }
-
             return userList;
         }
 
         @Override
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
+            actionBar.setTitle(String.valueOf(userList.size()) + " "+getApplicationContext().getResources().getString(R.string.users_count));
             setRecyclerView(userList );
         }
     }
