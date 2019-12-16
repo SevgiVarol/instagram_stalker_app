@@ -95,6 +95,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
+            actionBar.setTitle(String.valueOf(userList.size()) + " "+getApplicationContext().getResources().getString(R.string.users_count));
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -243,7 +244,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         @Override
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
-            actionBar.setTitle(String.valueOf(userList.size()) + " "+getApplicationContext().getResources().getString(R.string.users_count));
             setRecyclerView(userList );
         }
     }
