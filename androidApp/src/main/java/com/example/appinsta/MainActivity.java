@@ -34,6 +34,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
@@ -47,16 +48,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
-import static com.example.appinsta.Compare.compare;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
     CustomView  latestPhotoLikers, usersStalkers, usersStalking;
-    List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
     RecyclerView userStoryRecyclerView;
     ImageView profilPic, latestPhoto;

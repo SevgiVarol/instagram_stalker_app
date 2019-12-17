@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.appinsta.enums.UserListTypes;
@@ -31,6 +32,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     private UserListAdapter adapter;
     EditText searchEditText;
     UserListTypes listType;
+    ProgressBar progressBar;
     long pk;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -44,6 +46,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
+        progressBar=(ProgressBar)findViewById(R.id.recycler_view_progress_bar);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
         pk = getIntent().getLongExtra("userId",0);
         TextWatcher watcher = new TextWatcher() {
@@ -109,21 +112,25 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             dialog =new ProgressDialog(SearchActivity.this);
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
+                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_FOLLOWINGS:
+                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKERS:
+                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKINGS:
+                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
@@ -203,7 +210,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         @Override
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
+            progressBar.setVisibility(View.GONE);
             setRecyclerView(userList );
+
         }
     }
 
