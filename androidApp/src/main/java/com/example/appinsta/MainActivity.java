@@ -1,7 +1,6 @@
 package com.example.appinsta;
 
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
@@ -10,12 +9,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
@@ -45,8 +45,8 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramUserStoryFeedResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
@@ -55,30 +55,32 @@ import static com.example.appinsta.Compare.compare;
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
-    CustomView mutedStory, latestPhotoLikers, storyStalkers, usersStalkers, usersStalking, userAction;
+    CustomView  latestPhotoLikers, usersStalkers, usersStalking;
     List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
+    RecyclerView userStoryRecyclerView;
     ImageView profilPic, latestPhoto;
-    ImageView userProfilPic[];
     LinearLayout followingLayout, followersLayout;
     TextView tvFollowing, tvFollowers;
 
     ProgressBar mProgress = null, storyProgress;
+    ProgressBar userStoryProgress;
     Drawable drawable = null;
     InstagramUser user;
     InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
-    ArrayList<Uri> storyUrlList;
+    ArrayList<Uri> storyUrlList = new ArrayList<>();
+
+    ArrayList<InstagramUser> userStoriesUrlList = new ArrayList<>();
     ArrayList<String> storyIds;
     List<InstagramFeedItem> stories;
-    List<InstagramFeedItem> userStories=new ArrayList<>();
     BottomNavigationView bottomNavigationView;
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
     Button collapsedMenuButton;
-    LinearLayout lyHorizontalScroll;
-    List<InstagramUserStoryFeedResult> userStoriesList = new ArrayList<>();
-    Button button[];
+    LinearLayout recyclerLinearLayout;
+    List<InstagramStoryTray> userStoriesTrayList = new ArrayList<>();
+    StoryTrayRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +88,21 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lyHorizontalScroll = findViewById(R.id.layoutHorizontalScroll);
 
         initComponent();
 
         new setLoggedUserBasicInfoTask().execute();
+        initRecyclerView();
 
-        userProfilPic = new CircleImageView[10];
+        adapter.setOnItemClickListener(new StoryTrayRecyclerAdapter.OnListener() {
+            @Override
+            public void onClick(View view,int position) {
+
+                userStoryProgress =view.findViewById(R.id.progress_bar_story);
+                UserStoryTask userStoryTask=new UserStoryTask(position);
+                userStoryTask.execute();
+            }
+        });
 
         followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +162,15 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         });
     }
 
+    private void initRecyclerView() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        userStoryRecyclerView = findViewById(R.id.recyclerView);
+        userStoryRecyclerView.setLayoutManager(layoutManager);
+        adapter= new StoryTrayRecyclerAdapter(this, userStoriesUrlList);
+        userStoryRecyclerView.setAdapter(adapter);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
@@ -200,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         tvFollowing = (TextView) findViewById(R.id.tvFollowing);
         tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 
+        recyclerLinearLayout = findViewById(R.id.linearLayoutRecylerView);
         followingLayout = (LinearLayout) findViewById(R.id.followingLayout);
         followersLayout = (LinearLayout) findViewById(R.id.followersLayout);
 
@@ -236,9 +256,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-
             user = service.getLoggedUser();
-            userStoriesList = service.getStoriesMainPage();
+            userStoriesTrayList = service.getTrayStories();
+            for(int i=0;i<userStoriesTrayList.size();i++)
+            userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());
+
             return null;
         }
 
@@ -318,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             startActivity(backToLogin);
         }
     }
+
 
     private class storyTask extends AsyncTask<String, String, String> {
         long userid;
@@ -408,53 +431,42 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
                 }
             });
-
-
-            for (int i = 0; i < 9; i++) {
-
-                userProfilPic[i] = new CircleImageView(getApplicationContext());
-                userProfilPic[i].setMinimumHeight(150);
-                userProfilPic[i].setMinimumWidth(150);
-                userProfilPic[i].setPadding(5, 20, 5, 20);
-
-                Glide.with(getApplication()) //1
-                        .load(userStoriesList.get(i).getReel().getUser().getProfile_pic_url()).into(userProfilPic[i]);
-
-                lyHorizontalScroll.addView(userProfilPic[i]);
-
-                userStories.addAll(userStoriesList.get(i).reel.items);
-
-                userProfilPic[i].setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
-                        ArrayList<Uri> userStoriesUri = new ArrayList<>();
-                        for (InstagramFeedItem story : userStories) {
-                            Uri uri;
-                            if (story.getVideo_versions() != null) {
-                                uri = Uri.parse(story.getVideo_versions().get(0).getUrl());
-                            } else {
-                                uri = Uri.parse(story.getImage_versions2().getCandidates().get(0).getUrl());
-                            }
-                            userStoriesUri.add(uri);
-                        }
-                        storyIntent.putExtra("storyUrlList", userStoriesUri);
-                        if (userStories != null & userStories.size() != 0) {
-                            startActivity(storyIntent);
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
-            }
         }
-
-
 
     }
 
+    private class UserStoryTask extends AsyncTask<String,String,String> {
+        ArrayList<Uri> userStoryUrlList = new ArrayList<>();
+        int position;
+        public UserStoryTask(int position){
+            this.position=position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            userStoryProgress.setIndeterminate(true);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            userStoryUrlList = service.getStories(userStoriesTrayList.get(position).getUser().username);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
+
+            storyIntent.putExtra("storyUrlList", userStoryUrlList);
+            if (userStoryUrlList != null & userStoryUrlList.size() != 0) {
+                startActivity(storyIntent);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
+            }
+            userStoryProgress.setIndeterminate(false);
+        }
+
+    }
 }
 

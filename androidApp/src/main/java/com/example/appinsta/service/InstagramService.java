@@ -412,7 +412,7 @@ public class InstagramService {
         return userStoriesUri;
     }
 
-    public List<InstagramUserStoryFeedResult> getStoriesMainPage() {
+    public List<InstagramStoryTray> getTrayStories() {
         InstagramReelsTrayFeedResult result= null;
         try {
             result = instagram.sendRequest(new InstagramReelsTrayRequest());
@@ -422,27 +422,6 @@ public class InstagramService {
 
         List<InstagramStoryTray> trays = result.getTray();
 
-        List<InstagramUserStoryFeedResult> userStories = new ArrayList<>();
-
-        for (int i=0;i<9;i++) {
-            try {
-                userStories.add(instagram.sendRequest(new InstagramUserStoryFeedRequest("" + trays.get(i).getUser().getPk())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-        // To print the url's of the first items in everyones story do this
-
-        for (InstagramUserStoryFeedResult story : userStories) {
-            if (story.getReel() == null) {
-                System.out.println("Null check for safety, hardly ever null");
-            } else {
-                System.out.println(story.getReel().getItems().get(0).getImage_versions2().getCandidates().get(0).getUrl());
-            }
-        }
-        return userStories;
+        return trays;
     }
 }
