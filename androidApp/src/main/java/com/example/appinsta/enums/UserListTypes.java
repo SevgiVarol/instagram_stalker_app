@@ -1,0 +1,13 @@
+package com.example.appinsta.enums;
+
+public enum UserListTypes {
+    FOR_MY_FOLLOWERS,
+    FOR_MY_FOLLOWINGS,
+    FOR_MY_STALKERS,
+    FOR_MY_STALKINGS,
+    FOR_MY_LAST_PHOTO_LIKERS,
+    FOR_USERS_FOLLOWERS,
+    FOR_USERS_FOLLOWINGS,
+    FOR_USERS_STALKERS,
+    FOR_USERS_STALKINGS;
+}
