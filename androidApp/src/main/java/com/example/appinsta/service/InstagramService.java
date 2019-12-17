@@ -38,14 +38,20 @@ public class InstagramService {
     private static InstagramService myService;
     InstagramUser loggedUser;
     private List<InstagramUserSummary> myFollowing = new ArrayList<>();
+    List<InstagramUserSummary> myFollowers = new ArrayList<>();
     private List<InstagramUser> storyViewers = new ArrayList<>();
+
+    List<InstagramUserSummary> usersFollowers;
+    List<InstagramUserSummary> usersFollowings;
+
+    long lastPkFollower,lastPkFollowing;
 
     private List<InstagramFeedItem> story = null;
     String loggedUserLatestMediaUrl;
     InstagramFeedResult userFeedResult = null;
     InstagramFeedResult myUserFeedResult = null;
 
-    List<InstagramUserSummary> myFollowers = new ArrayList<>();
+
 
 
     private InstagramService() {
@@ -73,12 +79,12 @@ public class InstagramService {
 
     public void logout() {
         loggedUser = null;
-        myFollowing = new ArrayList<>();
+        myFollowing.clear();
         storyViewers = null;
         story = null;
         userFeedResult = null;
         myUserFeedResult = null;
-        myFollowers = new ArrayList<>();
+        myFollowers.clear();
 
     }
 
@@ -88,31 +94,34 @@ public class InstagramService {
 
 
     public List<InstagramUserSummary> getFollowers(long pk) {
+        if (usersFollowers == null || lastPkFollower != pk) {
+            lastPkFollower = pk;
+            usersFollowers = new ArrayList<>();
+            InstagramGetUserFollowersResult followersResult = null;
+            String nextMaxId = null;
 
+            do {
 
-        List<InstagramUserSummary> followers = new ArrayList<>();
-        InstagramGetUserFollowersResult followersResult = null;
-        String nextMaxId = null;
-
-        do {
-
-            try {
-                followersResult = instagram.sendRequest(new InstagramGetUserFollowersRequest(pk, nextMaxId));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
-                for (InstagramUserSummary userSummary : followersResult.getUsers()) {
-                    followers.add(userSummary);
-
+                try {
+                    followersResult = instagram.sendRequest(new InstagramGetUserFollowersRequest(pk, nextMaxId));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                if (followersResult.getUsers() != null && !followersResult.getUsers().isEmpty()) {
+                    for (InstagramUserSummary userSummary : followersResult.getUsers()) {
+                        usersFollowers.add(userSummary);
+
+                    }
+                }
+
+                nextMaxId = followersResult.getNext_max_id();
+            } while (nextMaxId != null);
+
+            if (followersResult.getStatus().equals("fail")){
+                usersFollowers = null;
             }
-
-            nextMaxId = followersResult.getNext_max_id();
-        } while (nextMaxId != null);
-
-
-        return followers;
+        }
+        return usersFollowers;
 
 
     }
@@ -141,7 +150,9 @@ public class InstagramService {
 
                 nextMaxId = followersResult.getNext_max_id();
             } while (nextMaxId != null);
-
+            if (followersResult.getStatus().equals("fail")){
+                return null;
+            }
 
             return myFollowers;
         }
@@ -149,27 +160,32 @@ public class InstagramService {
 
     public List<InstagramUserSummary> getFollowing(long pk) {
 
-        List<InstagramUserSummary> following = new ArrayList<>();
-        InstagramGetUserFollowersResult followingResult = null;
-        String nextMaxId = null;
-        do {
+        if (usersFollowings == null || lastPkFollowing != pk) {
+            lastPkFollowing = pk;
+            usersFollowings = new ArrayList<>();
+            InstagramGetUserFollowersResult followingResult = null;
+            String nextMaxId = null;
+            do {
 
 
-            try {
-                followingResult = instagram.sendRequest(new InstagramGetUserFollowingRequest(pk, nextMaxId));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
-                for (InstagramUserSummary userSummary : followingResult.getUsers()) {
-                    following.add(userSummary);
-
+                try {
+                    followingResult = instagram.sendRequest(new InstagramGetUserFollowingRequest(pk, nextMaxId));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }
-            nextMaxId = followingResult.getNext_max_id();
-        } while (nextMaxId != null);
+                if (followingResult.getUsers() != null && !followingResult.getUsers().isEmpty()) {
+                    for (InstagramUserSummary userSummary : followingResult.getUsers()) {
+                        usersFollowings.add(userSummary);
 
-        return following;
+                    }
+                }
+                nextMaxId = followingResult.getNext_max_id();
+            } while (nextMaxId != null);
+            if (followingResult.getStatus().equals("fail")){
+                usersFollowings = null;
+            }
+        }
+        return usersFollowings;
 
 
     }
@@ -199,6 +215,9 @@ public class InstagramService {
                 nextMaxId = followingResult.getNext_max_id();
             } while (nextMaxId != null);
 
+            if (followingResult.getStatus().equals("fail")){
+                return null;
+            }
             return myFollowing;
         }
     }

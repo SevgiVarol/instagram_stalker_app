@@ -32,6 +32,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.appinsta.database.InstaDatabase;
+import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
     CustomView mutedStory, latestPhotoLikers, storyStalkers, usersStalkers, usersStalking, userAction;
-    List<InstagramUserSummary> mediaLikersList, followersList, followingList, stalkersList, stalkingList;
 
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
@@ -84,44 +84,44 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) followersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWERS);
+                startActivity(searchActivity);
             }
         });
 
         followingLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) followingList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_FOLLOWINGS);
+                startActivity(searchActivity);
             }
         });
 
         latestPhotoLikers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) mediaLikersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS);
+                startActivity(searchActivity);
             }
         });
 
         usersStalkers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) stalkersList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS);
+                startActivity(searchActivity);
             }
         });
         usersStalking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), SearchActivity.class);
-                i.putExtra("userList", (Serializable) stalkingList);
-                startActivity(i);
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS);
+                startActivity(searchActivity);
             }
         });
         profilPic.setOnClickListener(new View.OnClickListener() {
@@ -259,41 +259,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             mProgress.setVisibility(View.GONE);
             storyProgress.setVisibility(View.VISIBLE);
 
-            new getFollowingAndFollowersTask().execute();
             new getMainViewPagerComponents().execute();
         }
 
-    }
-
-    private class getFollowingAndFollowersTask extends AsyncTask<String, String, String> {
-        @Override
-        protected String doInBackground(String... strings) {
-
-            followersList = service.getMyFollowers();
-            followingList = service.getMyFollowing();
-
-            stalkingList = compare(followersList, followingList);
-            stalkersList = compare(followingList, followersList);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (service.getLoggedUser().getMedia_count() != 0) {
-                InstagramFeedItem firstItem = (InstagramFeedItem) service.getLoggedUserMedias(null).items.get(0);
-                mediaLikersList = compare(followersList, service.getMediaLikers(firstItem.pk));
-            }
-            if (mediaLikersList != null) {
-                latestPhotoLikers.setNumberText(String.valueOf(mediaLikersList.size()));
-            } else latestPhotoLikers.setNumberText(String.valueOf(0));
-
-            usersStalkers.setNumberText(String.valueOf(stalkersList.size()));
-            usersStalking.setNumberText(String.valueOf(stalkingList.size()));
-
-        }
     }
 
     private class logout extends AsyncTask<String, String, String> {
@@ -399,11 +367,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             });
         }
     }
+
     public static String withSuffix(long count) {
         if (count < 1000) return "" + count;
         int exp = (int) (Math.log(count) / Math.log(1000));
         return String.format("%.1f %c",
                 count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
+                "kMGTPE".charAt(exp - 1));
     }
 }
