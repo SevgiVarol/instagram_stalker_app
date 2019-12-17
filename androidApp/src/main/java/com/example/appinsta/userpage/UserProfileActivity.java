@@ -200,6 +200,8 @@ public class UserProfileActivity extends AppCompatActivity {
                     return service.getStories(user.username);
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             return null;
