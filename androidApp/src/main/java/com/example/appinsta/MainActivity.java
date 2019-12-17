@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     LinearLayout recyclerLinearLayout;
     List<InstagramStoryTray> userStoriesTrayList = new ArrayList<>();
     StoryTrayRecyclerAdapter adapter;
-
+    ImageView userProfilPic;
+    int flag=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -96,9 +97,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             @Override
             public void onClick(View view,int position) {
 
-                userStoryProgress =view.findViewById(R.id.progress_bar_story);
-                UserStoryTask userStoryTask=new UserStoryTask(position);
-                userStoryTask.execute();
+                if(flag==0) {
+                    userStoryProgress = view.findViewById(R.id.progress_bar_story);
+                    UserStoryTask userStoryTask = new UserStoryTask(position);
+                    userStoryTask.execute();
+                    flag++;
+                }
             }
         });
 
@@ -230,7 +234,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         storyProgress = findViewById(R.id.progressBar);
 
-        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
@@ -437,6 +440,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             userStoryProgress.setIndeterminate(false);
+            flag=0;
         }
 
     }
