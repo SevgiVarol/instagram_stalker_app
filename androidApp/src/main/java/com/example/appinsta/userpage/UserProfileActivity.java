@@ -33,8 +33,6 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
-import static com.example.appinsta.Compare.compare;
-
 public class UserProfileActivity extends AppCompatActivity {
 
     ImageView profilPic;
@@ -61,7 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        user = (InstagramUserSummary) getIntent().getSerializableExtra("user");
+        user = (InstagramUserSummary) getIntent().getSerializableExtra("myUser");
         InstagramUser userSum = null;
 
         initComponents();
@@ -186,7 +184,7 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private class storyTask extends AsyncTask<String, String, String> {
+    private class storyTask extends AsyncTask<String, String, ArrayList<Uri>> {
 
         @Override
         protected void onPreExecute() {
@@ -196,10 +194,10 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected ArrayList<Uri> doInBackground(String... strings) {
             if (storyUrlList == null) {
                 try {
-                    storyUrlList = service.getStories(user.username);
+                    return service.getStories(user.username);
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
@@ -208,7 +206,8 @@ public class UserProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(ArrayList<Uri> urlList) {
+            storyUrlList = urlList;
             Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
             storyIntent.putExtra("storyUrlList", storyUrlList);
             if (storyUrlList != null & storyUrlList.size() != 0) {

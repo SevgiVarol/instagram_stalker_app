@@ -105,18 +105,18 @@ public class Compare {
 
     /* public List<InstagramUserSummary> peopleIdontFollow(long userId) {
 
-         user = new User(instagram);
+         myUser = new User(instagram);
          //benim takip etmediklerim
-         return compare(user.getFollowers(userId), user.getFollowing(userId));
+         return compare(myUser.getFollowers(userId), myUser.getFollowing(userId));
 
 
      }
 
      public List<InstagramUserSummary> peopledontFollowme(long userId) {
 
-         user = new User(instagram);
+         myUser = new User(instagram);
          //beni takip etmeyenler
-         return compare(user.getFollowing(userId), user.getFollowers(userId));
+         return compare(myUser.getFollowing(userId), myUser.getFollowers(userId));
 
 
      }
@@ -127,22 +127,22 @@ public class Compare {
      public List<InstagramUserSummary> unwatchedStoryAndFollowing(long userId, int storyIndex) {
 
          story = new Story(instagram);
-         user = new User(instagram);
+         myUser = new User(instagram);
 
          String storyId = story.getStory(userId, storyIndex).id;
 
-         return compareUnwatchedStoryAndFollowing(user.getFollowers(userId), story.getStoryViewers(userId, storyId));
+         return compareUnwatchedStoryAndFollowing(myUser.getFollowers(userId), story.getStoryViewers(userId, storyId));
 
      }
 
      public List<InstagramUserSummary> mediaLikersAndUnfollowing(long userId, int photoIndex) {
 
          media = new Media(instagram);
-         user = new User(instagram);
+         myUser = new User(instagram);
 
          long mediaId = media.getMedia(userId, photoIndex).getPk();
 
-         return compare(media.getMediaLikers(mediaId), user.getFollowers(userId));
+         return compare(media.getMediaLikers(mediaId), myUser.getFollowers(userId));
 
      }
 
@@ -150,11 +150,11 @@ public class Compare {
 
 
          story = new Story(instagram);
-         user = new User(instagram);
+         myUser = new User(instagram);
 
          String storyId = story.getStory(userId, storyIndex).id;
 
-         return compareWatchedStoryAndUnfollowing(story.getStoryViewers(userId, storyId), user.getFollowers(userId));
+         return compareWatchedStoryAndUnfollowing(story.getStoryViewers(userId, storyId), myUser.getFollowers(userId));
 
 
      }

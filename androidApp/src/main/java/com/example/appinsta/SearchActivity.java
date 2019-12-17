@@ -88,7 +88,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 @Override
                 public void onClick(int position) {
                     Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-                    i.putExtra("user", (Serializable) userList.get(position));
+                    i.putExtra("myUser", (Serializable) userList.get(position));
                     startActivity(i);
                 }
             });
@@ -96,7 +96,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     }
     private class loadUsersListTask extends AsyncTask<String, String, List<T>> {
         UserListTypes listType;
-        String exception = null;
+        Exception exception = null;
         List<T> userList = new ArrayList<>();
         public loadUsersListTask(UserListTypes listType) {
             this.listType = listType;
@@ -193,9 +193,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                         break;
                 }
             }catch (UnknownHostException e){
-                exception = "UnknownHostException";
+                exception = e;
             }catch (IOException e){
-                exception = "IOException";
+                exception = e;
             }
             return userList;
         }
@@ -206,14 +206,14 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             if (exception == null){
                 setRecyclerView(userList);
             }
-            else if (exception.equals("IOException")){
-                exception = null;
-                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
-                finish();
-            }
-            else if (exception.equals("UnknownHostException")){
+            else if (exception instanceof UnknownHostException){
                 exception = null;
                 Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_LONG).show();
+                finish();
+            }
+            else if (exception instanceof IOException){
+                exception = null;
+                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
                 finish();
             }
         }

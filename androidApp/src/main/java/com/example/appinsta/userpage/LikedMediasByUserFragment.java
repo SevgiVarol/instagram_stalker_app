@@ -49,15 +49,14 @@ public class LikedMediasByUserFragment extends Fragment {
         return view;
     }
 
-    public class getLoggedUserLikedMediaTask extends AsyncTask<String, String, String> {
+    public class getLoggedUserLikedMediaTask extends AsyncTask<String, String, DataWithOffsetIdModel> {
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected DataWithOffsetIdModel doInBackground(String... strings) {
 
             if (myLikedMediaList.isEmpty()) {
                 try {
-                    dataWithOffsetIdModel = service.getMyLikedMediaByUser(username);
-                    myLikedMediaList = dataWithOffsetIdModel.items;
+                    return service.getMyLikedMediaByUser(username);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -67,9 +66,10 @@ public class LikedMediasByUserFragment extends Fragment {
 
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(DataWithOffsetIdModel s) {
             super.onPostExecute(s);
-
+            dataWithOffsetIdModel = s;
+            myLikedMediaList = dataWithOffsetIdModel.items;
             footerLoadingView.setVisibility(View.GONE);
             imageListAdapter = new ImageAdapter(getActivity(), myLikedMediaList);
             gridView.setAdapter(imageListAdapter);

@@ -80,28 +80,24 @@ public class MyAllMediaFragment extends Fragment {
                 dataWithOffsetIdModel = service.getLoggedUserMedias();
                 myMediaList = dataWithOffsetIdModel.items;
                 if (mediaUrlList.size() == 0) {
-                    try {
-                        for (int counter = 0; counter < myMediaList.size(); counter++) {
-                            if (myMediaList.get(counter).getVideo_versions() != null) {
-                                try {
-                                    mediaUrlList.add(Uri.parse(myMediaList.get(counter).getVideo_versions().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                                }
-                            } else {
-                                try {
-                                    mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
-                                }
-
+                    for (int counter = 0; counter < myMediaList.size(); counter++) {
+                        if (myMediaList.get(counter).getVideo_versions() != null) {
+                            try {
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getVideo_versions().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
                             }
-                            mediaIdList.add(String.valueOf(myMediaList.get(counter).pk));
+                        } else {
+                            try {
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+
                         }
-                    } catch (Exception e) {
-                        Log.e("null object reference", e.getMessage());
+                        mediaIdList.add(String.valueOf(myMediaList.get(counter).pk));
                     }
                 }
                 userid = service.getLoggedUser().pk;
@@ -180,28 +176,23 @@ public class MyAllMediaFragment extends Fragment {
 
                 List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
                 if (mediaUrlList.size() != 0) {
-                    try {
-                        for (int counter = 0; counter < nextMedias.size(); counter++) {
-                            if (nextMedias.get(counter).getVideo_versions() != null) {
-                                try {
-                                    mediaUrlList.add(Uri.parse(nextMedias.get(counter).getVideo_versions().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                                }
-                            } else {
-                                try {
-                                    mediaUrlList.add(Uri.parse(nextMedias.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
-                                }
-
+                    for (int counter = 0; counter < nextMedias.size(); counter++) {
+                        if (nextMedias.get(counter).getVideo_versions() != null) {
+                            try {
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getVideo_versions().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
                             }
-                            mediaIdList.add(String.valueOf(nextMedias.get(counter).pk));
+                        } else {
+                            try {
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            } catch (Exception e) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
                         }
-                    } catch (Exception e) {
-                        Log.e("null object reference", e.getMessage());
+                        mediaIdList.add(String.valueOf(nextMedias.get(counter).pk));
                     }
                 }
                 if (nextMedias != null) {

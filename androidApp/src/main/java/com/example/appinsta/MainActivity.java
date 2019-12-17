@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,10 +44,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
-import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
-
-import static com.example.appinsta.Compare.compare;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -61,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     ProgressBar mProgress = null, storyProgress;
     Drawable drawable = null;
-    InstagramUser user;
+    InstagramUser myUser;
     InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
     ArrayList<Uri> storyUrlList;
@@ -210,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
+    private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, InstagramUser> {
 
         @Override
         protected void onPreExecute() {
@@ -224,10 +220,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected InstagramUser doInBackground(String... strings) {
 
             try {
-                user = service.getLoggedUser();
+                return service.getLoggedUser();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -235,16 +231,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(InstagramUser loggedUser) {
+            super.onPostExecute(loggedUser);
+            myUser = loggedUser;
             MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
             FragmentManager manager = getFragmentManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
-            tvFollowing.setText(String.valueOf(withSuffix(user.following_count)));
-            tvFollowers.setText(String.valueOf(withSuffix(user.follower_count)));
+            tvFollowing.setText(String.valueOf(withSuffix(myUser.following_count)));
+            tvFollowers.setText(String.valueOf(withSuffix(myUser.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
@@ -264,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             }
 
             Glide.with(getApplication()) //1
-                    .load(user.getProfile_pic_url()).into(profilPic);
+                    .load(myUser.getProfile_pic_url()).into(profilPic);
             mProgress.setVisibility(View.GONE);
             storyProgress.setVisibility(View.VISIBLE);
 
@@ -290,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     private class storyTask extends AsyncTask<String, String, String> {
-        long userid;
+        long userId;
 
         @Override
         protected void onPreExecute() {
@@ -302,7 +299,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             try {
                 stories = service.getStories(service.getLoggedUser().pk);
                 if (storyUrlList.size() == 0) {
-                    try {
                         for (int counter = 0; counter < stories.size(); counter++) {
                             if (stories.get(counter).getVideo_versions() != null) {
                                 storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
@@ -311,11 +307,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                             }
                             storyIds.add(String.valueOf(stories.get(counter).pk));
                         }
-                    } catch (Exception e) {
-                        Log.e("null object reference", e.getMessage());
-                    }
                 }
-                userid = service.getLoggedUser().pk;
+                userId = service.getLoggedUser().pk;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -327,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         protected void onPostExecute(String s) {
             Intent mediaLogIntent = new Intent(getApplicationContext(), MediaLogs.class);
             mediaLogIntent.putExtra("storyUrlList", storyUrlList);
-            mediaLogIntent.putExtra("userId", userid);
+            mediaLogIntent.putExtra("userId", userId);
             mediaLogIntent.putExtra("storyIds", storyIds);
 
             if (storyUrlList != null & storyUrlList.size() != 0) {

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.database.model.LoggedUserItem;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.utils.InternetControl;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
@@ -36,7 +37,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-        if (isNetworkAvailable()){
+        if (InternetControl.isNetworkAvailable(getApplicationContext())){
             new loginWithLastUser().execute();
         } else {
             Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
@@ -45,12 +46,12 @@ public class LoginPage extends AppCompatActivity {
         etPassword = findViewById(R.id.edtPassword);
 
     }
-    private boolean isNetworkAvailable() {
+/*    private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+    }*/
 
     //Login button onClick
     public void loginOnClick(View view) {
@@ -158,12 +159,8 @@ public class LoginPage extends AppCompatActivity {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
             if (loginResult == null || loginResult.equals("fail")) {
-                if (isNetworkAvailable()){
-                    final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
-                    toast.show();
-                } else {
-                    Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
-                }
+                final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
+                toast.show();
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);

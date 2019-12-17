@@ -273,7 +273,7 @@ public class InstagramService {
         String nextMaxId = null;
         try {
             do {
-                storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+                storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest(String.valueOf(userId)));
                 if (storyFeedResult.getReel() != null) {
 
                     userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
@@ -301,7 +301,7 @@ public class InstagramService {
             InstagramUserStoryFeedResult storyFeedResult = null;
 
             try {
-                storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + userId));
+                storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest(String.valueOf(userId)));
                 if (storyFeedResult.getReel() != null) {
                     if (storyFeedResult.getReel().getItems() != null && !storyFeedResult.getReel().getItems().isEmpty()) {
                         for (InstagramFeedItem item : storyFeedResult.getReel().getItems()) {
@@ -420,7 +420,7 @@ public class InstagramService {
             InstagramUserStoryFeedResult userTray = null;
             for (InstagramStoryTray tray : trays) {
                 if (tray != null & tray.getUser().username.equals(username)) {
-                    userTray = instagram.sendRequest(new InstagramUserStoryFeedRequest("" + tray.getUser().getPk()));
+                    userTray = instagram.sendRequest(new InstagramUserStoryFeedRequest(String.valueOf(tray.getUser().getPk())));
                     break;
                 }
             }
