@@ -1,13 +1,22 @@
 package com.example.appinsta.enums;
 
+import com.example.appinsta.R;
+
 public enum UserListTypes {
-    FOR_MY_FOLLOWERS,
-    FOR_MY_FOLLOWINGS,
-    FOR_MY_STALKERS,
-    FOR_MY_STALKINGS,
-    FOR_MY_LAST_PHOTO_LIKERS,
-    FOR_USERS_FOLLOWERS,
-    FOR_USERS_FOLLOWINGS,
-    FOR_USERS_STALKERS,
-    FOR_USERS_STALKINGS;
+    FOR_MY_FOLLOWERS(R.string.follower),
+    FOR_MY_FOLLOWINGS(R.string.follow),
+    FOR_MY_STALKERS(R.string.who_not_follow_me_back),
+    FOR_MY_STALKINGS(R.string.who_i_am_not_follow_back),
+    FOR_MY_LAST_PHOTO_LIKERS(R.string.who_do_not_like_my_last_photo),
+    FOR_USERS_FOLLOWERS(R.string.follower),
+    FOR_USERS_FOLLOWINGS(R.string.follow),
+    FOR_USERS_STALKERS(R.string.user_stalkers),
+    FOR_USERS_STALKINGS(R.string.user_stalkings);
+    private final int titleId;
+    UserListTypes(int s) {
+        titleId = s;
+    }
+    public int getTitle() {
+        return titleId;
+    }
 }

@@ -2,8 +2,6 @@ package com.example.appinsta;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,10 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.style.TextAppearanceSpan;
 import android.view.View;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,7 +46,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         super.onCreate(savedInstanceState);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setTitle("");
+        actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
@@ -95,7 +90,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
-            actionBar.setTitle(String.valueOf(userList.size()) + " "+getApplicationContext().getResources().getString(R.string.users_count));
+            actionBar.setTitle(String.format("%d %s",userList.size(),getResources().getString(R.string.users_count)));
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -125,47 +120,24 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
+            actionBar.setSubtitle(listType.getTitle());
             switch (listType){
-                case FOR_MY_FOLLOWERS:
-                    actionBar.setSubtitle(R.string.follower);
-                    break;
-
-                case FOR_MY_FOLLOWINGS:
-                    actionBar.setSubtitle(R.string.follow);
-                    break;
-
-                case FOR_MY_STALKERS:
-                    actionBar.setSubtitle(R.string.who_not_follow_me_back);
-                    break;
-
-                case FOR_MY_STALKINGS:
-                    actionBar.setSubtitle(R.string.who_i_am_not_follow_back);
-                    break;
-
-                case FOR_MY_LAST_PHOTO_LIKERS:
-                    actionBar.setSubtitle(R.string.who_do_not_like_my_last_photo);
-                    break;
-
                 case FOR_USERS_FOLLOWERS:
-                    actionBar.setSubtitle(R.string.follower);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_FOLLOWINGS:
-                    actionBar.setSubtitle(R.string.follow);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKERS:
-                    actionBar.setSubtitle(R.string.user_stalkers);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKINGS:
-                    actionBar.setSubtitle(R.string.user_stalkings);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
