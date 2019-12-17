@@ -1,18 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="actionBarTheme">@style/AppTheme.ActionBar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.ActionBar">
+        <item name="titleTextAppearance">@style/TextAppearance.Medium</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.Small</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -27,19 +28,19 @@
         <item name="android:popupBackground">@color/cardview_dark_background</item>
     </style>
 
-    <style name="TextAppearance.AppCompat.Widget.ActionBar.Title"
-        parent="@style/TextAppearance.AppCompat.Medium">
+    <!--<style name="TextAppearance.AppCompat.Widget.ActionBar.Title"
+        parent="@style/TextAppearance.Medium">
     </style>
 
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
         parent="@style/TextAppearance.Small">
-    </style>
+    </style>-->
 
-    <style name="TextAppearance.AppCompat.Medium" parent="Theme.AppCompat">
+    <style name="TextAppearance.Medium" parent="AppTheme">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="TextAppearance.Small" parent="Theme.AppCompat">
+    <style name="TextAppearance.Small" parent="AppTheme">
         <item name="android:textSize">12sp</item>
     </style>
 

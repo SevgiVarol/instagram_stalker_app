@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_LAST_PHOTO_LIKERS);
-                startActivityForResult(searchActivity,0);
+                startActivity(searchActivity);
             }
         });
 
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKERS);
-                startActivityForResult(searchActivity,1);
+                startActivity(searchActivity);
             }
         });
         usersStalking.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             public void onClick(View view) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("listType", UserListTypes.FOR_MY_STALKINGS);
-                startActivityForResult(searchActivity,2);
+                startActivity(searchActivity);
             }
         });
         profilPic.setOnClickListener(new View.OnClickListener() {

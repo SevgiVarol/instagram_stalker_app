@@ -51,7 +51,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         super.onCreate(savedInstanceState);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("");
+        //actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
