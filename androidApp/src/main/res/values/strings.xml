@@ -31,6 +31,7 @@
     <string name="search_hint">Search</string>
     <string name="follow_user">Follow</string>
     <string name="unfollow_user">Unfollow</string>
+    <string name="wait_a_few_minute">Please wait a few minutes before you try again</string>
 
     <!--user media fragment-->
     <string name="follow_if_want_to_show_profile">Follow this account to see photos and videos</string>
@@ -42,6 +43,8 @@
     <string name="user_liked_my_posts">My liked posts by this user</string>
     <string name="user_stalkers_loading_message">Loading who she/he has not followed back…</string>
     <string name="user_stalkings_loading_message">Loading who did not follow she/he back…</string>
+    <string name="user_follower_loading_message">Loading followers…</string>
+    <string name="user_following_loading_message">Loading followings…</string>
 
     <!--media log page , use search_hint from search-->
     <string name="tab_all_likes">All \nLikes</string>
