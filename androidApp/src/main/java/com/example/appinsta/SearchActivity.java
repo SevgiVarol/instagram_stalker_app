@@ -120,7 +120,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
-            actionBar.setSubtitle(listType.getTitle());
+            actionBar.setSubtitle(listType.getDescriptionResId());
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));

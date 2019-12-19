@@ -16,7 +16,7 @@ public enum UserListTypes {
     UserListTypes(int descriptionResId) {
         titleId = descriptionResId;
     }
-    public int getTitle() {
+    public int getDescriptionResId() {
         return titleId;
     }
 }
