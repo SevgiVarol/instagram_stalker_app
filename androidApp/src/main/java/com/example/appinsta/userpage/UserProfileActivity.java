@@ -2,11 +2,14 @@ package com.example.appinsta.userpage;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -57,10 +60,14 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_user_profile);
 
         user = (InstagramUserSummary) getIntent().getSerializableExtra("myUser");
         InstagramUser userSum = null;
+
+        actionBar.setTitle(user.username);
 
         initComponents();
 
@@ -124,6 +131,12 @@ public class UserProfileActivity extends AppCompatActivity {
         showUserStalkersAndStalking();
         showStories();
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
     }
 
 

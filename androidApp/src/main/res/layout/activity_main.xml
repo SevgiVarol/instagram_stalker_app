@@ -164,7 +164,7 @@
                         android:id="@+id/layoutStats"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
                         android:paddingTop="12dp">
 
                         <LinearLayout
@@ -194,8 +194,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="@string/who_do_not_like_my_last_photo"
-                                app:Number="0"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/who_do_not_like_my_last_photo"></com.example.appinsta.uiComponent.CustomView>
 
                             <com.example.appinsta.uiComponent.CustomView
                                 android:id="@+id/storyStalkers"
