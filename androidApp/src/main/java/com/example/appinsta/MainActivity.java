@@ -234,9 +234,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             super.onPostExecute(s);
             MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
             FragmentManager manager = getFragmentManager();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
-            }
+            manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commit();
 
             tvFollowing.setText(String.valueOf(withSuffix(user.following_count)));
             tvFollowers.setText(String.valueOf(withSuffix(user.follower_count)));
