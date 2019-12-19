@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,10 +39,14 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     public static List<InstagramUserSummary> myFollowers,myFollowing;
     List<InstagramUserSummary> usersFollowers,usersFollowings;
     ProgressDialog dialog;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
@@ -76,8 +81,16 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         new loadUsersListTask(listType).execute();
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
+            actionBar.setTitle(String.format(getResources().getString(R.string.users_count),userList.size()));
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -107,6 +120,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
+            actionBar.setSubtitle(listType.getDescriptionResId());
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
@@ -196,7 +210,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             }catch (Exception e){
                 userList = null;
             }
-
             return userList;
         }
 
