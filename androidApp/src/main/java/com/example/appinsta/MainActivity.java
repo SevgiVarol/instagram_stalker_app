@@ -1,6 +1,5 @@
 package com.example.appinsta;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,6 +39,7 @@ import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
 import com.example.appinsta.userpage.StoryViewer;
+import com.example.appinsta.userpage.UserMediaFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -268,8 +269,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
-            FragmentManager manager = getFragmentManager();
+            UserMediaFragment myAllMediaFragment = new UserMediaFragment(service.getLoggedUser());
+            FragmentManager manager = getSupportFragmentManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
