@@ -41,6 +41,7 @@ import com.example.appinsta.uiComponent.CustomView;
 import com.example.appinsta.userpage.StoryViewer;
 import com.example.appinsta.userpage.UserMediaFragment;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,6 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
-
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     ProgressBar mProgress = null, storyProgress;
     ProgressBar userStoryProgress;
     Drawable drawable = null;
-    InstagramUser loggedUser;
+    InstagramUser myUser;
     InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
     ArrayList<Uri> storyUrlList = new ArrayList<>();
@@ -253,43 +253,49 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected InstagramUser doInBackground(String... strings) {
 
-            loggedUser = service.getLoggedUser();
-            userStoriesTrayList = service.getTrayStories();
-            for (int i = 0; i < userStoriesTrayList.size(); i++)
-                userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());
-
+            try {
+                userStoriesTrayList = service.getTrayStories();
+                for (int i = 0; i < userStoriesTrayList.size(); i++){
+                    userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());}
+                return service.getLoggedUser();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            UserMediaFragment myAllMediaFragment = new UserMediaFragment(service.getLoggedUser());
+        protected void onPostExecute(InstagramUser loggedUser) {
+            super.onPostExecute(loggedUser);
+            myUser = loggedUser;
+            UserMediaFragment myAllMediaFragment = new UserMediaFragment(myUser);
             FragmentManager manager = getSupportFragmentManager();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
-            }
+            manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commit();
 
-            tvFollowing.setText(String.valueOf(withSuffix(loggedUser.following_count)));
-            tvFollowers.setText(String.valueOf(withSuffix(loggedUser.follower_count)));
+            tvFollowing.setText(String.valueOf(withSuffix(myUser.following_count)));
+            tvFollowers.setText(String.valueOf(withSuffix(myUser.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
-            if (service.getLoggedUser().getMedia_count() != 0) {
-                Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            latestPhoto.setBackground(resource);
+            try {
+                if (service.getLoggedUser().getMedia_count() != 0) {
+                    Glide.with(getApplication()).load(service.getLoggedUserLastMediaUrl()).transform(new CenterCrop(), new VignetteFilterTransformation(new PointF(0.5f, 0.0f), new float[]{0f, 0f, 0f}, 0.5f, 0.9f)).into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                latestPhoto.setBackground(resource);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
             Glide.with(getApplication()) //1
-                    .load(loggedUser.getProfile_pic_url()).into(profilPic);
+                    .load(myUser.getProfile_pic_url()).into(profilPic);
             mProgress.setVisibility(View.GONE);
             storyProgress.setVisibility(View.VISIBLE);
 
@@ -315,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     }
 
     private class storyTask extends AsyncTask<String, String, String> {
-        long userid;
+        long userId;
 
         @Override
         protected void onPreExecute() {
@@ -324,31 +330,31 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         @Override
         protected String doInBackground(String... strings) {
-            stories = service.getStories(service.getLoggedUser().pk);
-            if (storyUrlList.size() == 0) {
-                try {
-                    for (int counter = 0; counter < stories.size(); counter++) {
-                        if (stories.get(counter).getVideo_versions() != null) {
-                            storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
-                        } else {
-                            storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+            try {
+                stories = service.getStories(service.getLoggedUser().pk);
+                if (storyUrlList.size() == 0) {
+                        for (int counter = 0; counter < stories.size(); counter++) {
+                            if (stories.get(counter).getVideo_versions() != null) {
+                                storyUrlList.add(Uri.parse(stories.get(counter).getVideo_versions().get(0).getUrl()));
+                            } else {
+                                storyUrlList.add(Uri.parse(stories.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+                            storyIds.add(String.valueOf(stories.get(counter).pk));
                         }
-                        storyIds.add(String.valueOf(stories.get(counter).pk));
-                    }
-                } catch (Exception e) {
-                    Log.e("null object reference", e.getMessage());
                 }
+                userId = service.getLoggedUser().pk;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            userid = service.getLoggedUser().pk;
 
             return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String userPk) {
             Intent mediaLogIntent = new Intent(getApplicationContext(), MediaLogs.class);
             mediaLogIntent.putExtra("storyUrlList", storyUrlList);
-            mediaLogIntent.putExtra("userId", userid);
+            mediaLogIntent.putExtra("userId", userId);
             mediaLogIntent.putExtra("storyIds", storyIds);
 
             if (storyUrlList != null & storyUrlList.size() != 0) {

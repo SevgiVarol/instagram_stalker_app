@@ -29,6 +29,7 @@ import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class UserMediaFragment extends Fragment {
                 tvInfoText.setText(R.string.follow_if_want_to_show_profile);
                 tvInfoText.setVisibility(View.VISIBLE);
             } else {
-                if (mediaList.size() != 0){
+                if (mediaList.size() != 0) {
                     imageListAdapter = new ImageAdapter(getActivity(), mediaList);
                     mediasGridView.setAdapter(imageListAdapter);
 

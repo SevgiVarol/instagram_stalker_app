@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.appinsta.R;
@@ -16,7 +17,7 @@ import com.example.appinsta.R;
  */
 
 public class CustomView extends LinearLayout {
-    
+
     TextView condition;
 
     public CustomView(Context context, AttributeSet attrs) {
@@ -33,7 +34,6 @@ public class CustomView extends LinearLayout {
 
 
         initComponents();
-
         setConditionText(condition);
 
     }
@@ -41,6 +41,7 @@ public class CustomView extends LinearLayout {
     private void initComponents() {
 
         condition = (TextView) findViewById(R.id.condition);
+
 
     }
 

@@ -13,6 +13,8 @@
         android:layout_weight="1"
         android:background="@drawable/border_cardview"
         android:elevation="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
 
         <TextView

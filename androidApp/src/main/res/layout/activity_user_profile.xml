@@ -10,8 +10,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/cardview_dark_background">
+        android:layout_height="match_parent">
 
         <LinearLayout
 
@@ -26,7 +25,7 @@
             <LinearLayout
                 android:id="@+id/cardViewLayout"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="4">
 
@@ -59,19 +58,6 @@
                         android:indeterminateDrawable="@drawable/progress_circle_indeterminate"
                         android:indeterminateDuration="2000"
                         android:indeterminateOnly="false" />
-
-                    <TextView
-                        android:id="@+id/tvFullname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="110dp"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:textColor="#FFF"
-                        android:textSize="12dp" />
-
 
                 </RelativeLayout>
 
@@ -162,13 +148,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="10dp"
+                android:orientation="horizontal"
+                android:paddingTop="5dp"
                 android:weightSum="4"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp">
-
-
+                android:paddingBottom="15dp">
+                <TextView
+                    android:id="@+id/tvFullname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="#FFF"
+                    android:textSize="12dp" />
 
             </LinearLayout>
 

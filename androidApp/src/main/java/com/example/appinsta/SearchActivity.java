@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +19,9 @@ import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.UserProfileActivity;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +37,21 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     UserListTypes listType;
     ProgressBar progressBar;
     long pk;
+    Exception exception;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     InstagramService service = InstagramService.getInstance();
     public static List<InstagramUserSummary> myFollowers,myFollowing;
     List<InstagramUserSummary> usersFollowers,usersFollowings;
     ProgressDialog dialog;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
         progressBar=(ProgressBar)findViewById(R.id.recycler_view_progress_bar);
@@ -79,8 +87,15 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         new loadUsersListTask(listType).execute();
 
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
     public void setRecyclerView(List<T> userList){
-        if (userList != null) {
+            actionBar.setTitle(String.format(getResources().getString(R.string.users_count),userList.size()));
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -89,18 +104,15 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 @Override
                 public void onClick(int position) {
                     Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-                    i.putExtra("user", (Serializable) userList.get(position));
+                    i.putExtra("myUser", (Serializable) userList.get(position));
                     startActivity(i);
                 }
             });
-        }else {
-            Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
-            finish();
-        }
-        dialog.cancel();
+            dialog.cancel();
     }
     private class loadUsersListTask extends AsyncTask<String, String, List<T>> {
         UserListTypes listType;
+        Exception exception = null;
         List<T> userList = new ArrayList<>();
         public loadUsersListTask(UserListTypes listType) {
             this.listType = listType;
@@ -111,6 +123,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
             progressBar.setVisibility(View.VISIBLE);
+            actionBar.setSubtitle(listType.getDescriptionResId());
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
@@ -198,9 +211,8 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                         break;
                 }
             }catch (Exception e){
-                userList = null;
+                exception = e;
             }
-
             return userList;
         }
 
@@ -208,8 +220,19 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
             progressBar.setVisibility(View.GONE);
-            setRecyclerView(userList );
-
+            if (exception == null){
+                setRecyclerView(userList);
+            }
+            else if (exception instanceof UnknownHostException){
+                exception = null;
+                Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_LONG).show();
+                finish();
+            }
+            else if (exception instanceof IOException){
+                exception = null;
+                Toast.makeText(getApplicationContext(),R.string.wait_a_few_minute,Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 
