@@ -433,13 +433,13 @@ public class InstagramService {
 
     public List<InstagramStoryTray> getTrayStories() {
         InstagramReelsTrayFeedResult result= null;
+        List<InstagramStoryTray> trays = null;
         try {
             result = instagram.sendRequest(new InstagramReelsTrayRequest());
+            result.getTray();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        List<InstagramStoryTray> trays = result.getTray();
 
         return trays;
     }

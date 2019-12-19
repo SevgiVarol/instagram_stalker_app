@@ -55,9 +55,9 @@ import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
-    CustomView  latestPhotoLikers, usersStalkers, usersStalking;
+    CustomView latestPhotoLikers, usersStalkers, usersStalking;
 
-    RecyclerView userStoryRecyclerView;
+    RecyclerView storyTrayRecyclerView;
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
     TextView tvFollowing, tvFollowers;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     ProgressBar mProgress = null, storyProgress;
     ProgressBar userStoryProgress;
     Drawable drawable = null;
-    InstagramUser user;
+    InstagramUser loggedUser;
     InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
     ArrayList<Uri> storyUrlList = new ArrayList<>();
@@ -77,11 +77,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
     Button collapsedMenuButton;
-    LinearLayout recyclerLinearLayout;
     List<InstagramStoryTray> userStoriesTrayList = new ArrayList<>();
     StoryTrayRecyclerAdapter adapter;
-    ImageView userProfilPic;
-    int flag=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -91,18 +89,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         initComponent();
 
-        new setLoggedUserBasicInfoTask().execute();
+        new getLoggedUserBasicInfoTask().execute();
         initRecyclerView();
 
         adapter.setOnItemClickListener(new StoryTrayRecyclerAdapter.OnListener() {
             @Override
-            public void onClick(View view,int position) {
-
-                if(flag==0) {
+            public void onClick(View view, int position) {
+                if (storyTrayRecyclerView.isClickable()) {
+                    storyTrayRecyclerView.setClickable(false);
                     userStoryProgress = view.findViewById(R.id.progress_bar_story);
-                    UserStoryTask userStoryTask = new UserStoryTask(position);
+                    getUsersStoriesTask userStoryTask = new getUsersStoriesTask(position);
                     userStoryTask.execute();
-                    flag++;
                 }
             }
         });
@@ -168,10 +165,11 @@ public class MainActivity extends AppCompatActivity implements Serializable {
     private void initRecyclerView() {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        userStoryRecyclerView = findViewById(R.id.recyclerView);
-        userStoryRecyclerView.setLayoutManager(layoutManager);
-        adapter= new StoryTrayRecyclerAdapter(this, userStoriesUrlList);
-        userStoryRecyclerView.setAdapter(adapter);
+        storyTrayRecyclerView = findViewById(R.id.storyTrayRecyclerView);
+        storyTrayRecyclerView.setClickable(true);
+        storyTrayRecyclerView.setLayoutManager(layoutManager);
+        adapter = new StoryTrayRecyclerAdapter(this, userStoriesUrlList);
+        storyTrayRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -222,7 +220,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         tvFollowing = (TextView) findViewById(R.id.tvFollowing);
         tvFollowers = (TextView) findViewById(R.id.tvFollowers);
 
-        recyclerLinearLayout = findViewById(R.id.linearLayoutRecylerView);
         followingLayout = (LinearLayout) findViewById(R.id.followingLayout);
         followersLayout = (LinearLayout) findViewById(R.id.followersLayout);
 
@@ -242,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
+    private class getLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -258,10 +255,10 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         @Override
         protected String doInBackground(String... strings) {
 
-            user = service.getLoggedUser();
+            loggedUser = service.getLoggedUser();
             userStoriesTrayList = service.getTrayStories();
-            for(int i=0;i<userStoriesTrayList.size();i++)
-            userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());
+            for (int i = 0; i < userStoriesTrayList.size(); i++)
+                userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());
 
             return null;
         }
@@ -275,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commitNow();
             }
 
-            tvFollowing.setText(String.valueOf(withSuffix(user.following_count)));
-            tvFollowers.setText(String.valueOf(withSuffix(user.follower_count)));
+            tvFollowing.setText(String.valueOf(withSuffix(loggedUser.following_count)));
+            tvFollowers.setText(String.valueOf(withSuffix(loggedUser.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
@@ -292,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             }
 
             Glide.with(getApplication()) //1
-                    .load(user.getProfile_pic_url()).into(profilPic);
+                    .load(loggedUser.getProfile_pic_url()).into(profilPic);
             mProgress.setVisibility(View.GONE);
             storyProgress.setVisibility(View.VISIBLE);
 
@@ -364,6 +361,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             profilPic.setClickable(true);
         }
     }
+
     private class getMainViewPagerComponents extends AsyncTask<String, String, String> {
 
         @Override
@@ -404,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
     }
+
     public static String withSuffix(long count) {
         if (count < 1000) return "" + count;
         int exp = (int) (Math.log(count) / Math.log(1000));
@@ -411,11 +410,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 count / Math.pow(1000, exp),
                 "kMGTPE".charAt(exp - 1));
     }
-    private class UserStoryTask extends AsyncTask<String,String,String> {
+
+    private class getUsersStoriesTask extends AsyncTask<String, String, ArrayList<Uri>> {
         ArrayList<Uri> userStoryUrlList = new ArrayList<>();
         int position;
-        public UserStoryTask(int position){
-            this.position=position;
+
+        public getUsersStoriesTask(int position) {
+            this.position = position;
         }
 
         @Override
@@ -424,14 +425,14 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
-            userStoryUrlList = service.getStories(userStoriesTrayList.get(position).getUser().username);
-            return null;
+        protected ArrayList<Uri> doInBackground(String... strings) {
+            return service.getStories(userStoriesTrayList.get(position).getUser().username);
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(ArrayList<Uri> storyUrlList) {
+            super.onPostExecute(storyUrlList);
+            userStoryUrlList = storyUrlList;
             Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
 
             storyIntent.putExtra("storyUrlList", userStoryUrlList);
@@ -441,7 +442,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             userStoryProgress.setIndeterminate(false);
-            flag=0;
+            storyTrayRecyclerView.setClickable(true);
         }
 
     }

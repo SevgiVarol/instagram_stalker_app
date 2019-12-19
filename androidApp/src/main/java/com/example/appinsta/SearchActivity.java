@@ -110,27 +110,24 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
+            progressBar.setVisibility(View.VISIBLE);
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
-                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_FOLLOWINGS:
-                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKERS:
-                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
                     dialog.show();
                     break;
 
                 case FOR_USERS_STALKINGS:
-                    progressBar.setVisibility(View.GONE);
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
