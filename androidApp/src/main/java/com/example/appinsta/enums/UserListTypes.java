@@ -12,11 +12,11 @@ public enum UserListTypes {
     FOR_USERS_FOLLOWINGS(R.string.follow),
     FOR_USERS_STALKERS(R.string.user_stalkers),
     FOR_USERS_STALKINGS(R.string.user_stalkings);
-    private final int titleId;
+    private final int descriptionResId;
     UserListTypes(int descriptionResId) {
-        titleId = descriptionResId;
+        this.descriptionResId = descriptionResId;
     }
     public int getDescriptionResId() {
-        return titleId;
+        return descriptionResId;
     }
 }
