@@ -22,12 +22,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.appinsta.Compare;
 import com.example.appinsta.R;
 import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.utils.InternetControl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,10 @@ public class MediaLogs<T> extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("");
         setContentView(R.layout.activity_media_logs);
+        if (!InternetControl.isNetworkAvailable(getApplicationContext())){
+            Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         new init().execute();
 
@@ -75,7 +82,7 @@ public class MediaLogs<T> extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-    private class init extends AsyncTask<String, String, String> {
+    private class init extends AsyncTask<String, String, List<InstagramUserSummary>> {
         StoryImagePagerAdapter myImagePager;
         StoryUserPagerAdapter myUserPager;
         TextWatcher textListener;
@@ -166,8 +173,22 @@ public class MediaLogs<T> extends AppCompatActivity {
 
 
         @Override
-        protected String doInBackground(String... strings) {
-            followers = service.getMyFollowers();
+        protected List<InstagramUserSummary> doInBackground(String... strings) {
+
+            recyclerAll = configureSizeRecyclerView(recyclerAll);
+            recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
+            recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
+            try {
+                return service.getMyFollowers();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<InstagramUserSummary> myFollowers) {
+            followers = myFollowers;
             textListener = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -195,17 +216,6 @@ public class MediaLogs<T> extends AppCompatActivity {
                     adapter.getFilter().filter(s);
                 }
             };
-
-            recyclerAll = configureSizeRecyclerView(recyclerAll);
-            recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
-            recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
             searchEdit.addTextChangedListener(textListener);
             searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

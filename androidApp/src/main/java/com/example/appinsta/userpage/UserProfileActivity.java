@@ -25,7 +25,9 @@ import com.example.appinsta.SearchActivity;
 import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +36,12 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
-import static com.example.appinsta.Compare.compare;
-
 public class UserProfileActivity extends AppCompatActivity {
 
     ImageView profilPic;
     TextView tvFollowingCount, tvFollowersCount, tvMediaCount, tvFullname;
     public InstagramUserSummary user;
-    Button btnStalking,btnStalkers;
+    Button btnStalking, btnStalkers;
     ViewPager viewPager;
     List<InstagramUserSummary> userStalkingList = null;
     List<InstagramUserSummary> userStalkersList = null;
@@ -64,31 +64,38 @@ public class UserProfileActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_user_profile);
 
-        user = (InstagramUserSummary) getIntent().getSerializableExtra("user");
+        user = (InstagramUserSummary) getIntent().getSerializableExtra("myUser");
+        InstagramUser userSum = null;
+
         actionBar.setTitle(user.username);
-        InstagramUser userSum = service.getUser(user.getUsername());
+
         initComponents();
 
         Glide.with(getApplicationContext()) //1
                 .load(user.getProfile_pic_url()).into(profilPic);
 
-
-
-        if(userSum.getFull_name().isEmpty()){
-            tvFullname.setText(userSum.getUsername());
-        }else {
-            tvFullname.setText(userSum.getFull_name());
-        }
-
-        tvMediaCount.setText(String.valueOf(withSuffix(userSum.media_count)));
-        tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
-        tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
-
         tabLayout.addTab(tabLayout.newTab().setText(R.string.medias));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.user_liked_my_posts));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
+        try {
+            userSum = service.getUser(user.getUsername());
+            if (userSum.getFull_name().isEmpty()) {
+                tvFullname.setText(userSum.getUsername());
+            } else {
+                tvFullname.setText(userSum.getFull_name());
+            }
+
+            tvMediaCount.setText(String.valueOf(withSuffix(userSum.media_count)));
+            tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
+            tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
+            userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
+        } catch (UnknownHostException e) {
+            Toast.makeText(getApplicationContext(), R.string.check_network_connection, Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         viewPager.setAdapter(userProfilePagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
@@ -110,14 +117,14 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWINGS;
-                startSearchActivityWithEnum(userListTypes,user.getPk());
+                startSearchActivityWithEnum(userListTypes, user.getPk());
             }
         });
         lyFollowersCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_FOLLOWERS;
-                startSearchActivityWithEnum(userListTypes,user.getPk());
+                startSearchActivityWithEnum(userListTypes, user.getPk());
             }
         });
 
@@ -141,16 +148,16 @@ public class UserProfileActivity extends AppCompatActivity {
         tvFollowersCount = (TextView) findViewById(R.id.tvFollowersCount);
         tvMediaCount = (TextView) findViewById(R.id.tvMediaNum);
 
-        btnStalkers=findViewById(R.id.btnStalkers);
-        btnStalking=findViewById(R.id.btnStalking);
+        btnStalkers = findViewById(R.id.btnStalkers);
+        btnStalking = findViewById(R.id.btnStalking);
 
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
         cycleProgressBar = findViewById(R.id.progressBar);
 
-        lyFollowersCount =findViewById(R.id.lyFollowersCount);
-        lyFollowingCount =findViewById(R.id.lyFollowingCount);
+        lyFollowersCount = findViewById(R.id.lyFollowersCount);
+        lyFollowingCount = findViewById(R.id.lyFollowingCount);
 
     }
 
@@ -160,7 +167,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKERS;
-                startSearchActivityWithEnum(userListTypes,user.getPk());
+                startSearchActivityWithEnum(userListTypes, user.getPk());
             }
         });
 
@@ -168,18 +175,19 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 UserListTypes userListTypes = UserListTypes.FOR_USERS_STALKINGS;
-                startSearchActivityWithEnum(userListTypes,user.getPk());
+                startSearchActivityWithEnum(userListTypes, user.getPk());
             }
         });
     }
-    public void startSearchActivityWithEnum(UserListTypes listType, long pk){
+
+    public void startSearchActivityWithEnum(UserListTypes listType, long pk) {
         Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
-        searchActivity.putExtra("listType",listType);
-        searchActivity.putExtra("userId",pk);
+        searchActivity.putExtra("listType", listType);
+        searchActivity.putExtra("userId", pk);
         startActivity(searchActivity);
     }
 
-    private void showStories(){
+    private void showStories() {
         profilPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,170 +197,54 @@ public class UserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private class getUserFollowingsTask extends AsyncTask<String,String,String>{
+    private class storyTask extends AsyncTask<String, String, ArrayList<Uri>> {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_following_loading_message));
-            dialog.show();
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            if(userFollowingList == null){
-                userFollowingList=service.getFollowing(user.getPk());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dialog.dismiss();
-            showList(userFollowingList);
-
-        }
-    }
-
-    private class getUserFollowersTask extends AsyncTask<String,String,String>{
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog =new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_follower_loading_message));
-            dialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            if(userFollowersList == null){
-                userFollowersList=service.getFollowers(user.getPk());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dialog.dismiss();
-            showList(userFollowersList);
-        }
-    }
-
-    private class userStalkersTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkers_loading_message));
-            dialog.show();
-
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            if(userFollowingList == null || userFollowersList == null){
-                getUserFollowingsAndFollowers();
-            }
-            if (userStalkersList == null) {
-                userStalkersList = compare(userFollowersList,userFollowingList);
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dialog.dismiss();
-            showList(userStalkersList);
-
-        }
-    }
-
-    private class userStalkingTask extends AsyncTask<String, String, String> {
-        
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = new ProgressDialog(UserProfileActivity.this);
-            dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
-            dialog.show();
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            if(userFollowingList == null || userFollowersList == null){
-                getUserFollowingsAndFollowers();
-            }
-
-            if (userStalkingList == null) {
-                userStalkingList = compare(userFollowingList,userFollowersList);
-            }
-            return null;
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            dialog.dismiss();
-            showList(userStalkingList);
-        }
-    }
-
-    private class storyTask extends AsyncTask<String,String,String>{
-
-        @Override
-        protected void onPreExecute(){
             //Cycle progress bar
             cycleProgressBar.setIndeterminate(true);
 
         }
+
         @Override
-        protected String doInBackground(String... strings) {
-            if (storyUrlList ==null){
-                storyUrlList = service.getStories(user.username);
+        protected ArrayList<Uri> doInBackground(String... strings) {
+            if (storyUrlList == null) {
+                try {
+                    return service.getStories(user.username);
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
+
         @Override
-        protected void onPostExecute(String s){
+        protected void onPostExecute(ArrayList<Uri> urlList) {
+            storyUrlList = urlList;
             Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
             storyIntent.putExtra("storyUrlList", storyUrlList);
-            if (storyUrlList !=null & storyUrlList.size()!=0) {
+            if (storyUrlList != null & storyUrlList.size() != 0) {
                 startActivity(storyIntent);
-            }else {
-                Toast.makeText(getApplicationContext(),R.string.story_not_found,Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
             }
             cycleProgressBar.setIndeterminate(false);
             profilPic.setClickable(true);
 
         }
     }
+
     public static String withSuffix(long count) {
         if (count < 1000) return "" + count;
         int exp = (int) (Math.log(count) / Math.log(1000));
         return String.format("%.1f %c",
                 count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp-1));
+                "kMGTPE".charAt(exp - 1));
     }
 
-    public void getUserFollowingsAndFollowers() {
-        userFollowingList = service.getFollowing(user.getPk());
-        userFollowersList = service.getFollowers(user.getPk());
-    }
-
-    public void showList(List<InstagramUserSummary> userList){
+    public void showList(List<InstagramUserSummary> userList) {
         Intent i = new Intent(getApplicationContext(), SearchActivity.class);
         i.putExtra("userList", (Serializable) userList);
         startActivity(i);

@@ -27,6 +27,7 @@ import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.userpage.ImageAdapter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class MyAllMediaFragment extends Fragment {
     ImageAdapter imageListAdapter;
     Boolean isLoadingNextMedias = false;
     DataWithOffsetIdModel dataWithOffsetIdModel;
+
     public MyAllMediaFragment() {
         // Required empty public constructor
     }
@@ -54,7 +56,7 @@ public class MyAllMediaFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_media, container, false);
         view.setBackgroundColor(Color.TRANSPARENT);
-        view.setPadding(10,0,10,30);
+        view.setPadding(10, 0, 10, 30);
         gridView = (GridView) view.findViewById(R.id.userMediasGridView);
         footerLoadingView = view.findViewById(R.id.footerLoadingView);
 
@@ -74,34 +76,33 @@ public class MyAllMediaFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getLoggedUserMedias();
-            myMediaList = dataWithOffsetIdModel.items;
-            if (mediaUrlList.size() == 0) {
-                try {
+            try {
+                dataWithOffsetIdModel = service.getLoggedUserMedias();
+                myMediaList = dataWithOffsetIdModel.items;
+                if (mediaUrlList.size() == 0) {
                     for (int counter = 0; counter < myMediaList.size(); counter++) {
-                        if (myMediaList.get(counter).getVideo_versions() != null) {
-                            try {
+                        try {
+                            if (myMediaList.get(counter).getVideo_versions() != null) {
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getVideo_versions().get(0).getUrl()));
-                            } catch (Exception e) {
+                            } else {
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+                        } catch (Exception e) {
+                            if (myMediaList.get(counter).getVideo_versions() != null) {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                            }
-                        } else {
-                            try {
-                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                            } catch (Exception e) {
+                            } else {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
-
                         }
                         mediaIdList.add(String.valueOf(myMediaList.get(counter).pk));
                     }
-                } catch (Exception e) {
-                    Log.e("null object reference", e.getMessage());
                 }
+                userid = service.getLoggedUser().pk;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            userid = service.getLoggedUser().pk;
             return null;
         }
 
@@ -127,10 +128,14 @@ public class MyAllMediaFragment extends Fragment {
 
                     if (totalItemCount - 1 == view.getLastVisiblePosition()) {
 
-                        if (totalItemCount < service.getLoggedUser().getMedia_count() && !isLoadingNextMedias) {
-                            footerLoadingView.setVisibility(View.VISIBLE);
-                            isLoadingNextMedias = true;
-                            new getNextMedias().execute();
+                        try {
+                            if (totalItemCount < service.getLoggedUser().getMedia_count() && !isLoadingNextMedias) {
+                                footerLoadingView.setVisibility(View.VISIBLE);
+                                isLoadingNextMedias = true;
+                                new getNextMedias().execute();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -160,14 +165,16 @@ public class MyAllMediaFragment extends Fragment {
             });
         }
     }
+
     private class getNextMedias extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
 
-            dataWithOffsetIdModel = service.getLoggedUserMedias(dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
-            if (mediaUrlList.size() != 0) {
-                try {
+            try {
+                dataWithOffsetIdModel = service.getLoggedUserMedias(dataWithOffsetIdModel.nextMaxId);
+
+                List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
+                if (mediaUrlList.size() != 0) {
                     for (int counter = 0; counter < nextMedias.size(); counter++) {
                         if (nextMedias.get(counter).getVideo_versions() != null) {
                             try {
@@ -183,16 +190,16 @@ public class MyAllMediaFragment extends Fragment {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
-
                         }
                         mediaIdList.add(String.valueOf(nextMedias.get(counter).pk));
                     }
-                } catch (Exception e) {
-                    Log.e("null object reference", e.getMessage());
                 }
+                if (nextMedias != null) {
+                    myMediaList.addAll(nextMedias);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (nextMedias != null){myMediaList.addAll(nextMedias);}
-
             return null;
         }
 
@@ -206,6 +213,7 @@ public class MyAllMediaFragment extends Fragment {
             isLoadingNextMedias = false;
         }
     }
+
     public void itemLongClickPopup(int position) {
         ConstraintLayout layout = new ConstraintLayout(getActivity());
         ConstraintLayout.LayoutParams clp = new ConstraintLayout.LayoutParams(

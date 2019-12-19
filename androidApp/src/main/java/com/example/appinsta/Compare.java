@@ -2,6 +2,7 @@ package com.example.appinsta;
 
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class Compare {
 
     }
 
-    public List<InstagramUserSummary> peopleIdontFollow(long userId) {
+    public List<InstagramUserSummary> peopleIdontFollow(long userId) throws IOException {
         service = new InstagramService(instagram);
 
         //benim takip etmediklerim
@@ -93,7 +94,7 @@ public class Compare {
 
     }
 
-    public List<InstagramUserSummary> peopledontFollowme(long userId) {
+    public List<InstagramUserSummary> peopledontFollowme(long userId) throws IOException {
 
         service = new InstagramService(instagram);
         //beni takip etmeyenler
@@ -101,63 +102,4 @@ public class Compare {
 
 
     }
-
-    /* public List<InstagramUserSummary> peopleIdontFollow(long userId) {
-
-         user = new User(instagram);
-         //benim takip etmediklerim
-         return compare(user.getFollowers(userId), user.getFollowing(userId));
-
-
-     }
-
-     public List<InstagramUserSummary> peopledontFollowme(long userId) {
-
-         user = new User(instagram);
-         //beni takip etmeyenler
-         return compare(user.getFollowing(userId), user.getFollowers(userId));
-
-
-     }
-
-
-
-
-     public List<InstagramUserSummary> unwatchedStoryAndFollowing(long userId, int storyIndex) {
-
-         story = new Story(instagram);
-         user = new User(instagram);
-
-         String storyId = story.getStory(userId, storyIndex).id;
-
-         return compareUnwatchedStoryAndFollowing(user.getFollowers(userId), story.getStoryViewers(userId, storyId));
-
-     }
-
-     public List<InstagramUserSummary> mediaLikersAndUnfollowing(long userId, int photoIndex) {
-
-         media = new Media(instagram);
-         user = new User(instagram);
-
-         long mediaId = media.getMedia(userId, photoIndex).getPk();
-
-         return compare(media.getMediaLikers(mediaId), user.getFollowers(userId));
-
-     }
-
-     public List<InstagramUser> wachedStoryAndUnfollowing(long userId, int storyIndex) {
-
-
-         story = new Story(instagram);
-         user = new User(instagram);
-
-         String storyId = story.getStory(userId, storyIndex).id;
-
-         return compareWatchedStoryAndUnfollowing(story.getStoryViewers(userId, storyId), user.getFollowers(userId));
-
-
-     }
-
-
-*/
 }
