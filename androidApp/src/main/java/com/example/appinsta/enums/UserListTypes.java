@@ -13,8 +13,8 @@ public enum UserListTypes {
     FOR_USERS_STALKERS(R.string.user_stalkers),
     FOR_USERS_STALKINGS(R.string.user_stalkings);
     private final int titleId;
-    UserListTypes(int s) {
-        titleId = s;
+    UserListTypes(int descriptionResId) {
+        titleId = descriptionResId;
     }
     public int getTitle() {
         return titleId;

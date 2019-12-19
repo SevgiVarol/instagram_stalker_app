@@ -24,8 +24,7 @@
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
             android:textSize="13sp"
-            android:layout_gravity="center"
-            android:text="ahhahahaha"/>
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/number"
             android:layout_width="0dp"

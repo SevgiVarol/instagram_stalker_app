@@ -90,7 +90,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
     public void setRecyclerView(List<T> userList){
         if (userList != null) {
-            actionBar.setTitle(String.format("%d %s",userList.size(),getResources().getString(R.string.users_count)));
+            actionBar.setTitle(String.format(getResources().getString(R.string.users_count),userList.size()));
             adapter = new UserListAdapter(userList,getApplicationContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
