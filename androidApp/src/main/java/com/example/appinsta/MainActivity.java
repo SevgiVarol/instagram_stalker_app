@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(String userPk) {
             Intent mediaLogIntent = new Intent(getApplicationContext(), MediaLogs.class);
             mediaLogIntent.putExtra("storyUrlList", storyUrlList);
             mediaLogIntent.putExtra("userId", userId);

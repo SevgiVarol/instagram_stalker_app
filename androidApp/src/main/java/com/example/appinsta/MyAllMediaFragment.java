@@ -81,21 +81,20 @@ public class MyAllMediaFragment extends Fragment {
                 myMediaList = dataWithOffsetIdModel.items;
                 if (mediaUrlList.size() == 0) {
                     for (int counter = 0; counter < myMediaList.size(); counter++) {
-                        if (myMediaList.get(counter).getVideo_versions() != null) {
-                            try {
+                        try {
+                            if (myMediaList.get(counter).getVideo_versions() != null) {
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getVideo_versions().get(0).getUrl()));
-                            } catch (Exception e) {
+                            } else {
+                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+                        } catch (Exception e) {
+                            if (myMediaList.get(counter).getVideo_versions() != null) {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                            }
-                        } else {
-                            try {
-                                mediaUrlList.add(Uri.parse(myMediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                            } catch (Exception e) {
+                            } else {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(myMediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
-
                         }
                         mediaIdList.add(String.valueOf(myMediaList.get(counter).pk));
                     }

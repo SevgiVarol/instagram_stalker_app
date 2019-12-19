@@ -165,6 +165,21 @@ public class MediaLogs<T> extends AppCompatActivity {
 
         @Override
         protected List<InstagramUserSummary> doInBackground(String... strings) {
+
+            recyclerAll = configureSizeRecyclerView(recyclerAll);
+            recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
+            recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
+            try {
+                return service.getMyFollowers();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<InstagramUserSummary> myFollowers) {
+            followers = myFollowers;
             textListener = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -192,21 +207,6 @@ public class MediaLogs<T> extends AppCompatActivity {
                     adapter.getFilter().filter(s);
                 }
             };
-
-            recyclerAll = configureSizeRecyclerView(recyclerAll);
-            recyclerNotFollow = configureSizeRecyclerView(recyclerNotFollow);
-            recyclerNotWatch = configureSizeRecyclerView(recyclerNotWatch);
-            try {
-                return service.getMyFollowers();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<InstagramUserSummary> myFollowers) {
-            followers = myFollowers;
             searchEdit.addTextChangedListener(textListener);
             searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

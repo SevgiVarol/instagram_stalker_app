@@ -46,12 +46,6 @@ public class LoginPage extends AppCompatActivity {
         etPassword = findViewById(R.id.edtPassword);
 
     }
-/*    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }*/
 
     //Login button onClick
     public void loginOnClick(View view) {

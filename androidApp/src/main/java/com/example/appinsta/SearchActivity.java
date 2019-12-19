@@ -194,7 +194,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                 }
             }catch (UnknownHostException e){
                 exception = e;
-            }catch (IOException e){
+            }catch (Exception e){
                 exception = e;
             }
             return userList;
