@@ -257,10 +257,7 @@ public class InstagramService {
                     }
                 }
             }
-            if (storyFeedResult.getReel() != null) {
-                return story;
-            }
-            return null;
+            return story;
         }
 
 
@@ -337,7 +334,7 @@ public class InstagramService {
                 break;
             }
         }
-        if (userTray.getReel() != null) {
+        if (userTray != null && userTray.getReel() != null) {
             if (username.equals(userTray.getReel().getUser().username)) {
                 userStoriesUri.clear();
                 List<InstagramFeedItem> stories = userTray.getReel().getItems();
