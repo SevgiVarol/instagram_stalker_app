@@ -257,10 +257,17 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         protected InstagramUser doInBackground(String... strings) {
 
             try {
+                myUser = service.getLoggedUser();
                 userStoriesTrayList = service.getTrayStories();
                 for (int i = 0; i < userStoriesTrayList.size(); i++){
-                    userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());}
-                return service.getLoggedUser();
+                    if (!userStoriesTrayList.get(i).getUser().username.equals(myUser.username)){
+                        userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());
+                    }else {
+                        userStoriesTrayList.remove(i);
+                        i = i-1;
+                    }
+                }
+                return myUser;
             } catch (IOException e) {
                 e.printStackTrace();
             }
