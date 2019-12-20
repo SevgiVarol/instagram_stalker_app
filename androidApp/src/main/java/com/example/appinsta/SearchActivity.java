@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.appinsta.enums.UserListTypes;
@@ -34,8 +35,8 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     private UserListAdapter adapter;
     EditText searchEditText;
     UserListTypes listType;
+    ProgressBar progressBar;
     long pk;
-    Exception exception;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     InstagramService service = InstagramService.getInstance();
@@ -52,6 +53,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         actionBar.setTitle("");
         setContentView(R.layout.activity_search);
         searchEditText = (EditText) findViewById(R.id.editTextSearch);
+        progressBar=(ProgressBar)findViewById(R.id.recycler_view_progress_bar);
         listType = (UserListTypes) getIntent().getSerializableExtra("listType");
         pk = getIntent().getLongExtra("userId",0);
         TextWatcher watcher = new TextWatcher() {
@@ -140,6 +142,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
+
+                default:
+                    progressBar.setVisibility(View.VISIBLE);
             }
         }
 
@@ -215,6 +220,7 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         @Override
         protected void onPostExecute(List<T> userList ) {
             super.onPostExecute(userList );
+            progressBar.setVisibility(View.GONE);
             if (exception == null){
                 setRecyclerView(userList);
             }

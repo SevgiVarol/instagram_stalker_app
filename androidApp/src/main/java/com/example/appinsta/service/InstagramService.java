@@ -122,8 +122,7 @@ public class InstagramService {
 
     public List<InstagramUserSummary> getMyFollowers() throws IOException {
 
-        if (!myFollowers.isEmpty())
-            return myFollowers;
+        if (!myFollowers.isEmpty()) return myFollowers;
         else {
             InstagramGetUserFollowersResult followersResult = null;
             String nextMaxId = null;
@@ -172,8 +171,7 @@ public class InstagramService {
     public List<InstagramUserSummary> getMyFollowing() throws IOException {
 
 
-        if (!myFollowing.isEmpty())
-            return myFollowing;
+        if (!myFollowing.isEmpty()) return myFollowing;
         else {
             InstagramGetUserFollowersResult followingResult = null;
             String nextMaxId = null;
@@ -259,10 +257,7 @@ public class InstagramService {
                     }
                 }
             }
-            if (storyFeedResult.getReel() != null) {
-                return story;
-            }
-            return null;
+            return story;
         }
 
 
@@ -339,7 +334,7 @@ public class InstagramService {
                 break;
             }
         }
-        if (userTray.getReel() != null) {
+        if (userTray != null && userTray.getReel() != null) {
             if (username.equals(userTray.getReel().getUser().username)) {
                 userStoriesUri.clear();
                 List<InstagramFeedItem> stories = userTray.getReel().getItems();
@@ -355,5 +350,17 @@ public class InstagramService {
             }
         }
         return userStoriesUri;
+    }
+
+    public List<InstagramStoryTray> getTrayStories() {
+        InstagramReelsTrayFeedResult result= null;
+        try {
+            result = instagram.sendRequest(new InstagramReelsTrayRequest());
+            return result.getTray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

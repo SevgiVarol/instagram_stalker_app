@@ -1,6 +1,5 @@
 package com.example.appinsta;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PointF;
@@ -12,8 +11,11 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,6 +37,8 @@ import com.example.appinsta.enums.UserListTypes;
 import com.example.appinsta.medialog.MediaLogs;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.uiComponent.CustomView;
+import com.example.appinsta.userpage.StoryViewer;
+import com.example.appinsta.userpage.UserMediaFragment;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -43,30 +47,39 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
+
+import static com.example.appinsta.utils.Util.ConvertShortenNumber;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
     InstagramService service = InstagramService.getInstance();
-    CustomView mutedStory, latestPhotoLikers, storyStalkers, usersStalkers, usersStalking, userAction;
+    CustomView latestPhotoLikers, usersStalkers, usersStalking;
 
+    RecyclerView storyTrayRecyclerView;
     ImageView profilPic, latestPhoto;
     LinearLayout followingLayout, followersLayout;
     TextView tvFollowing, tvFollowers;
 
     ProgressBar mProgress = null, storyProgress;
+    ProgressBar userStoryProgress;
     Drawable drawable = null;
     InstagramUser myUser;
     InstaDatabase instaDatabase = InstaDatabase.getInstance(this);
 
-    ArrayList<Uri> storyUrlList;
+    ArrayList<Uri> storyUrlList = new ArrayList<>();
+
+    ArrayList<InstagramUser> userStoriesUrlList = new ArrayList<>();
     ArrayList<String> storyIds;
     List<InstagramFeedItem> stories;
     BottomNavigationView bottomNavigationView;
     ViewPager mainViewPager;
     MainPageViewPagerAdapter mainPagerAdapter;
     Button collapsedMenuButton;
+    List<InstagramStoryTray> userStoriesTrayList = new ArrayList<>();
+    StoryTrayRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +87,23 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initComponent();
 
-        new setLoggedUserBasicInfoTask().execute();
+        new getLoggedUserBasicInfoTask().execute();
+        initRecyclerView();
+
+        adapter.setOnItemClickListener(new StoryTrayRecyclerAdapter.OnListener() {
+            @Override
+            public void onClick(View view, int position) {
+                if (storyTrayRecyclerView.isClickable()) {
+                    storyTrayRecyclerView.setClickable(false);
+                    userStoryProgress = view.findViewById(R.id.progress_bar_story);
+                    getUsersStoriesTask userStoryTask = new getUsersStoriesTask(position);
+                    userStoryTask.execute();
+                }
+            }
+        });
 
         followersLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +163,16 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         });
     }
 
+    private void initRecyclerView() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        storyTrayRecyclerView = findViewById(R.id.storyTrayRecyclerView);
+        storyTrayRecyclerView.setClickable(true);
+        storyTrayRecyclerView.setLayoutManager(layoutManager);
+        adapter = new StoryTrayRecyclerAdapter(this, userStoriesUrlList);
+        storyTrayRecyclerView.setAdapter(adapter);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
@@ -189,16 +226,13 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         latestPhoto = (ImageView) findViewById(R.id.latestPhoto);
 
-        mutedStory = (CustomView) findViewById(R.id.mutedStory);
-        storyStalkers = (CustomView) findViewById(R.id.storyStalkers);
         latestPhotoLikers = (CustomView) findViewById(R.id.latestPhotoLikers);
-        userAction = (CustomView) findViewById(R.id.userAction);
+
         usersStalkers = (CustomView) findViewById(R.id.userStalkers);
         usersStalking = (CustomView) findViewById(R.id.userStalking);
 
         storyProgress = findViewById(R.id.progressBar);
 
-        profilPic = (CircleImageView) findViewById(R.id.userProfilPic);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mainViewPager = findViewById(R.id.main_pager);
         mainPagerAdapter = new MainPageViewPagerAdapter();
@@ -206,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private class setLoggedUserBasicInfoTask extends AsyncTask<String, String, InstagramUser> {
+    private class getLoggedUserBasicInfoTask extends AsyncTask<String, String, InstagramUser> {
 
         @Override
         protected void onPreExecute() {
@@ -223,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         protected InstagramUser doInBackground(String... strings) {
 
             try {
+                userStoriesTrayList = service.getTrayStories();
+                for (int i = 0; i < userStoriesTrayList.size(); i++){
+                    userStoriesUrlList.add(userStoriesTrayList.get(i).getUser());}
                 return service.getLoggedUser();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -234,12 +271,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
         protected void onPostExecute(InstagramUser loggedUser) {
             super.onPostExecute(loggedUser);
             myUser = loggedUser;
-            MyAllMediaFragment myAllMediaFragment = new MyAllMediaFragment();
-            FragmentManager manager = getFragmentManager();
+            UserMediaFragment myAllMediaFragment = new UserMediaFragment(myUser);
+            FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commit();
 
-            tvFollowing.setText(String.valueOf(withSuffix(myUser.following_count)));
-            tvFollowers.setText(String.valueOf(withSuffix(myUser.follower_count)));
+            tvFollowing.setText(String.valueOf(ConvertShortenNumber(myUser.following_count)));
+            tvFollowers.setText(String.valueOf(ConvertShortenNumber(myUser.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
@@ -370,13 +407,48 @@ public class MainActivity extends AppCompatActivity implements Serializable {
                 }
             });
         }
+
     }
 
-    public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format("%.1f %c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp - 1));
+    private class getUsersStoriesTask extends AsyncTask<String, String, ArrayList<Uri>> {
+        ArrayList<Uri> userStoryUrlList = new ArrayList<>();
+        int position;
+
+        public getUsersStoriesTask(int position) {
+            this.position = position;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            userStoryProgress.setIndeterminate(true);
+        }
+
+        @Override
+        protected ArrayList<Uri> doInBackground(String... strings) {
+            try {
+                return service.getStories(userStoriesTrayList.get(position).getUser().username);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Uri> storyUrlList) {
+            super.onPostExecute(storyUrlList);
+            userStoryUrlList = storyUrlList;
+            Intent storyIntent = new Intent(getApplicationContext(), StoryViewer.class);
+
+            storyIntent.putExtra("storyUrlList", userStoryUrlList);
+            if (userStoryUrlList != null & userStoryUrlList.size() != 0) {
+                startActivity(storyIntent);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.story_not_found, Toast.LENGTH_SHORT).show();
+            }
+            userStoryProgress.setIndeterminate(false);
+            storyTrayRecyclerView.setClickable(true);
+        }
+
     }
 }
+
