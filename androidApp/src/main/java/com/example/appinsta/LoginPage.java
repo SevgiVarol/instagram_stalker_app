@@ -1,12 +1,9 @@
 package com.example.appinsta;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -18,7 +15,7 @@ import android.widget.Toast;
 import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.database.model.LoggedUserItem;
 import com.example.appinsta.service.InstagramService;
-import com.example.appinsta.utils.InternetControl;
+import com.example.appinsta.utils.Util;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
@@ -37,7 +34,7 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-        if (InternetControl.isNetworkAvailable(getApplicationContext())){
+        if (Util.isNetworkAvailable(getApplicationContext())){
             new loginWithLastUser().execute();
         } else {
             Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();

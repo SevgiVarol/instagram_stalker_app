@@ -36,6 +36,8 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
+import static com.example.appinsta.utils.Util.ConvertShortenNumber;
+
 public class UserProfileActivity extends AppCompatActivity {
 
     ImageView profilPic;
@@ -86,9 +88,9 @@ public class UserProfileActivity extends AppCompatActivity {
                 tvFullname.setText(userSum.getFull_name());
             }
 
-            tvMediaCount.setText(String.valueOf(withSuffix(userSum.media_count)));
-            tvFollowersCount.setText(String.valueOf(withSuffix(userSum.follower_count)));
-            tvFollowingCount.setText(String.valueOf(withSuffix(userSum.following_count)));
+            tvMediaCount.setText(String.valueOf(ConvertShortenNumber(userSum.media_count)));
+            tvFollowersCount.setText(String.valueOf(ConvertShortenNumber(userSum.follower_count)));
+            tvFollowingCount.setText(String.valueOf(ConvertShortenNumber(userSum.following_count)));
             userProfilePagerAdapter = new UserProfilePagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userSum);
         } catch (UnknownHostException e) {
             Toast.makeText(getApplicationContext(), R.string.check_network_connection, Toast.LENGTH_LONG).show();
@@ -235,15 +237,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
         }
     }
-
-    public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format("%.1f %c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp - 1));
-    }
-
     public void showList(List<InstagramUserSummary> userList) {
         Intent i = new Intent(getApplicationContext(), SearchActivity.class);
         i.putExtra("userList", (Serializable) userList);

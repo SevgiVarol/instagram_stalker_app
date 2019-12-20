@@ -16,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -51,6 +50,8 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramFeedItem;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramStoryTray;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
+
+import static com.example.appinsta.utils.Util.ConvertShortenNumber;
 
 public class MainActivity extends AppCompatActivity implements Serializable {
 
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private class getLoggedUserBasicInfoTask extends AsyncTask<String, String, String> {
+    private class getLoggedUserBasicInfoTask extends AsyncTask<String, String, InstagramUser> {
 
         @Override
         protected void onPreExecute() {
@@ -274,8 +275,8 @@ public class MainActivity extends AppCompatActivity implements Serializable {
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.layoutMedia, myAllMediaFragment).commit();
 
-            tvFollowing.setText(String.valueOf(withSuffix(myUser.following_count)));
-            tvFollowers.setText(String.valueOf(withSuffix(myUser.follower_count)));
+            tvFollowing.setText(String.valueOf(ConvertShortenNumber(myUser.following_count)));
+            tvFollowers.setText(String.valueOf(ConvertShortenNumber(myUser.follower_count)));
 
             latestPhoto.setAlpha(0.3f);
 
@@ -409,14 +410,6 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format("%.1f %c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp - 1));
-    }
-
     private class getUsersStoriesTask extends AsyncTask<String, String, ArrayList<Uri>> {
         ArrayList<Uri> userStoryUrlList = new ArrayList<>();
         int position;
@@ -432,7 +425,12 @@ public class MainActivity extends AppCompatActivity implements Serializable {
 
         @Override
         protected ArrayList<Uri> doInBackground(String... strings) {
-            return service.getStories(userStoriesTrayList.get(position).getUser().username);
+            try {
+                return service.getStories(userStoriesTrayList.get(position).getUser().username);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override

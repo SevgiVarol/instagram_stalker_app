@@ -37,7 +37,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
     UserListTypes listType;
     ProgressBar progressBar;
     long pk;
-    Exception exception;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     InstagramService service = InstagramService.getInstance();
@@ -122,7 +121,6 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
         protected void onPreExecute() {
             super.onPreExecute();
             dialog =new ProgressDialog(SearchActivity.this);
-            progressBar.setVisibility(View.VISIBLE);
             actionBar.setSubtitle(listType.getDescriptionResId());
             switch (listType){
                 case FOR_USERS_FOLLOWERS:
@@ -144,6 +142,9 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
                     dialog.setMessage(getApplicationContext().getResources().getString(R.string.user_stalkings_loading_message));
                     dialog.show();
                     break;
+
+                default:
+                    progressBar.setVisibility(View.VISIBLE);
             }
         }
 

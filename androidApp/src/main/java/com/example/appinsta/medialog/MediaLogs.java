@@ -28,7 +28,7 @@ import com.example.appinsta.Compare;
 import com.example.appinsta.R;
 import com.example.appinsta.UserListAdapter;
 import com.example.appinsta.service.InstagramService;
-import com.example.appinsta.utils.InternetControl;
+import com.example.appinsta.utils.Util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class MediaLogs<T> extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("");
         setContentView(R.layout.activity_media_logs);
-        if (!InternetControl.isNetworkAvailable(getApplicationContext())){
+        if (!Util.isNetworkAvailable(getApplicationContext())){
             Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
             finish();
         }

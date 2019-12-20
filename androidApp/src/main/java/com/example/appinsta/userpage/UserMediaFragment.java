@@ -67,12 +67,12 @@ public class UserMediaFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_user_media, container, false);
         view.setBackgroundColor(Color.TRANSPARENT);
-        view.setPadding(10,0,10,30);
+        view.setPadding(10, 0, 10, 30);
         mediasGridView = view.findViewById(R.id.userMediasGridView);
         footerLoadingView = view.findViewById(R.id.footerLoadingView);
         tvInfoText = view.findViewById(R.id.nullMediaInfo);
 
-        getUserMedia= new getUserMediaTask().execute();
+        getUserMedia = new getUserMediaTask().execute();
         mediaUrlList = new ArrayList<>();
         mediaIdList = new ArrayList<>();
         return view;
@@ -82,35 +82,34 @@ public class UserMediaFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
 
+            try {
                 dataWithOffsetIdModel = service.getUserMedias(user.getPk());
                 mediaList = dataWithOffsetIdModel.items;
                 if (mediaUrlList.size() == 0) {
-                    try {
-                        for (int counter = 0; counter < mediaList.size(); counter++) {
+                    for (int counter = 0; counter < mediaList.size(); counter++) {
+                        try {
                             if (mediaList.get(counter).getVideo_versions() != null) {
-                                try {
-                                    mediaUrlList.add(Uri.parse(mediaList.get(counter).getVideo_versions().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(mediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                                }
+                                mediaUrlList.add(Uri.parse(mediaList.get(counter).getVideo_versions().get(0).getUrl()));
                             } else {
-                                try {
-                                    mediaUrlList.add(Uri.parse(mediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                                } catch (Exception e) {
-                                    //if is post (multiple sharing)
-                                    mediaUrlList.add(Uri.parse(mediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
-                                }
-
+                                mediaUrlList.add(Uri.parse(mediaList.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
-                            mediaIdList.add(String.valueOf(mediaList.get(counter).pk));
+                        } catch (Exception e) {
+                            if (mediaList.get(counter).getVideo_versions() != null) {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(mediaList.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
+                            } else {
+                                //if is post (multiple sharing)
+                                mediaUrlList.add(Uri.parse(mediaList.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
                         }
-                    } catch (Exception e) {
-                        Log.e("null object reference", e.getMessage());
-                    }
-                }
-                userid = service.getLoggedUser().pk;
 
+                        mediaIdList.add(String.valueOf(mediaList.get(counter).pk));
+                    }
+                    userid = service.getLoggedUser().pk;
+                }
+            } catch (Exception e) {
+                Log.e("null object reference", e.getMessage());
+            }
             return null;
         }
 
@@ -154,25 +153,29 @@ public class UserMediaFragment extends Fragment {
                         }
                     });
 
-                    if (user.username.equals(service.getLoggedUser().username)){
-                    mediasGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if (mediaUrlList != null & mediaUrlList.size() != 0) {
+                    try {
+                        if (user.username.equals(service.getLoggedUser().username)) {
+                            mediasGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    if (mediaUrlList != null & mediaUrlList.size() != 0) {
 
-                                Intent mediaLogIntent = new Intent(getActivity(), MediaLogs.class);
-                                mediaLogIntent.putExtra("storyUrlList", mediaUrlList);
-                                mediaLogIntent.putExtra("userId", userid);
-                                mediaLogIntent.putExtra("storyIds", mediaIdList);
-                                mediaLogIntent.putExtra("key", "MEDIA");
-                                mediaLogIntent.putExtra("position", position);
-                                startActivity(mediaLogIntent);
-                            } else {
-                                Toast.makeText(getActivity(), R.string.media_not_found, Toast.LENGTH_SHORT).show();
-                            }
+                                        Intent mediaLogIntent = new Intent(getActivity(), MediaLogs.class);
+                                        mediaLogIntent.putExtra("storyUrlList", mediaUrlList);
+                                        mediaLogIntent.putExtra("userId", userid);
+                                        mediaLogIntent.putExtra("storyIds", mediaIdList);
+                                        mediaLogIntent.putExtra("key", "MEDIA");
+                                        mediaLogIntent.putExtra("position", position);
+                                        startActivity(mediaLogIntent);
+                                    } else {
+                                        Toast.makeText(getActivity(), R.string.media_not_found, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
-                    });}
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     tvInfoText.setVisibility(View.VISIBLE);
                 }
@@ -185,34 +188,37 @@ public class UserMediaFragment extends Fragment {
     private class getUserMediasNextPage extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
-            if (mediaUrlList.size() != 0) {
-                try {
+            try {
+                dataWithOffsetIdModel = service.getUserMedias(user.getPk(), dataWithOffsetIdModel.nextMaxId);
+                List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
+                if (mediaUrlList.size() != 0) {
                     for (int counter = 0; counter < nextMedias.size(); counter++) {
-                        if (nextMedias.get(counter).getVideo_versions() != null) {
-                            try {
+                        try {
+                            if (nextMedias.get(counter).getVideo_versions() != null) {
                                 mediaUrlList.add(Uri.parse(nextMedias.get(counter).getVideo_versions().get(0).getUrl()));
-                            } catch (Exception e) {
+
+                            } else {
+                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
+                            }
+                        } catch (Exception e) {
+                            if (nextMedias.get(counter).getVideo_versions() != null) {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getVideo_versions().get(0).getUrl()));
-                            }
-                        } else {
-                            try {
-                                mediaUrlList.add(Uri.parse(nextMedias.get(counter).getImage_versions2().getCandidates().get(0).getUrl()));
-                            } catch (Exception e) {
+                            } else {
                                 //if is post (multiple sharing)
                                 mediaUrlList.add(Uri.parse(nextMedias.get(counter).getCarousel_media().get(0).getImage_versions2().getCandidates().get(0).getUrl()));
                             }
-
                         }
                         mediaIdList.add(String.valueOf(nextMedias.get(counter).pk));
                     }
-                } catch (Exception e) {
-                    Log.e("null object reference", e.getMessage());
+                    if (nextMedias != null) {
+                        mediaList.addAll(nextMedias);
+                    }
+
                 }
+            } catch (Exception e) {
+                Log.e("null object reference", e.getMessage());
             }
-            if (nextMedias != null){mediaList.addAll(nextMedias);}
 
             return null;
         }
@@ -238,6 +244,7 @@ public class UserMediaFragment extends Fragment {
         super.onPause();
         getUserMedia.cancel(true);
     }
+
     public void itemLongClickPopup(int position) {
         ConstraintLayout layout = new ConstraintLayout(getActivity());
         ConstraintLayout.LayoutParams clp = new ConstraintLayout.LayoutParams(
