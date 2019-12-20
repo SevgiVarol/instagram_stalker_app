@@ -10,9 +10,12 @@
         <TextView
             android:id="@+id/nullMediaInfo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:paddingTop="50dp"
             android:visibility="gone"
-            android:text="Kullanıcıya ait gönderi bulunmamaktadır."/>
+            android:text="@string/media_not_found"
+            android:textSize="20dp"/>
         <GridView
             android:id="@+id/userMediasGridView"
             android:layout_width="match_parent"

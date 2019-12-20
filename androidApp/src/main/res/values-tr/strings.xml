@@ -14,7 +14,7 @@
     <string name="press_back_again">Çıkmak için tekrar geri tuşuna basın</string>
     <string name="story_not_found">Hiçbir hikaye bulunamadı</string>
     <string name="login_failed">Bilgileriniz eksik veya yanlış</string>
-    <string name="media_not_found">Medya bulunamadı</string>
+    <string name="media_not_found">Gönderi bulunamadı</string>
     <string name="follow_if_want_to_show_profile">Fotoğraf ve videolarını görmek için bu hesabı takip et</string>
     <string name="tab_all_likes">Tüm \nBeğenmeler</string>
     <string name="tab_not_followers">Takip \nEtmeyenler</string>
@@ -37,6 +37,8 @@
     <string name="user_follower_loading_message">Takipçiler yükleniyor…</string>
     <string name="user_following_loading_message">Takip edilenler yükleniyor…</string>
     <string name="wait_a_few_minute">Tekrar denemeden önce lütfen birkaç dakika bekleyin</string>
+    <string name="check_network_connection">İnternet bağlantınızı kontrol edin</string>
+    <string name="users_count">%d Kişi</string>
     <string name="login_or_line">YA DA</string>
     <string name="dont_you_have_account">Hesabın yok mu?</string>
     <string name="register">Kaydol</string>

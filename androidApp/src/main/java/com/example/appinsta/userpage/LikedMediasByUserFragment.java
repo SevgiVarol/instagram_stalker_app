@@ -14,6 +14,7 @@ import com.example.appinsta.R;
 import com.example.appinsta.models.DataWithOffsetIdModel;
 import com.example.appinsta.service.InstagramService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +33,13 @@ public class LikedMediasByUserFragment extends Fragment {
     DataWithOffsetIdModel dataWithOffsetIdModel;
 
     public LikedMediasByUserFragment(String username) {
-        this.username=username;
+        this.username = username;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_my_media, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_media, container, false);
 
         gridView = (GridView) view.findViewById(R.id.myLikedMediasGridView);
         footerLoadingView = view.findViewById(R.id.likedMediasfooterLoadingView);
@@ -48,23 +49,27 @@ public class LikedMediasByUserFragment extends Fragment {
         return view;
     }
 
-    public class getLoggedUserLikedMediaTask extends AsyncTask<String, String, String> {
+    public class getLoggedUserLikedMediaTask extends AsyncTask<String, String, DataWithOffsetIdModel> {
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected DataWithOffsetIdModel doInBackground(String... strings) {
 
-            if(myLikedMediaList.isEmpty()) {
-                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username);
-                myLikedMediaList = dataWithOffsetIdModel.items;
+            if (myLikedMediaList.isEmpty()) {
+                try {
+                    return service.getMyLikedMediaByUser(username);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
 
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(DataWithOffsetIdModel s) {
             super.onPostExecute(s);
-
+            dataWithOffsetIdModel = s;
+            myLikedMediaList = dataWithOffsetIdModel.items;
             footerLoadingView.setVisibility(View.GONE);
             imageListAdapter = new ImageAdapter(getActivity(), myLikedMediaList);
             gridView.setAdapter(imageListAdapter);
@@ -75,8 +80,7 @@ public class LikedMediasByUserFragment extends Fragment {
 
                     if (totalItemCount - 1 == view.getLastVisiblePosition()) {
 
-                        if (!isLoadingNextMedias && dataWithOffsetIdModel.nextMaxId!=null)
-                        {
+                        if (!isLoadingNextMedias && dataWithOffsetIdModel.nextMaxId != null) {
                             footerLoadingView.setVisibility(View.VISIBLE);
                             isLoadingNextMedias = true;
                             new getLikedMediasNextPage().execute();
@@ -96,9 +100,14 @@ public class LikedMediasByUserFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            dataWithOffsetIdModel = service.getMyLikedMediaByUser(username, dataWithOffsetIdModel.nextMaxId);
-            List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
-            myLikedMediaList.addAll(nextMedias);
+            try {
+                dataWithOffsetIdModel = service.getMyLikedMediaByUser(username, dataWithOffsetIdModel.nextMaxId);
+                List<InstagramFeedItem> nextMedias = dataWithOffsetIdModel.items;
+                myLikedMediaList.addAll(nextMedias);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
 
@@ -112,6 +121,7 @@ public class LikedMediasByUserFragment extends Fragment {
             isLoadingNextMedias = false;
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();

@@ -9,6 +9,7 @@
     <string name="login_or_line">OR</string>
     <string name="dont_you_have_account">Don\'t you have an account?</string>
     <string name="register">Register</string>
+    <string name="check_network_connection">Check your internet connection</string>
 
     <!--main page-->
     <string name="story_not_found">No stories found</string>
@@ -32,6 +33,7 @@
     <string name="follow_user">Follow</string>
     <string name="unfollow_user">Unfollow</string>
     <string name="wait_a_few_minute">Please wait a few minutes before you try again</string>
+    <string name="users_count">%d User</string>
 
     <!--user media fragment-->
     <string name="follow_if_want_to_show_profile">Follow this account to see photos and videos</string>

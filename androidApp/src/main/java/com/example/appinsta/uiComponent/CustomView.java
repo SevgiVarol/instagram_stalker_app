@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.appinsta.R;
@@ -17,9 +18,6 @@ import com.example.appinsta.R;
 
 public class CustomView extends LinearLayout {
 
-
-
-    TextView number;
     TextView condition;
 
     public CustomView(Context context, AttributeSet attrs) {
@@ -30,36 +28,21 @@ public class CustomView extends LinearLayout {
     private void init(Context context, AttributeSet attrs) {
         inflate(context, R.layout.custom_view, this);
 
-        int[] sets = {R.attr.Number};
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, sets);
-        String number = (String) typedArray.getText(0);
-
         int[] set = {R.attr.Condition};
         TypedArray typedArray2 = context.obtainStyledAttributes(attrs, set);
         String condition = (String) typedArray2.getText(0);
 
 
         initComponents();
-
-        setNumberText(number);
         setConditionText(condition);
 
     }
 
     private void initComponents() {
 
-        number = (TextView) findViewById(R.id.number);
-
         condition = (TextView) findViewById(R.id.condition);
 
-    }
 
-    public CharSequence getArtistText() {
-        return number.getText();
-    }
-
-    public void setNumberText(String value) {
-        number.setText(value);
     }
 
     public CharSequence getTrackText() {

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.appinsta.database.InstaDatabase;
 import com.example.appinsta.database.model.LoggedUserItem;
 import com.example.appinsta.service.InstagramService;
+import com.example.appinsta.utils.Util;
 
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
@@ -32,10 +33,12 @@ public class LoginPage extends AppCompatActivity {
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
-
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-
-        new loginWithLastUser().execute();
+        if (Util.isNetworkAvailable(getApplicationContext())){
+            new loginWithLastUser().execute();
+        } else {
+            Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
+        }
         etName = findViewById(R.id.edtEmail);
         etPassword = findViewById(R.id.edtPassword);
 
@@ -147,7 +150,7 @@ public class LoginPage extends AppCompatActivity {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
             if (loginResult == null || loginResult.equals("fail")) {
-                final Toast toast = Toast.makeText(getApplicationContext(), "Bilgileriniz eksik veya yanlış.", Toast.LENGTH_SHORT);
+                final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
                 toast.show();
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);

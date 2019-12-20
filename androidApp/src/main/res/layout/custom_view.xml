@@ -13,28 +13,20 @@
         android:layout_weight="1"
         android:background="@drawable/border_cardview"
         android:elevation="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="0"
-            android:textColor="#FFFFFF"
-            android:textSize="30sp"
-            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/condition"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="17dp"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:text="ahhahahaha"/>
+            android:textSize="13sp" />
 
     </LinearLayout>
 
