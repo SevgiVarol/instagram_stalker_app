@@ -230,7 +230,7 @@ public class InstagramService {
             storyFeedResult = instagram.sendRequest(new InstagramUserStoryFeedRequest(String.valueOf(userId)));
             if (storyFeedResult.getReel() != null) {
 
-                userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, null));
+                userStoryViewers = instagram.sendRequest(new InstagramGetStoryViewersRequest(storyId, nextMaxId));
                 for (InstagramUser user : userStoryViewers.getUsers()) {
                     storyViewers.add(user);
                 }
