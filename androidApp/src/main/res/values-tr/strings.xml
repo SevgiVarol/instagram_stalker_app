@@ -3,11 +3,8 @@
     <string name="app_name">Instagram İçin Takipçi Analizi</string>
     <string name="analysis">Analizler</string>
     <string name="user_activities">Kişi Hareketleri</string>
-    <string name="edit_text_name">Telefon numarası, kullanıcı adı veya email</string>
-    <string name="edit_text_pass">Şifre</string>
     <string name="follow">Takip</string>
     <string name="follower">Takipçi</string>
-    <string name="login_button_text">Giriş</string>
     <string name="posts">Gönderiler</string>
     <string name="search_hint">Ara</string>
     <string name="medias">Gönderiler</string>
@@ -39,21 +36,7 @@
     <string name="wait_a_few_minute">Tekrar denemeden önce lütfen birkaç dakika bekleyin</string>
     <string name="check_network_connection">İnternet bağlantınızı kontrol edin</string>
     <string name="users_count">%d Kişi</string>
-    <string name="login_or_line">YA DA</string>
-    <string name="dont_you_have_account">Hesabın yok mu?</string>
-    <string name="register">Kaydol</string>
-    <string name="forgot_password">Parolanızı mı unuttunuz?</string>
-    <string name="get_the_app">Uygulamayı indir.</string>
-    <string name="about_us">HAKKIMIZDA</string>
-    <string name="support">DESTEK</string>
-    <string name="press">BASIN</string>
-    <string name="api">API</string>
-    <string name="jobs">İŞ FIRSATLARI</string>
-    <string name="privacy">GİZLİLİK</string>
-    <string name="terms">KOŞULLAR</string>
-    <string name="directory">DİZİN</string>
-    <string name="profiles">PROFİLLER</string>
-    <string name="language">DİL</string>
+
     <string name="login_with_instagram">Instagram İle Giriş Yap</string>
     <string name="login_to_get_started">Başlamak için giriş yapın</string>
 
