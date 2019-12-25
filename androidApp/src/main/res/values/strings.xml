@@ -1,15 +1,30 @@
 <resources>
-    <string name="app_name">appinsta</string>
-        <!--login page-->
-    <string name="edit_text_name">Email / User Name</string>
+    <string name="app_name">Stalker Catcher For Instagram</string>
+    <!--login page-->
+    <string name="edit_text_name">Phone number, username or email</string>
     <string name="edit_text_pass">Password</string>
     <string name="login_button_text">Log In</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="press_back_again">Press back again to exit</string>
     <string name="login_failed">Your information is missing or incorrect</string>
     <string name="login_or_line">OR</string>
     <string name="dont_you_have_account">Don\'t you have an account?</string>
-    <string name="register">Register</string>
+    <string name="register">Sign up</string>
     <string name="check_network_connection">Check your internet connection</string>
+    <string name="get_the_app">Get the app.</string>
+    <string name="about_us">ABOUT US</string>
+    <string name="support">SUPPORT</string>
+    <string name="press">PRESS</string>
+    <string name="api">API</string>
+    <string name="jobs">JOBS</string>
+    <string name="privacy">PRIVACY</string>
+    <string name="terms">TERMS</string>
+    <string name="directory">DIRECTORY</string>
+    <string name="profiles">PROFILES</string>
+    <string name="language">LANGUAGE</string>
+
+    <string name="login_with_instagram">Login With Instagram</string>
+    <string name="login_to_get_started">Login to get started</string>
 
     <!--main page-->
     <string name="story_not_found">No stories found</string>
@@ -54,7 +69,6 @@
     <string name="tab_not_liked_followers">Who Didn\'t \nLiked</string>
     <string name="tab_all_viewers">All \nViewers</string>
     <string name="tab_non_viewing_my_followers">Who Didn\'t \nWatched</string>
-
 
 
 </resources>
