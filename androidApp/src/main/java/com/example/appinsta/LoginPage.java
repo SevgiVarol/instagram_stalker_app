@@ -182,7 +182,7 @@ public class LoginPage extends AppCompatActivity {
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);
-                finish();
+                finishAffinity();
             }
         }
     }
