@@ -28,7 +28,6 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
 public class LoginPage extends AppCompatActivity {
     InstagramService service = InstagramService.getInstance();
-    private long backPressedTime;
     LoggedUserItem loggedUserItem, lastLoggedUser;
     InstaDatabase instaDatabase;
     Dialog loginDialog;
@@ -53,15 +52,9 @@ public class LoginPage extends AppCompatActivity {
             loginWebView.loadUrl("file:///android_asset/dist/index.html");
         }
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-        if (Util.isNetworkAvailable(getApplicationContext())){
-            new loginWithLastUser().execute();
-        } else {
+        if (!Util.isNetworkAvailable(getApplicationContext())){
             Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
         }
-
-
-
-
     }
     @Override
     public boolean onSupportNavigateUp() {
@@ -84,16 +77,7 @@ public class LoginPage extends AppCompatActivity {
             new saveUserAndLogin(name, password).execute();
         }
     }
-    /*@Override
-    public void onBackPressed() {
-        if (backPressedTime + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-            finishAffinity();
-        } else {
-            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
-        }
-        backPressedTime = System.currentTimeMillis();
-    }*/
+
     public void createDialogComponents() {
         loginDialog = new Dialog(this);
         loginDialog.setContentView(R.layout.waiting_for_loading);
@@ -101,28 +85,7 @@ public class LoginPage extends AppCompatActivity {
         loginDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loginDialog.show();
     }
-    private class loginWithLastUser extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            createDialogComponents();
-        }
 
-        @Override
-        protected String doInBackground(String... strings) {
-            lastLoggedUser = instaDatabase.loggedUserDao().getLastUser();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (lastLoggedUser != null) {
-                //giriş fonksiyonunu çağır
-                new login(lastLoggedUser).execute();
-            } else {
-                loginDialog.dismiss();
-            }
-        }
-    }
     private class saveUserAndLogin extends AsyncTask<String, String, String> {
 
         String name, password;
