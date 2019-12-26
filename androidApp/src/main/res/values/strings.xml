@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">appinsta</string>
+    <string name="app_name">Stalker Catcher For Instagram</string>
         <!--login page-->
     <string name="edit_text_name">Email / User Name</string>
     <string name="edit_text_pass">Password</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">appinsta</string>
+    <string name="app_name">Instagram İçin Takipçi Analizi</string>
     <string name="analysis">Analizler</string>
     <string name="user_activities">Kişi Hareketleri</string>
     <string name="edit_text_name">Email/Kullanıcı Adı</string>
