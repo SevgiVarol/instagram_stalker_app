@@ -1,73 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/backround"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".LoginPage">
-
-    <LinearLayout
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <WebView
+        android:id="@+id/loginWebView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/lblHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:gravity="center_horizontal"
-            android:padding="20dp"
-            android:text="Instagram Stalker Login"
-            android:textColor="#fff"
-            android:textSize="36sp"
-            android:textStyle="bold" />
+    </WebView>
 
-        <EditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.7"
-            android:hint="@string/edit_text_name"
-            android:inputType="text"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
-
-        <EditText
-            android:id="@+id/edtPassword"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:alpha="0.7"
-            android:hint="@string/edit_text_pass"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="#fff"
-            android:textColorHint="#fff" />
-
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:onClick="loginOnClick"
-            android:shadowColor="#432B2929"
-            android:text="@string/login_button_text"
-            android:textColor="#000" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

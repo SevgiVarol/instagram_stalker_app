@@ -3,11 +3,8 @@
     <string name="app_name">Instagram İçin Takipçi Analizi</string>
     <string name="analysis">Analizler</string>
     <string name="user_activities">Kişi Hareketleri</string>
-    <string name="edit_text_name">Email/Kullanıcı Adı</string>
-    <string name="edit_text_pass">Şifre</string>
     <string name="follow">Takip</string>
     <string name="follower">Takipçi</string>
-    <string name="login_button_text">Giriş</string>
     <string name="posts">Gönderiler</string>
     <string name="search_hint">Ara</string>
     <string name="medias">Gönderiler</string>
@@ -39,4 +36,9 @@
     <string name="wait_a_few_minute">Tekrar denemeden önce lütfen birkaç dakika bekleyin</string>
     <string name="check_network_connection">İnternet bağlantınızı kontrol edin</string>
     <string name="users_count">%d Kişi</string>
+
+    <string name="login_with_instagram">Instagram İle Giriş Yap</string>
+    <string name="login_to_get_started">Başlamak için giriş yapın</string>
+
+
 </resources>

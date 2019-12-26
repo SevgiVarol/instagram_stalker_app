@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Stalker Catcher For Instagram</string>
         <!--login page-->
-    <string name="edit_text_name">Email / User Name</string>
-    <string name="edit_text_pass">Password</string>
-    <string name="login_button_text">Log In</string>
+
     <string name="press_back_again">Press back again to exit</string>
     <string name="login_failed">Your information is missing or incorrect</string>
     <string name="check_network_connection">Check your internet connection</string>
+
+
+    <string name="login_with_instagram">Login With Instagram</string>
+    <string name="login_to_get_started">Login to get started</string>
 
     <!--main page-->
     <string name="story_not_found">No stories found</string>
@@ -51,7 +53,6 @@
     <string name="tab_not_liked_followers">Who Didn\'t \nLiked</string>
     <string name="tab_all_viewers">All \nViewers</string>
     <string name="tab_non_viewing_my_followers">Who Didn\'t \nWatched</string>
-
 
 
 </resources>

@@ -1,15 +1,20 @@
 package com.example.appinsta;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.EditText;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.example.appinsta.database.InstaDatabase;
@@ -17,51 +22,59 @@ import com.example.appinsta.database.model.LoggedUserItem;
 import com.example.appinsta.service.InstagramService;
 import com.example.appinsta.utils.Util;
 
+import java.util.Locale;
+
 import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 
 public class LoginPage extends AppCompatActivity {
     InstagramService service = InstagramService.getInstance();
-    public EditText etName, etPassword;
-    private long backPressedTime;
     LoggedUserItem loggedUserItem, lastLoggedUser;
     InstaDatabase instaDatabase;
     Dialog loginDialog;
-
+    @SuppressLint("JavascriptInterface")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getResources().getString(R.string.login_with_instagram));
         setContentView(R.layout.login_page);
+        WebView loginWebView = findViewById(R.id.loginWebView);
+        WebSettings webSettings = loginWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        loginWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
+        if (Locale.getDefault().getDisplayLanguage().equals("Türkçe")){
+            loginWebView.loadUrl("file:///android_asset/dist/index_tr.html");
+        }else {
+            loginWebView.loadUrl("file:///android_asset/dist/index.html");
+        }
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());
-        if (Util.isNetworkAvailable(getApplicationContext())){
-            new loginWithLastUser().execute();
-        } else {
+        if (!Util.isNetworkAvailable(getApplicationContext())){
             Toast.makeText(getApplicationContext(),R.string.check_network_connection,Toast.LENGTH_SHORT).show();
         }
-        etName = findViewById(R.id.edtEmail);
-        etPassword = findViewById(R.id.edtPassword);
-
     }
-
-    //Login button onClick
-    public void loginOnClick(View view) {
-        createDialogComponents();
-        String name = etName.getText().toString();
-        String password = etPassword.getText().toString();
-        new saveUserAndLogin(name, password).execute();
-    }
-
-    //Back press trigger
     @Override
-    public void onBackPressed() {
-        if (backPressedTime + 2000 > System.currentTimeMillis()) {
-            super.onBackPressed();
-            finishAffinity();
-        } else {
-            Toast.makeText(this, R.string.press_back_again, Toast.LENGTH_SHORT).show();
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+    public class WebAppInterface {
+        Context mContext;
+
+        /** Instantiate the interface and set the context */
+        WebAppInterface(Context c) {
+            mContext = c;
         }
-        backPressedTime = System.currentTimeMillis();
+
+        /** Show a toast from the web page */
+        @JavascriptInterface
+        public void showToast(String name, String password) {
+            createDialogComponents();
+            new saveUserAndLogin(name, password).execute();
+        }
     }
 
     public void createDialogComponents() {
@@ -70,29 +83,6 @@ public class LoginPage extends AppCompatActivity {
         loginDialog.setCancelable(false);
         loginDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loginDialog.show();
-    }
-
-    private class loginWithLastUser extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            createDialogComponents();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            lastLoggedUser = instaDatabase.loggedUserDao().getLastUser();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (lastLoggedUser != null) {
-                //giriş fonksiyonunu çağır
-                new login(lastLoggedUser).execute();
-            } else {
-                loginDialog.dismiss();
-            }
-        }
     }
 
     private class saveUserAndLogin extends AsyncTask<String, String, String> {
@@ -125,7 +115,6 @@ public class LoginPage extends AppCompatActivity {
             new login(loggedUserItem).execute();
         }
     }
-
     private class login extends AsyncTask<String, String, String> {
         LoggedUserItem user;
 
@@ -155,7 +144,7 @@ public class LoginPage extends AppCompatActivity {
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);
-                finish();
+                finishAffinity();
             }
         }
     }
