@@ -39,16 +39,15 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(getResources().getString(R.string.login_with_instagram));
         setContentView(R.layout.login_page);
         WebView loginWebView = findViewById(R.id.loginWebView);
         WebSettings webSettings = loginWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         loginWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
         if (Locale.getDefault().getDisplayLanguage().equals("Türkçe")){
-            actionBar.setTitle("Instagram ile giriş yap");
             loginWebView.loadUrl("file:///android_asset/dist/index_tr.html");
         }else {
-            actionBar.setTitle("Login with Instagram");
             loginWebView.loadUrl("file:///android_asset/dist/index.html");
         }
         instaDatabase = InstaDatabase.getInstance(getApplicationContext());

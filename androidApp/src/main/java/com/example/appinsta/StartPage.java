@@ -21,7 +21,6 @@ import dev.niekirk.com.instagram4android.requests.payload.InstagramLoginResult;
 public class StartPage extends AppCompatActivity {
 
     InstagramService service = InstagramService.getInstance();
-    LoggedUserItem lastLoggedUser;
     InstaDatabase instaDatabase;
     Dialog loginDialog;
     Button loginWithInstagram;
@@ -45,31 +44,24 @@ public class StartPage extends AppCompatActivity {
             }
         });
     }
-    private class loginWithLastUser extends AsyncTask<String, String, String> {
+    private class loginWithLastUser extends AsyncTask<String, String, LoggedUserItem> {
         @Override
-        protected void onPreExecute() {
-            createDialogComponents();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
+        protected LoggedUserItem doInBackground(String... strings) {
             try {
-                lastLoggedUser = instaDatabase.loggedUserDao().getLastUser();
+               return instaDatabase.loggedUserDao().getLastUser();
             }catch (Exception e){
-
+                return null;
             }
-
-            return null;
         }
 
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(LoggedUserItem lastLoggedUser) {
             if (lastLoggedUser != null) {
+                createDialogComponents();
                 //giriş fonksiyonunu çağır
                 new login(lastLoggedUser).execute();
             } else {
                 loginWithInstagram.setClickable(true);
-                loginDialog.dismiss();
             }
         }
     }
