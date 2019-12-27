@@ -1,17 +1,21 @@
 package com.basarsoft.instagramcatcher;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -31,6 +35,7 @@ public class LoginPage extends AppCompatActivity {
     LoggedUserItem loggedUserItem, lastLoggedUser;
     InstaDatabase instaDatabase;
     Dialog loginDialog;
+    WebView loginWebView;
     @SuppressLint("JavascriptInterface")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +46,7 @@ public class LoginPage extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(getResources().getString(R.string.login_with_instagram));
         setContentView(R.layout.login_page);
-        WebView loginWebView = findViewById(R.id.loginWebView);
+        loginWebView = findViewById(R.id.loginWebView);
         WebSettings webSettings = loginWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         loginWebView.addJavascriptInterface(new WebAppInterface(this), "Android");
@@ -115,7 +120,7 @@ public class LoginPage extends AppCompatActivity {
             new login(loggedUserItem).execute();
         }
     }
-    private class login extends AsyncTask<String, String, String> {
+    private class login extends AsyncTask<String, String, InstagramLoginResult> {
         LoggedUserItem user;
 
         public login(LoggedUserItem user) {
@@ -123,10 +128,10 @@ public class LoginPage extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected InstagramLoginResult doInBackground(String... strings) {
             try {
                 InstagramLoginResult loginResult = service.login(user.username, user.password);
-                return loginResult.getStatus();
+                return loginResult;
 
             } catch (Exception exc) {
                 exc.printStackTrace();
@@ -135,12 +140,22 @@ public class LoginPage extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(String loginResult) {
+        protected void onPostExecute(InstagramLoginResult loginResult) {
             super.onPostExecute(loginResult);
             loginDialog.dismiss();
-            if (loginResult == null || loginResult.equals("fail")) {
-                final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
-                toast.show();
+            if (loginResult == null || loginResult.getStatus().equals("fail")) {
+                if (loginResult.getChallenge() != null){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginPage.this);
+                    builder.setTitle(R.string.suspicious_login_attempt);
+                    builder.setMessage(R.string.detail_text);
+                    builder.setPositiveButton(R.string.okay,null);
+                    builder.setCancelable(false);
+                    builder.show();
+                }else {
+                    final Toast toast = Toast.makeText(getApplicationContext(), R.string.login_failed, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
             } else {
                 Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivityIntent);
