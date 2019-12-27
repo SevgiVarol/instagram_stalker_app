@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.appinsta">
+    package="com.basarsoft.instagramcatcher">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StartPage"
+        <activity android:name="com.basarsoft.instagramcatcher.StartPage"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -23,18 +23,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".userpage.UserProfileActivity"
+            android:name="com.basarsoft.instagramcatcher.userpage.UserProfileActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SearchActivity"
+            android:name="com.basarsoft.instagramcatcher.SearchActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".LoginPage"
+            android:name="com.basarsoft.instagramcatcher.LoginPage"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.basarsoft.instagramcatcher.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".userpage.StoryViewer"
+            android:name="com.basarsoft.instagramcatcher.userpage.StoryViewer"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".medialog.MediaLogs"
+            android:name="com.basarsoft.instagramcatcher.medialog.MediaLogs"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
