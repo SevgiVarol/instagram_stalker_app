@@ -5,7 +5,7 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId "com.example.appinsta"
+        applicationId "com.basarsoft.instagramcatcher"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1

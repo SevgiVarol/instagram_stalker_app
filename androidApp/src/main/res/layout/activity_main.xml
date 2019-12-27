@@ -198,7 +198,7 @@
                         android:orientation="vertical">
 
 
-                            <com.example.appinsta.uiComponent.CustomView
+                            <com.basarsoft.instagramcatcher.uiComponent.CustomView
                                 android:id="@+id/latestPhotoLikers"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -207,10 +207,10 @@
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
                                 app:Condition="@string/who_do_not_like_my_last_photo"
-                                ></com.example.appinsta.uiComponent.CustomView>
+                                ></com.basarsoft.instagramcatcher.uiComponent.CustomView>
 
 
-                            <com.example.appinsta.uiComponent.CustomView
+                            <com.basarsoft.instagramcatcher.uiComponent.CustomView
                                 android:id="@+id/userStalking"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -219,9 +219,9 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="@string/who_i_am_not_follow_back"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/who_i_am_not_follow_back"></com.basarsoft.instagramcatcher.uiComponent.CustomView>
 
-                            <com.example.appinsta.uiComponent.CustomView
+                            <com.basarsoft.instagramcatcher.uiComponent.CustomView
                                 android:id="@+id/userStalkers"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -229,7 +229,7 @@
                                 android:paddingTop="3dp"
                                 android:paddingRight="3dp"
                                 android:paddingBottom="3dp"
-                                app:Condition="@string/who_not_follow_me_back"></com.example.appinsta.uiComponent.CustomView>
+                                app:Condition="@string/who_not_follow_me_back"></com.basarsoft.instagramcatcher.uiComponent.CustomView>
 
 
 
