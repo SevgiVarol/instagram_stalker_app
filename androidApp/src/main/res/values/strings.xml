@@ -5,6 +5,9 @@
     <string name="press_back_again">Press back again to exit</string>
     <string name="login_failed">Your information is missing or incorrect</string>
     <string name="check_network_connection">Check your internet connection</string>
+    <string name="suspicious_login_attempt">We Detected An Unusual Login Attempt</string>
+    <string name="okay">OKAY</string>
+    <string name="detail_text">We noticed a login attempt to your account that seemed suspicious.</string>
 
 
     <string name="login_with_instagram">Login With Instagram</string>

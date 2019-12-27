@@ -39,6 +39,9 @@
 
     <string name="login_with_instagram">Instagram İle Giriş Yap</string>
     <string name="login_to_get_started">Başlamak için giriş yapın</string>
+    <string name="suspicious_login_attempt">Şüpheli Bir Giriş Denemesi Saptadık</string>
+    <string name="okay">Tamam</string>
+    <string name="detail_text">Hesabınıza şüpheli görünen bir giriş denemesi fark ettik.</string>
 
 
 </resources>
