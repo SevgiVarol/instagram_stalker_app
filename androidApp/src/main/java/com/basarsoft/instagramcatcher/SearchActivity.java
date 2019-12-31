@@ -89,8 +89,15 @@ public class SearchActivity<T> extends AppCompatActivity implements Serializable
 
     @Override
     public boolean onSupportNavigateUp() {
+        searchEditText.setText("");
         finish();
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+        searchEditText.setText("");
+        super.onBackPressed();
     }
 
     public void setRecyclerView(List<T> userList){
